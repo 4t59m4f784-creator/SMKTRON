@@ -26,7 +26,7 @@ Complete frozen engine: `experiments/appearance/engine`. Overlay build: `python 
 
 ## GitHub Pages
 
-Upload this folder's contents to a repository named SMKTRON. Enable Pages with GitHub Actions. The included workflow publishes `web/`; firmware writing still requires explicit user confirmation. This package is prepared for publication; it does not create a GitHub repository.
+Repository: https://github.com/4t59m4f784-creator/SMKTRON. Enable Pages with GitHub Actions, then run the Pages workflow. It publishes `web/`; firmware writing still requires explicit user confirmation. The hosted official installer remains available at the link above.
 
 ## Credits and licenses
 
