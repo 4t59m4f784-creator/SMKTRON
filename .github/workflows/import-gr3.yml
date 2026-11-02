@@ -10,6 +10,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: main
       - name: Fetch and verify approved distribution
         run: |
           curl --fail --location --retry 3 https://smktron-rf1.padrini.chatgpt.site/downloads/SMKTRON-GR3-GitHub.zip -o /tmp/smktron.zip
