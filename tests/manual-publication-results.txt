@@ -1,0 +1,15 @@
+✔ CH3 pins exact verified package; source models restricted; foreign/damaged files rejected (73.979136ms)
+✔ USB protocol/parser unchanged; loader and first16KiB identical to official AP8; flash stays below data (2.40594ms)
+✔ V016 return gate retained; unknown loader refused and resume requires same pending operation (0.362234ms)
+✔ installer local assets resolve, experimental version/source/rollback clear; opening only fetches package (0.750317ms)
+✔ manual includes all fourteen pages in both themes, actual 240x240 PNGs and valid provenance (4.655519ms)
+✔ manual internal links, section ids and external page assets are complete (1.08477ms)
+✔ one-version editorial scope and critical controls are accurately documented (0.523012ms)
+ℹ tests 7
+ℹ suites 0
+ℹ pass 7
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 191.40196

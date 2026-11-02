@@ -1,0 +1,1 @@
+PASS actual GR1 AudioWorklet: load, GRAIN button, Bruma controls, sounding triad, original, panic, framebuffer and no processing errors.

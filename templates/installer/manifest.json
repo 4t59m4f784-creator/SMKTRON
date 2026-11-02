@@ -1,0 +1,28 @@
+{
+  "version": "0.3.0-ap8",
+  "status": "official-user-authorized-factory-defaults",
+  "product": "SMK-37 Pro_453",
+  "firmware_sha256": "7dd9edb2bb90809b8e952b463a587dbf2c26789879a74a448ad4362d0d1ab63f",
+  "firmware_bytes": 651266,
+  "app_bytes": 617224,
+  "app_limit": 619520,
+  "app_free": 2296,
+  "factory_preset": "factory-preset.json",
+  "ram_bytes": 27456,
+  "ram_limit": 98304,
+  "pool": 237860,
+  "pool_limit": 344064,
+  "loader_identical_to_fl1": true,
+  "first_16KiB_identical_to_fl1": true,
+  "hardware_tested": false,
+  "base_hardware_tested": true,
+  "base_version": "0.3.0-ap7",
+  "change_scope": "factory initialization only; existing SAVE takes precedence",
+  "scene_sectors": [
+    "0x9E000",
+    "0x9F000"
+  ],
+  "boot_sector": "0x9D000",
+  "wasm_sha256": "22d1ef1c5532d0ab57edc68f6ca26a066c166e247758cd9960e2eb0144b7a60b",
+  "source": "../downloads/SMKTRON-AP8-fontes.zip"
+}

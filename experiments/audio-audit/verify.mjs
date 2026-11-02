@@ -1,0 +1,7 @@
+import{readFileSync}from'node:fs';import assert from'node:assert/strict';import{test}from'node:test';
+const bytes=readFileSync('dist/audio-preview/mel.wasm');
+const run=(e,ms)=>{for(let i=0;i<ms*44.1/128;i++)e.web_render(128)};
+async function boot(){const e=(await WebAssembly.instantiate(bytes,{})).instance.exports;e.web_boot();run(e,1700);return e;}
+function pg(e,p){for(let i=0;i<20&&e.web_probe(0)!==p;i++){e.web_button(3,1);run(e,30);e.web_button(3,0);run(e,30);}}
+test('reverb, fader and volume transition residual steps improve against identical PM1 scenarios',()=>{const a=JSON.parse(readFileSync('experiments/audio-audit/transitions.json'));for(const type of ['reverb','fader','scene-volume','master-volume']){const before=a.find(x=>x.version==='PM1'&&x.type===type),after=a.find(x=>x.version==='AT1'&&x.type===type);assert(after.maxResidualStep<before.maxResidualStep*.8,type);}});
+test('vibrato maintains history and phase while wet mix is zero; re-entry converges to continuously running reference',async()=>{const a=await boot(),b=await boot();for(const e of[a,b]){pg(e,7);e.web_enc(3,-19);run(e,60);pg(e,4);e.web_enc(3,40);run(e,60);for(const n of [12,16,19])e.web_key(n,100);run(e,600);}b.web_enc(3,-40);run(a,500);run(b,500);b.web_enc(3,40);run(a,50);run(b,50);for(let i=0;i<20;i++){a.web_render(128);b.web_render(128);assert.deepEqual(new Float32Array(a.memory.buffer,a.web_out_l(),128),new Float32Array(b.memory.buffer,b.web_out_l(),128));}});

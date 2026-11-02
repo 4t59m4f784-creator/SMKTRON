@@ -1,0 +1,15 @@
+{
+  "effects": {
+    "bootWrites": 0,
+    "chordWrites": 0,
+    "noteStillGated": 1
+  },
+  "explicitSave": {
+    "bootWrites": 1,
+    "noteStillGated": 1
+  },
+  "chordMix": {
+    "chordWrites": 1,
+    "noteStillGated": 1
+  }
+}

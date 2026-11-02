@@ -1,0 +1,16 @@
+import{readFileSync}from'node:fs';import assert from'node:assert/strict';import vm from'node:vm';
+let Processor;const messages=[];
+const sandbox={AudioWorkletProcessor:class{constructor(){this.port={postMessage:m=>messages.push(m)}}},registerProcessor:(n,c)=>Processor=c,currentTime:0,WebAssembly,Float32Array,Uint8Array,Uint16Array,Array,console};
+vm.runInNewContext(readFileSync('dist/grain3-preview/worklet.js','utf8'),sandbox);
+const p=new Processor();await p.message({type:'load',wasm:readFileSync('dist/grain3-preview/mel.wasm')});
+const run=ms=>{for(let i=0;i<ms*44.1/128;i++){p.process([],[[new Float32Array(128),new Float32Array(128)]]);sandbox.currentTime+=128/44100}};
+run(1700);assert(messages.some(m=>m.type==='ready'));await p.message({type:'button',id:6,down:true});run(80);await p.message({type:'button',id:6,down:false});run(80);
+assert.equal(p.ex.web_probe(0),10);
+await p.message({type:'grain-style',value:1});await p.message({type:'grain-on',value:1});
+for(const k of[12,16,19])await p.message({type:'key',k,vel:100});run(800);
+assert.deepEqual(Array.from({length:4},(_,k)=>p.ex.web_page_param(10,k)),[200,65,100,75]);assert(p.ex.web_grain_spawns()>0);
+assert(new Float32Array(p.ex.memory.buffer,p.ex.web_out_l(),128).some(x=>x!==0));
+await p.message({type:'grain',k:3,value:0});run(100);assert.equal(p.ex.web_page_param(10,3),0);
+await p.message({type:'midi',data:[0xB0,1,64]});run(50);assert.equal(p.ex.web_probe(0),4);assert(p.ex.web_vibrato_mix()>0);await p.message({type:'midi',data:[0xB0,1,0]});run(50);assert.equal(p.ex.web_probe(0),10);await p.message({type:'panic'});run(100);assert(!messages.some(m=>m.type==='error'));
+const frame=messages.filter(m=>m.type==='frame').at(-1);assert(frame?.fb?.length===57600);assert.equal(frame.state[4],0);
+console.log('PASS actual GR3 AudioWorklet: load, GRAIN button, Bruma style, GRAIN ON, sounding triad, original, wheel focus/return, panic, framebuffer and no processing errors.');

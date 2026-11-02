@@ -1,0 +1,22 @@
+✔ K6 styles and FREE edit; pad 10 toggles without changing stored MIX; ARP absent, SEQ retained (68.838903ms)
+✔ boot saves all grain controls, ON and style, volume/global appearance unchanged (60.042475ms)
+✔ favorite slots save and restore GRAIN including disabled with remembered MIX (79.213537ms)
+✔ v6 boot and scenes migrate without musical loss, old ARP values never become GRAIN (69.117054ms)
+✔ physical modulation wheel focuses VIBRATO; MAX MIX scales wheel and zero restores previous page (23.779186ms)
+✔ MIDI CC1 focus, manual navigation wins, chords/presets mode survives wheel (70.074597ms)
+✔ GRAIN dry/bypass identical to ZM1 with wheel zero; active audio finite and fades on pad toggle (100.505224ms)
+✔ Light Dark Zoom have GRAIN style and ON screen; capture all styles and vibrato (63.537836ms)
+✔ sequencer record, step order and clock remain exact to ZM1, GRAIN also processes playback (88.883873ms)
+✔ FX bypass smoothly disables GRAIN without losing its saved state; wheel does not toggle GRAIN pad (44.744024ms)
+✔ Light Dark Zoom: grain motion with sound only, fixed controls; stop when OFF and after note decay (490.430714ms)
+✔ pad 10: warm dim OFF, steady coral idle, rounded multicolour pulse while sounding, bypass steady (69.958997ms)
+✔ global brightness scales grain LED and other pad modes keep their own colours (128.984636ms)
+✔ new animation and legacy UI cleanup leave GR2 musical PCM and persisted bytes unchanged (218.307467ms)
+ℹ tests 14
+ℹ suites 0
+ℹ pass 14
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1054.384828

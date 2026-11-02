@@ -1,0 +1,1 @@
+PASS ZM1 SHA/CRC/model/loader guards and links; AT2 official + reserved UD1 unchanged.

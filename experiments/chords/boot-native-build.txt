@@ -1,0 +1,8 @@
+loader: image 8424 B at 0x1c0a800, bss end 0x1c0f4c0
+loader: ota.bin 7150 B
+  ok    .ram_text: 971 insns, no calls
+  ok    image 616136 B of 619520; RAM .data+.bss 29664 B of 98304; pool 237860 B of 344064
+  ok    register access: hal/ only (src/, loader/ clean)
+app      /workspace/sites/smktron-chords/experiments/chords/build/engine/build/mel.bin  616136 B
+loader   /workspace/sites/smktron-chords/experiments/chords/build/engine/build/loader/ota.bin  7150 B
+package  /workspace/sites/smktron-chords/experiments/chords/build/engine/build/mel-0.3.0-bt2-smk37.fwsc  651266 B, identity SMK-37 Pro_453, board smk37

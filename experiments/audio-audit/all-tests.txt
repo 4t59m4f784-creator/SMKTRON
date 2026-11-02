@@ -1,0 +1,35 @@
+✔ reverb, fader and volume transition residual steps improve against identical PM1 scenarios (3.707168ms)
+✔ vibrato maintains history and phase while wet mix is zero; re-entry converges to continuously running reference (708.228138ms)
+✔ boot moves reels and LEDs, respects brightness, exits by 1.4s without changing musical defaults (286.933961ms)
+✔ early keyboard audio remains bit identical to CH4 while boot yields display and pads (168.717797ms)
+✔ first drawing may arrive late: title and STARTING still render, LEDs are committed (336.928446ms)
+✔ GLOBAL third page, six-note recording includes both outer edges; saves once after all release (114.533431ms)
+✔ HOLD survives release, next chord replaces, old pad release cannot cut new, disabling HOLD releases (49.164432ms)
+✔ keyboard same pitch has separate gate and tape from chord, and six voices reserved per group (52.049195ms)
+✔ global bank and tape restore independently of boot/scenes; transient flags do not restore (93.999486ms)
+✔ failed NOR write keeps prior bank; overflow preserves old chord and stays armed for retry (120.970563ms)
+✔ panic, leaving mode and opening scenes release held chords and cancel recording (250.868338ms)
+✔ normal mode preserves AP8 PCM exactly (168.966415ms)
+✔ MIDI recording respects releases with sustain; scene save/recall never writes chord bank (91.802081ms)
+✔ actual lab persistence and AudioWorklet controls round-trip global bank and audible HOLD after panic (89.511042ms)
+✔ PAD CHORDS knobs control mix and two signed pans; mode remains accessible on K4 (108.782706ms)
+✔ CH1 bank migrates without losing eight chords or tape, with centered pans and 50% mix (199.129235ms)
+✔ hard pan isolates each dry voice to its channel; center matches both sides (937.796544ms)
+✔ mix endpoints mute the opposite voice; middle allows simultaneous independently panned melody/chords (403.66724ms)
+✔ live stereo changes leave HOLD and REC state intact, shared effects remain finite under twelve voices (120.545555ms)
+✔ lab exposes mix/pan controls and persists them without changing AP8 reference (134.179534ms)
+✔ CH3 chord pads use lilac/pink, recording blinks rose, and tape pads share exact normal SMKTRON palette (152.474747ms)
+✔ last recalled preset uses green hue and continuous slow pulse; saving another or recalling empty slot keeps last loaded (396.227462ms)
+✔ CH3 LED changes preserve CH2 audio and respect global 75% brightness (172.728474ms)
+✔ official first boot is scene 90%, Master 70%, Light, pads 75%, bank B and tape active (40.463465ms)
+✔ KNOB BANK cycles persistent presets, chord pads, performance; returns to musical page (251.773958ms)
+✔ GLOBE and K4 chord entry remain, SAVE long and brief retain scene and boot paths (151.759321ms)
+✔ switch away releases held chord and cancels recording; long KNOB BANK never cycles (121.259479ms)
+ℹ tests 27
+ℹ suites 0
+ℹ pass 27
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 4196.121005

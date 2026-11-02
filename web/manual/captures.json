@@ -1,0 +1,615 @@
+{
+  "wasm_sha256": "fd891bff8612937de36cc44c1736812bfb1393d4dff0a1c76e9a045b83f463b3",
+  "width": 240,
+  "height": 240,
+  "captures": [
+    {
+      "name": "play",
+      "theme": "light",
+      "file": "images/play-light.png",
+      "page": 0,
+      "params": [
+        70,
+        0,
+        4,
+        18
+      ]
+    },
+    {
+      "name": "layer",
+      "theme": "light",
+      "file": "images/layer-light.png",
+      "page": 1,
+      "params": [
+        2,
+        40,
+        0,
+        6
+      ]
+    },
+    {
+      "name": "tape",
+      "theme": "light",
+      "file": "images/tape-light.png",
+      "page": 2,
+      "params": [
+        30,
+        20,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "wear",
+      "theme": "light",
+      "file": "images/wear-light.png",
+      "page": 3,
+      "params": [
+        30,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "vibrato",
+      "theme": "light",
+      "file": "images/vibrato-light.png",
+      "page": 4,
+      "params": [
+        75,
+        35,
+        70,
+        25
+      ]
+    },
+    {
+      "name": "leslie",
+      "theme": "light",
+      "file": "images/leslie-light.png",
+      "page": 5,
+      "params": [
+        1,
+        15,
+        70,
+        25
+      ]
+    },
+    {
+      "name": "echo",
+      "theme": "light",
+      "file": "images/echo-light.png",
+      "page": 6,
+      "params": [
+        38,
+        35,
+        45,
+        25
+      ]
+    },
+    {
+      "name": "reverb",
+      "theme": "light",
+      "file": "images/reverb-light.png",
+      "page": 7,
+      "params": [
+        55,
+        45,
+        15,
+        19
+      ]
+    },
+    {
+      "name": "eq",
+      "theme": "light",
+      "file": "images/eq-light.png",
+      "page": 8,
+      "params": [
+        0,
+        0,
+        8,
+        0
+      ]
+    },
+    {
+      "name": "setup",
+      "theme": "light",
+      "file": "images/setup-light.png",
+      "page": 9,
+      "params": [
+        90,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "arp",
+      "theme": "light",
+      "file": "images/arp-light.png",
+      "page": 10,
+      "params": [
+        0,
+        3,
+        1,
+        60
+      ]
+    },
+    {
+      "name": "seq",
+      "theme": "light",
+      "file": "images/seq-light.png",
+      "page": 11,
+      "params": [
+        4,
+        80,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "system",
+      "theme": "light",
+      "file": "images/system-light.png",
+      "page": 12,
+      "params": [
+        75,
+        0,
+        70,
+        -1
+      ]
+    },
+    {
+      "name": "chords",
+      "theme": "light",
+      "file": "images/chords-light.png",
+      "page": 13,
+      "params": [
+        40,
+        -20,
+        30,
+        1
+      ]
+    },
+    {
+      "name": "presets",
+      "theme": "light",
+      "file": "images/presets-light.png",
+      "page": 0,
+      "params": [
+        70,
+        0,
+        4,
+        18
+      ]
+    },
+    {
+      "name": "play",
+      "theme": "dark",
+      "file": "images/play-dark.png",
+      "page": 0,
+      "params": [
+        70,
+        0,
+        4,
+        18
+      ]
+    },
+    {
+      "name": "layer",
+      "theme": "dark",
+      "file": "images/layer-dark.png",
+      "page": 1,
+      "params": [
+        2,
+        40,
+        0,
+        6
+      ]
+    },
+    {
+      "name": "tape",
+      "theme": "dark",
+      "file": "images/tape-dark.png",
+      "page": 2,
+      "params": [
+        30,
+        20,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "wear",
+      "theme": "dark",
+      "file": "images/wear-dark.png",
+      "page": 3,
+      "params": [
+        30,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "vibrato",
+      "theme": "dark",
+      "file": "images/vibrato-dark.png",
+      "page": 4,
+      "params": [
+        75,
+        35,
+        70,
+        25
+      ]
+    },
+    {
+      "name": "leslie",
+      "theme": "dark",
+      "file": "images/leslie-dark.png",
+      "page": 5,
+      "params": [
+        1,
+        15,
+        70,
+        25
+      ]
+    },
+    {
+      "name": "echo",
+      "theme": "dark",
+      "file": "images/echo-dark.png",
+      "page": 6,
+      "params": [
+        38,
+        35,
+        45,
+        25
+      ]
+    },
+    {
+      "name": "reverb",
+      "theme": "dark",
+      "file": "images/reverb-dark.png",
+      "page": 7,
+      "params": [
+        55,
+        45,
+        15,
+        19
+      ]
+    },
+    {
+      "name": "eq",
+      "theme": "dark",
+      "file": "images/eq-dark.png",
+      "page": 8,
+      "params": [
+        0,
+        0,
+        8,
+        0
+      ]
+    },
+    {
+      "name": "setup",
+      "theme": "dark",
+      "file": "images/setup-dark.png",
+      "page": 9,
+      "params": [
+        90,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "arp",
+      "theme": "dark",
+      "file": "images/arp-dark.png",
+      "page": 10,
+      "params": [
+        0,
+        3,
+        1,
+        60
+      ]
+    },
+    {
+      "name": "seq",
+      "theme": "dark",
+      "file": "images/seq-dark.png",
+      "page": 11,
+      "params": [
+        4,
+        80,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "system",
+      "theme": "dark",
+      "file": "images/system-dark.png",
+      "page": 12,
+      "params": [
+        75,
+        1,
+        70,
+        -1
+      ]
+    },
+    {
+      "name": "chords",
+      "theme": "dark",
+      "file": "images/chords-dark.png",
+      "page": 13,
+      "params": [
+        40,
+        -20,
+        30,
+        1
+      ]
+    },
+    {
+      "name": "presets",
+      "theme": "dark",
+      "file": "images/presets-dark.png",
+      "page": 0,
+      "params": [
+        70,
+        0,
+        4,
+        18
+      ]
+    }
+  ],
+  "pads": {
+    "normal": [
+      [
+        143,
+        173,
+        191
+      ],
+      [
+        8,
+        0,
+        11
+      ],
+      [
+        11,
+        5,
+        0
+      ],
+      [
+        0,
+        5,
+        11
+      ],
+      [
+        0,
+        11,
+        6
+      ],
+      [
+        8,
+        0,
+        11
+      ],
+      [
+        11,
+        5,
+        0
+      ],
+      [
+        0,
+        5,
+        11
+      ],
+      [
+        179,
+        157,
+        0
+      ],
+      [
+        11,
+        0,
+        0
+      ],
+      [
+        11,
+        2,
+        5
+      ],
+      [
+        11,
+        2,
+        5
+      ],
+      [
+        11,
+        11,
+        11
+      ],
+      [
+        72,
+        132,
+        191
+      ],
+      [
+        14,
+        7,
+        2
+      ],
+      [
+        14,
+        7,
+        2
+      ]
+    ],
+    "chords": [
+      [
+        191,
+        36,
+        108
+      ],
+      [
+        84,
+        24,
+        132
+      ],
+      [
+        84,
+        24,
+        132
+      ],
+      [
+        84,
+        24,
+        132
+      ],
+      [
+        14,
+        3,
+        21
+      ],
+      [
+        14,
+        3,
+        21
+      ],
+      [
+        14,
+        3,
+        21
+      ],
+      [
+        14,
+        3,
+        21
+      ],
+      [
+        36,
+        0,
+        0
+      ],
+      [
+        191,
+        90,
+        0
+      ],
+      [
+        0,
+        11,
+        6
+      ],
+      [
+        132,
+        0,
+        191
+      ],
+      [
+        11,
+        5,
+        0
+      ],
+      [
+        0,
+        5,
+        11
+      ],
+      [
+        60,
+        0,
+        0
+      ],
+      [
+        36,
+        36,
+        36
+      ]
+    ],
+    "presets": [
+      [
+        40,
+        120,
+        90
+      ],
+      [
+        26,
+        156,
+        52
+      ],
+      [
+        40,
+        120,
+        90
+      ],
+      [
+        40,
+        120,
+        90
+      ],
+      [
+        6,
+        18,
+        14
+      ],
+      [
+        6,
+        18,
+        14
+      ],
+      [
+        6,
+        18,
+        14
+      ],
+      [
+        6,
+        18,
+        14
+      ],
+      [
+        191,
+        168,
+        6
+      ],
+      [
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0
+      ]
+    ]
+  }
+}

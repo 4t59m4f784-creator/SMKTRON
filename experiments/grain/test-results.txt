@@ -1,0 +1,15 @@
+✔ MIX zero is bit-exact ZM1 for all tapes, normal/layer; no grain decoding while bypassed (362.352189ms)
+✔ ARP button opens GRAIN and never steals keyboard notes; physical knobs clamp to documented ranges (22.880582ms)
+✔ granulation changes audio; extreme controls/all tapes/layer/12 notes produce finite bounded PCM and release (701.14703ms)
+✔ sequencer step recording, playback pitch order and timing match ZM1 after ARP removal (70.149228ms)
+✔ chord recording/global persistence and independent melody still work with granulation (76.41534ms)
+✔ experimental grain controls do not change boot record size; saved boot/scene/chords remain isolated (65.14616ms)
+✔ all themes render GRAIN with actual firmware capture (56.772663ms)
+ℹ tests 7
+ℹ suites 0
+ℹ pass 7
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1487.057381

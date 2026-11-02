@@ -1,0 +1,28 @@
+✔ GLOBAL third page, six-note recording includes both outer edges; saves once after all release (49.082529ms)
+✔ HOLD survives release, next chord replaces, old pad release cannot cut new, disabling HOLD releases (34.845804ms)
+✔ keyboard same pitch has separate gate and tape from chord, and six voices reserved per group (28.670479ms)
+✔ global bank and tape restore independently of boot/scenes; transient flags do not restore (37.046971ms)
+✔ failed NOR write keeps prior bank; overflow preserves old chord and stays armed for retry (40.6603ms)
+✔ panic, leaving mode and opening scenes release held chords and cancel recording (66.951352ms)
+✔ MIDI recording respects releases with sustain; scene save/recall never writes chord bank (42.756861ms)
+✔ actual lab persistence and AudioWorklet controls round-trip global bank and audible HOLD after panic (47.512995ms)
+✔ PAD CHORDS knobs control mix and two signed pans; mode remains accessible on K4 (33.020371ms)
+✔ CH1 bank migrates without losing eight chords or tape, with centered pans and 50% mix (90.604862ms)
+✔ hard pan isolates each dry voice to its channel; center matches both sides (511.885057ms)
+✔ mix endpoints mute the opposite voice; middle allows simultaneous independently panned melody/chords (129.25519ms)
+✔ live stereo changes leave HOLD and REC state intact, shared effects remain finite under twelve voices (35.056267ms)
+✔ lab exposes mix/pan controls and persists them without changing AP8 reference (45.135334ms)
+✔ CH3 chord pads use lilac/pink, recording blinks rose, and tape pads share exact normal SMKTRON palette (48.551437ms)
+✔ last recalled preset uses green hue and continuous slow pulse; saving another or recalling empty slot keeps last loaded (111.245654ms)
+✔ official first boot is scene 90%, Master 70%, Light, pads 75%, bank B and tape active (19.717431ms)
+✔ KNOB BANK cycles persistent presets, chord pads, performance; returns to musical page (88.366252ms)
+✔ GLOBE and K4 chord entry remain, SAVE long and brief retain scene and boot paths (41.659776ms)
+✔ switch away releases held chord and cancels recording; long KNOB BANK never cycles (38.320381ms)
+ℹ tests 20
+ℹ suites 0
+ℹ pass 20
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1497.266023

@@ -1,0 +1,10 @@
+✔ reverb, fader and volume transition residual steps improve against identical PM1 scenarios (4.722125ms)
+✔ vibrato maintains history and phase while wet mix is zero; re-entry converges to continuously running reference (239.513297ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 2
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 890.256168

@@ -1,0 +1,11 @@
+✔ KNOB BANK cycles persistent presets, chord pads, performance; returns to musical page (60.356219ms)
+✔ GLOBE and K4 chord entry remain, SAVE long and brief retain scene and boot paths (35.897084ms)
+✔ switch away releases held chord and cancels recording; long KNOB BANK never cycles (25.004056ms)
+ℹ tests 3
+ℹ suites 0
+ℹ pass 3
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 228.789391

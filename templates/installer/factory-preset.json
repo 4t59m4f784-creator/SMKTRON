@@ -1,0 +1,99 @@
+{
+  "version": "0.3.0-ap8",
+  "source": "12 photographs IMG_3752.jpeg through IMG_3763.jpeg; explicit VOL/Master/Fader Bank and appearance instructions, 2026-10-25",
+  "first_boot_only": true,
+  "sound": "FLUTE",
+  "scene_volume_percent": 60,
+  "scene_volume_raw": 614,
+  "master_percent": 70,
+  "fader_bank": "B",
+  "theme": "LIGHT",
+  "pad_brightness_percent": 75,
+  "half_speed": false,
+  "lofi_bypassed": false,
+  "fx_bypassed": false,
+  "arp_on": false,
+  "sequencer_on": false,
+  "sequence_notes": [],
+  "page_parameters_raw": [
+    [
+      70,
+      0,
+      4,
+      18
+    ],
+    [
+      0,
+      40,
+      0,
+      6
+    ],
+    [
+      30,
+      20,
+      0,
+      0
+    ],
+    [
+      30,
+      0,
+      0,
+      0
+    ],
+    [
+      75,
+      35,
+      70,
+      0
+    ],
+    [
+      1,
+      15,
+      70,
+      0
+    ],
+    [
+      38,
+      35,
+      45,
+      0
+    ],
+    [
+      55,
+      45,
+      15,
+      19
+    ],
+    [
+      0,
+      0,
+      8,
+      0
+    ],
+    [
+      90,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      3,
+      1,
+      60
+    ],
+    [
+      16,
+      80,
+      0,
+      0
+    ]
+  ],
+  "display_conversions": {
+    "vibrato_rate_75": "4.7 Hz",
+    "echo_time_38": "195 ms",
+    "reverb_pre_15": "18 ms",
+    "eq_freq_8": "1.1 kHz"
+  },
+  "sequence_policy": "No SEQ photograph supplied: retain empty, stopped 16-step factory pattern with gate80 and swing0."
+}

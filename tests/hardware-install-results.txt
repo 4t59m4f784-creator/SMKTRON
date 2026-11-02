@@ -1,0 +1,30 @@
+✔ GLOBAL third page, six-note recording includes both outer edges; saves once after all release (37.477011ms)
+✔ HOLD survives release, next chord replaces, old pad release cannot cut new, disabling HOLD releases (25.363936ms)
+✔ keyboard same pitch has separate gate and tape from chord, and six voices reserved per group (22.36935ms)
+✔ global bank and tape restore independently of boot/scenes; transient flags do not restore (28.468264ms)
+✔ failed NOR write keeps prior bank; overflow preserves old chord and stays armed for retry (26.62693ms)
+✔ panic, leaving mode and opening scenes release held chords and cancel recording (48.925199ms)
+✔ normal mode preserves AP8 PCM exactly (40.272979ms)
+✔ MIDI recording respects releases with sustain; scene save/recall never writes chord bank (33.275244ms)
+✔ actual lab persistence and AudioWorklet controls round-trip global bank and audible HOLD after panic (34.750855ms)
+✔ PAD CHORDS knobs control mix and two signed pans; mode remains accessible on K4 (27.543947ms)
+✔ CH1 bank migrates without losing eight chords or tape, with centered pans and 50% mix (57.007675ms)
+✔ hard pan isolates each dry voice to its channel; center matches both sides (330.499894ms)
+✔ mix endpoints mute the opposite voice; middle allows simultaneous independently panned melody/chords (93.797487ms)
+✔ live stereo changes leave HOLD and REC state intact, shared effects remain finite under twelve voices (29.08842ms)
+✔ lab exposes mix/pan controls and persists them without changing AP8 reference (23.927678ms)
+✔ CH3 chord pads use lilac/pink, recording blinks rose, and tape pads share exact normal SMKTRON palette (31.125563ms)
+✔ last recalled preset uses green hue and continuous slow pulse; saving another or recalling empty slot keeps last loaded (58.947606ms)
+✔ CH3 LED changes preserve CH2 audio and respect global 75% brightness (48.37672ms)
+✔ CH3 pins exact verified package; source models restricted; foreign/damaged files rejected (76.43749ms)
+✔ USB protocol/parser unchanged; loader and first16KiB identical to official AP8; flash stays below data (2.412077ms)
+✔ V016 return gate retained; unknown loader refused and resume requires same pending operation (0.453749ms)
+✔ installer local assets resolve, experimental version/source/rollback clear; opening only fetches package (0.797346ms)
+ℹ tests 22
+ℹ suites 0
+ℹ pass 22
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1130.711968

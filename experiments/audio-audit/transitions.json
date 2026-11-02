@@ -1,0 +1,82 @@
+[
+  {
+    "version": "PM1",
+    "type": "reverb",
+    "maxResidualStep": 0.041473388671875,
+    "residualDerivativeEnergy": 0.03621252067387104,
+    "firstChangedSample": 0,
+    "peak": 0.163421630859375
+  },
+  {
+    "version": "PM1",
+    "type": "vibrato",
+    "maxResidualStep": 0.012908935546875,
+    "residualDerivativeEnergy": 0.03747250605374575,
+    "firstChangedSample": 0,
+    "peak": 0.1502685546875
+  },
+  {
+    "version": "PM1",
+    "type": "fader",
+    "maxResidualStep": 0.04931640625,
+    "residualDerivativeEnergy": 0.05115300230681896,
+    "firstChangedSample": 0,
+    "peak": 0.142059326171875
+  },
+  {
+    "version": "PM1",
+    "type": "scene-volume",
+    "maxResidualStep": 0.081817626953125,
+    "residualDerivativeEnergy": 0.06447997316718102,
+    "firstChangedSample": 0,
+    "peak": 0.065093994140625
+  },
+  {
+    "version": "PM1",
+    "type": "master-volume",
+    "maxResidualStep": 0.027740478515625,
+    "residualDerivativeEnergy": 0.03505453001707792,
+    "firstChangedSample": 0,
+    "peak": 0.05657958984375
+  },
+  {
+    "version": "AT1",
+    "type": "reverb",
+    "maxResidualStep": 0.011932373046875,
+    "residualDerivativeEnergy": 0.02887539006769657,
+    "firstChangedSample": 0,
+    "peak": 0.152740478515625
+  },
+  {
+    "version": "AT1",
+    "type": "vibrato",
+    "maxResidualStep": 0.012908935546875,
+    "residualDerivativeEnergy": 0.0374730983749032,
+    "firstChangedSample": 0,
+    "peak": 0.1502685546875
+  },
+  {
+    "version": "AT1",
+    "type": "fader",
+    "maxResidualStep": 0.014129638671875,
+    "residualDerivativeEnergy": 0.04078873619437218,
+    "firstChangedSample": 0,
+    "peak": 0.14959716796875
+  },
+  {
+    "version": "AT1",
+    "type": "scene-volume",
+    "maxResidualStep": 0.013702392578125,
+    "residualDerivativeEnergy": 0.051037298515439034,
+    "firstChangedSample": 0,
+    "peak": 0.148681640625
+  },
+  {
+    "version": "AT1",
+    "type": "master-volume",
+    "maxResidualStep": 0.010894775390625,
+    "residualDerivativeEnergy": 0.0292149530723691,
+    "firstChangedSample": 0,
+    "peak": 0.078765869140625
+  }
+]

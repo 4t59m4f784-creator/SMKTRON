@@ -1,0 +1,34 @@
+✔ GLOBAL third page, six-note recording includes both outer edges; saves once after all release (26.376814ms)
+✔ HOLD survives release, next chord replaces, old pad release cannot cut new, disabling HOLD releases (18.319443ms)
+✔ keyboard same pitch has separate gate and tape from chord, and six voices reserved per group (15.877504ms)
+✔ global bank and tape restore independently of boot/scenes; transient flags do not restore (24.108893ms)
+✔ failed NOR write keeps prior bank; overflow preserves old chord and stays armed for retry (25.387566ms)
+✔ panic, leaving mode and opening scenes release held chords and cancel recording (45.929304ms)
+✔ normal mode preserves AP8 PCM exactly (31.877689ms)
+✔ MIDI recording respects releases with sustain; scene save/recall never writes chord bank (26.629067ms)
+✔ actual lab persistence and AudioWorklet controls round-trip global bank and audible HOLD after panic (27.551014ms)
+✔ PAD CHORDS knobs control mix and two signed pans; mode remains accessible on K4 (20.628234ms)
+✔ CH1 bank migrates without losing eight chords or tape, with centered pans and 50% mix (53.620025ms)
+✔ hard pan isolates each dry voice to its channel; center matches both sides (312.696748ms)
+✔ mix endpoints mute the opposite voice; middle allows simultaneous independently panned melody/chords (81.431903ms)
+✔ live stereo changes leave HOLD and REC state intact, shared effects remain finite under twelve voices (25.786514ms)
+✔ lab exposes mix/pan controls and persists them without changing AP8 reference (20.672259ms)
+✔ CH3 chord pads use lilac/pink, recording blinks rose, and tape pads share exact normal SMKTRON palette (24.986695ms)
+✔ last recalled preset uses green hue and continuous slow pulse; saving another or recalling empty slot keeps last loaded (53.477665ms)
+✔ CH3 LED changes preserve CH2 audio and respect global 75% brightness (38.532719ms)
+✔ official first boot is scene 90%, Master 70%, Light, pads 75%, bank B and tape active (9.185674ms)
+✔ CH3 pins exact verified package; source models restricted; foreign/damaged files rejected (66.280189ms)
+✔ USB protocol/parser unchanged; loader and first16KiB identical to official AP8; flash stays below data (2.166312ms)
+✔ V016 return gate retained; unknown loader refused and resume requires same pending operation (0.446888ms)
+✔ installer local assets resolve, experimental version/source/rollback clear; opening only fetches package (0.751958ms)
+✔ manual includes all fourteen pages in both themes, actual 240x240 PNGs and valid provenance (4.109284ms)
+✔ manual internal links, section ids and external page assets are complete (0.809262ms)
+✔ one-version editorial scope and critical controls are accurately documented (0.570721ms)
+ℹ tests 26
+ℹ suites 0
+ℹ pass 26
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1004.950276

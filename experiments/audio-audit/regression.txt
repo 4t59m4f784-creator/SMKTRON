@@ -1,0 +1,27 @@
+✔ GLOBAL third page, six-note recording includes both outer edges; saves once after all release (129.6319ms)
+✔ HOLD survives release, next chord replaces, old pad release cannot cut new, disabling HOLD releases (91.966163ms)
+✔ keyboard same pitch has separate gate and tape from chord, and six voices reserved per group (75.398066ms)
+✔ global bank and tape restore independently of boot/scenes; transient flags do not restore (112.430006ms)
+✔ failed NOR write keeps prior bank; overflow preserves old chord and stays armed for retry (73.56735ms)
+✔ panic, leaving mode and opening scenes release held chords and cancel recording (168.433165ms)
+✔ normal mode preserves AP8 PCM exactly (121.775726ms)
+✔ MIDI recording respects releases with sustain; scene save/recall never writes chord bank (164.966437ms)
+✔ actual lab persistence and AudioWorklet controls round-trip global bank and audible HOLD after panic (216.89326ms)
+✔ PAD CHORDS knobs control mix and two signed pans; mode remains accessible on K4 (61.005041ms)
+✔ CH1 bank migrates without losing eight chords or tape, with centered pans and 50% mix (239.47796ms)
+✔ hard pan isolates each dry voice to its channel; center matches both sides (1906.627572ms)
+✔ mix endpoints mute the opposite voice; middle allows simultaneous independently panned melody/chords (358.020172ms)
+✔ live stereo changes leave HOLD and REC state intact, shared effects remain finite under twelve voices (70.801811ms)
+✔ lab exposes mix/pan controls and persists them without changing AP8 reference (94.849991ms)
+✔ CH3 chord pads use lilac/pink, recording blinks rose, and tape pads share exact normal SMKTRON palette (63.866868ms)
+✔ last recalled preset uses green hue and continuous slow pulse; saving another or recalling empty slot keeps last loaded (157.085509ms)
+✔ CH3 LED changes preserve CH2 audio and respect global 75% brightness (146.916754ms)
+✔ official first boot is scene 90%, Master 70%, Light, pads 75%, bank B and tape active (62.756233ms)
+ℹ tests 19
+ℹ suites 0
+ℹ pass 19
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 4981.146272

@@ -1,0 +1,132 @@
+[
+  {
+    "id": "comecar",
+    "title": "Comece a tocar",
+    "group": "Tocar"
+  },
+  {
+    "id": "painel",
+    "title": "Painel e navegação",
+    "group": "Tocar"
+  },
+  {
+    "id": "pads",
+    "title": "Três mapas para os pads",
+    "group": "Tocar"
+  },
+  {
+    "id": "patch",
+    "title": "PLAY / Patch",
+    "group": "Editar"
+  },
+  {
+    "id": "layer",
+    "title": "LAYER / Duas fitas",
+    "group": "Editar"
+  },
+  {
+    "id": "tape",
+    "title": "TAPE / Movimento da fita",
+    "group": "Editar"
+  },
+  {
+    "id": "wear",
+    "title": "WEAR / Desgaste",
+    "group": "Editar"
+  },
+  {
+    "id": "vibrato",
+    "title": "VIBRATO / Modulação",
+    "group": "Editar"
+  },
+  {
+    "id": "leslie",
+    "title": "LESLIE / Caixa rotativa",
+    "group": "Editar"
+  },
+  {
+    "id": "echo",
+    "title": "ECHO / Delay",
+    "group": "Editar"
+  },
+  {
+    "id": "reverb",
+    "title": "REVERB / Plate",
+    "group": "Editar"
+  },
+  {
+    "id": "eq",
+    "title": "EQ / Equalizador",
+    "group": "Editar"
+  },
+  {
+    "id": "setup",
+    "title": "SETUP / Global 1 de 3",
+    "group": "Editar"
+  },
+  {
+    "id": "system",
+    "title": "SYSTEM / Global 2 de 3",
+    "group": "Editar"
+  },
+  {
+    "id": "chords",
+    "title": "PAD CHORDS / Global 3 de 3",
+    "group": "Tocar"
+  },
+  {
+    "id": "arp",
+    "title": "ARP / Arpejador",
+    "group": "Tocar"
+  },
+  {
+    "id": "seq",
+    "title": "SEQ / Sequenciador",
+    "group": "Tocar"
+  },
+  {
+    "id": "gravar-acordes",
+    "title": "Grave e toque seus acordes",
+    "group": "Tocar"
+  },
+  {
+    "id": "interacao",
+    "title": "Teclado, acordes, ARP e SEQ",
+    "group": "Tocar"
+  },
+  {
+    "id": "gravar-seq",
+    "title": "Grave uma sequência",
+    "group": "Tocar"
+  },
+  {
+    "id": "presets",
+    "title": "Cenas e presets",
+    "group": "Guardar"
+  },
+  {
+    "id": "volume-memoria",
+    "title": "Volume, SAVE e memória",
+    "group": "Guardar"
+  },
+  {
+    "id": "conexoes",
+    "title": "USB, afinação e bateria",
+    "group": "Guardar"
+  },
+  {
+    "id": "receitas",
+    "title": "Quatro ideias para começar",
+    "group": "Tocar"
+  },
+  {
+    "id": "duvidas",
+    "title": "Dúvidas rápidas",
+    "group": "Consultar"
+  },
+  {
+    "id": "creditos",
+    "title": "Créditos e referência",
+    "group": "Consultar"
+  }
+]

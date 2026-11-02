@@ -1,0 +1,1 @@
+PASS actual ZM1 AudioWorklet: boot, GLOBE, Zoom selection, Patch and sounding note.

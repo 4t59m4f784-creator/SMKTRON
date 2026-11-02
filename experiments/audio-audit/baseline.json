@@ -1,0 +1,130 @@
+[
+  {
+    "tape": "FLUTE",
+    "reverb": 0,
+    "peak": 0.243499755859375,
+    "clipSamples": 0,
+    "maxStep": 0.04302978515625,
+    "rms": 0.06778642299945202
+  },
+  {
+    "tape": "FLUTE",
+    "reverb": 19,
+    "peak": 0.2559814453125,
+    "clipSamples": 0,
+    "maxStep": 0.04443359375,
+    "rms": 0.06841277569829589
+  },
+  {
+    "tape": "FLUTE",
+    "reverb": 50,
+    "peak": 0.280853271484375,
+    "clipSamples": 0,
+    "maxStep": 0.050506591796875,
+    "rms": 0.07292688002682501
+  },
+  {
+    "tape": "FLUTE",
+    "reverb": 80,
+    "peak": 0.300628662109375,
+    "clipSamples": 0,
+    "maxStep": 0.058441162109375,
+    "rms": 0.08087487052019629
+  },
+  {
+    "tape": "CHOIR",
+    "reverb": 0,
+    "peak": 0.260101318359375,
+    "clipSamples": 0,
+    "maxStep": 0.042327880859375,
+    "rms": 0.06458774891183423
+  },
+  {
+    "tape": "CHOIR",
+    "reverb": 19,
+    "peak": 0.269317626953125,
+    "clipSamples": 0,
+    "maxStep": 0.043670654296875,
+    "rms": 0.06538605631967395
+  },
+  {
+    "tape": "CHOIR",
+    "reverb": 50,
+    "peak": 0.2867431640625,
+    "clipSamples": 0,
+    "maxStep": 0.04742431640625,
+    "rms": 0.07029115094196445
+  },
+  {
+    "tape": "CHOIR",
+    "reverb": 80,
+    "peak": 0.30450439453125,
+    "clipSamples": 0,
+    "maxStep": 0.05517578125,
+    "rms": 0.07866157729311657
+  },
+  {
+    "tape": "CELLO",
+    "reverb": 0,
+    "peak": 0.2388916015625,
+    "clipSamples": 0,
+    "maxStep": 0.04180908203125,
+    "rms": 0.05600051498905312
+  },
+  {
+    "tape": "CELLO",
+    "reverb": 19,
+    "peak": 0.24591064453125,
+    "clipSamples": 0,
+    "maxStep": 0.0416259765625,
+    "rms": 0.056535478842996735
+  },
+  {
+    "tape": "CELLO",
+    "reverb": 50,
+    "peak": 0.267181396484375,
+    "clipSamples": 0,
+    "maxStep": 0.043212890625,
+    "rms": 0.06047586713714436
+  },
+  {
+    "tape": "CELLO",
+    "reverb": 80,
+    "peak": 0.294464111328125,
+    "clipSamples": 0,
+    "maxStep": 0.0491943359375,
+    "rms": 0.06743719321545102
+  },
+  {
+    "tape": "VIOLINS",
+    "reverb": 0,
+    "peak": 0.18585205078125,
+    "clipSamples": 0,
+    "maxStep": 0.053497314453125,
+    "rms": 0.042222207948740736
+  },
+  {
+    "tape": "VIOLINS",
+    "reverb": 19,
+    "peak": 0.191986083984375,
+    "clipSamples": 0,
+    "maxStep": 0.053253173828125,
+    "rms": 0.04266769537167609
+  },
+  {
+    "tape": "VIOLINS",
+    "reverb": 50,
+    "peak": 0.20672607421875,
+    "clipSamples": 0,
+    "maxStep": 0.055084228515625,
+    "rms": 0.04538148701106996
+  },
+  {
+    "tape": "VIOLINS",
+    "reverb": 80,
+    "peak": 0.221588134765625,
+    "clipSamples": 0,
+    "maxStep": 0.0655517578125,
+    "rms": 0.050080948838472715
+  }
+]

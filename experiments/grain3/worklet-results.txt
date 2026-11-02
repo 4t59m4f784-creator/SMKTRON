@@ -1,0 +1,1 @@
+PASS actual GR3 AudioWorklet: load, GRAIN button, Bruma style, GRAIN ON, sounding triad, original, wheel focus/return, panic, framebuffer and no processing errors.

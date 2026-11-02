@@ -1,0 +1,13 @@
+✔ Light/Dark/Zoom, boot persistence and scene isolation (101.368946ms)
+✔ Light/Dark stay pixel exact against approved AT2, all 14 pages (1187.337753ms)
+✔ Zoom leaves musical PCM unchanged against approved AT2 Dark (61.543067ms)
+✔ all Zoom pages render; four patches and composed Layer captured from firmware (440.201891ms)
+✔ Zoom keyboard lights orange and clears after release; diagnostic remains original Dark (71.80068ms)
+ℹ tests 5
+ℹ suites 0
+ℹ pass 5
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1953.002332

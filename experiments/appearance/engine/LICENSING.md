@@ -1,0 +1,53 @@
+# Licensing
+
+Dinghy is free software under the GNU General Public License, version 3 only (`GPL-3.0-only`, full text in
+`LICENSE`). You may use, study, change and share it. If you give someone a firmware built from it, give them its
+complete source under the same licence too.
+
+## Who made what
+
+| | |
+| --- | --- |
+| The platform: `firmware/hal/`, `firmware/loader/`, `crt0.S`, `app.ld`, `firmware/src/` (`usb.c`, `ota.c`, `recovery.c`, `lcd.c`, `gfx.c`, `libc.c`, `bootguard.h`, `uac_fir.h`), `tools/` | Copyright (C) 2026 Leo Kuroshita (@kurogedelic), Hügelton Instruments ([Felucca](https://github.com/hugelton/Felucca)), with the changes of [SLOOP](https://github.com/isod89/sloop-fm1) (isod89) |
+| Dinghy: the wiring `platform.c`, the host mode `tests/`, the docs (the app `dinghy.c`, which MEL grew out of) | zvenson |
+| MEL: `firmware/src/mel.c`, `mel_fx.c`, `mel_seq.c`, `mel_ui.c`, `tools/gen_tapes.py`, `tools/get_tapes.sh`, `tools/gen_sprites.py`, `tools/gen_mel_fonts.py`, `web/emu/` (after the browser emulators of X0X, Felucca and FoMni, GPL-3.0) | AntonioAltea |
+| The SMK-37 layer (`BOARD_SMK37`): `firmware/hal/smk_input.h`, `fm1_flash_map.h`, the SMK parts of `hal/`, `loader/`, `ota.c`, `lcd.c`, `platform.c`, `tools/build.py`, `fm1pkg_make.py`, `fm1_install.py`, after the SLOOP SMK-37 target; `firmware/src/mel_smk.h`, `smk_store.h`, `smk_wheel.h`, `tests/smk*`, `tests/run_tests.sh`, `SMK37.md` | M. Geisler (genkigenki/makkuro); the pad event queue in `smk_input.h`: zvenson |
+
+## Third-party material
+
+| What | Licence | Where |
+| --- | --- | --- |
+| Terminus font 8x16 (ter-u16n), rendered into `firmware/gen/felucca_font.h` | SIL OFL 1.1 | `assets/fonts/Terminus-LICENSE.txt` |
+| Terminus Bold 16, 20 and 24 px (Debian's console fonts), rendered into `firmware/gen/mel_fonts.h` by `tools/gen_mel_fonts.py` | SIL OFL 1.1 | `assets/fonts/Terminus-LICENSE.txt` |
+| JieLi AC79 SDK: `uboot.boot`, `cfg_tool.bin`, `eq_cfg_hw.bin` are read from your SDK checkout at build time and placed in the package; no SDK files are in this tree | Apache-2.0 | <https://gitee.com/Jieli-Tech/fw-AC79_AIoT_SDK> |
+| MEL's tapes: Taijiguy's (Bernie Kornowicz) Mellotron M400S samples, packed by `tools/gen_tapes.py` into `firmware/gen/mel_tapes.h` and so into every build; the originals (`tools/get_tapes.sh`, into the ignored `tapes/`) are not in this tree | his, not GPL: "free to use, but cannot be used in any commercial, for profit software" ([KVR, 2021](https://www.kvraudio.com/forum/viewtopic.php?t=561309)) | <http://leisureland.us> (via the Wayback Machine) |
+
+## The drawings
+
+The instruments on MEL's screen (`assets/sprites/`, and `firmware/gen/mel_sprites.h`, made from them by
+`tools/gen_sprites.py`) are drawn by Javi and used here with his permission. They are his: not under the GPL unless he
+says so.
+
+## The logo
+
+`assets/logo.svg` / `logo.png` carry the designburg signet: Copyright (C) designburg, all rights reserved, not under
+the GPL. It marks Dinghy itself; a fork uses its own logo.
+
+## Trademarks
+
+"Felucca" and "Hügelton Instruments" are names of Hügelton Instruments; "M-VAVE" and "FM-1" belong to their
+owners. Dinghy is not made or endorsed by them.
+
+## SMKTRON PLAY and web adaptation
+
+The added SMKTRON PLAY renderer, font generator and browser panel follow GPL-3.0-only.
+The renderer uses generated 2-bit-alpha DejaVu glyphs. The underlying fonts remain under
+the Bitstream Vera / DejaVu terms, preserved in `assets/fonts/DejaVu-LICENSE.txt`.
+The tape samples, original illustrations, names and marks retain their separate terms above.
+
+## Optional SMKTRON STRINGS bank
+
+`firmware/gen/smktron_strings_tapes.h` is an opt-in alternative (SMKTRON_STRINGS=1). Its first three banks are the unchanged Taijiguy recordings described above. The fourth bank uses String Section recordings supplied by the user, who states that these are recordings of an original Mellotron available for noncommercial use. The supplied archive contains no licence or attribution document; no independent public-domain status is asserted. These audio recordings are not relicensed as GPL. See STRINGS.md for provenance, generation and validation. The original mel_tapes.h and default build remain unchanged.
+
+## SMKTRON AP1 bank provenance correction
+FLUTE, CHOIR, CELLO and VIOLINS in the SMKTRON bank are recordings by Bernie Kornowicz (Taijiguy). VIOLINS uses MkII Violins.zip from https://web.archive.org/web/20250613060856/http://www.leisureland.us/mellotron.htm . Prior provisional unknown-author statements for replacement strings do not describe this approved bank. Samples retain the author's separate terms, including the restriction on commercial for-profit software documented at https://www.kvraudio.com/forum/viewtopic.php?t=561309 . See CREDITOS.md in the source package.

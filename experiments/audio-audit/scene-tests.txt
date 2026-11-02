@@ -1,0 +1,11 @@
+✔ favorites stay pinned on pads while recalling Patch or Layer; no dedicated favorites screen (494.928135ms)
+✔ scene commits only after dry ramp reaches zero; mix returns to unity and loading never writes flash (397.842ms)
+✔ leaving presets cancels pending recall and restores full dry gain (190.9283ms)
+ℹ tests 3
+ℹ suites 0
+ℹ pass 3
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2141.120383

@@ -1,0 +1,25 @@
+{
+  "version": "0.3.0-gr3",
+  "status": "official-user-approved",
+  "product": "SMK-37 Pro_453",
+  "firmware_sha256": "f45220c62a124ca763fde3974039c95fad60ef3f6fbea3e9649e012aa51e684c",
+  "firmware_bytes": 651266,
+  "app_bytes": 586032,
+  "app_limit": 619520,
+  "app_free": 33488,
+  "hardware_tested": false,
+  "scene_sectors": [
+    "0x9E000",
+    "0x9F000"
+  ],
+  "chord_sectors": [
+    "0xA0000",
+    "0xA1000"
+  ],
+  "boot_sector": "0x9D000",
+  "official_rollback": "https://smktron-rf1.padrini.chatgpt.site/previous-at2/install/",
+  "source": "../source.zip",
+  "simulator_user_approved": true,
+  "required_origin": "SMK-37 Pro_016",
+  "user_approved": true
+}
