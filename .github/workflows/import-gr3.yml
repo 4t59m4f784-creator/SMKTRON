@@ -1,0 +1,37 @@
+name: Import approved SMKTRON GR3
+on:
+  workflow_dispatch:
+  push:
+    paths: ['.github/workflows/import-gr3.yml']
+permissions:
+  contents: write
+jobs:
+  import:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Fetch and verify approved distribution
+        run: |
+          curl --fail --location --retry 3 https://smktron-rf1.padrini.chatgpt.site/downloads/SMKTRON-GR3-GitHub.zip -o /tmp/smktron.zip
+          echo '5885951c2f60a58e69d8cdb87d6d9ceffdf13c82f261e73a4f18385fdd822f39  /tmp/smktron.zip' | sha256sum --check
+          python - <<'PY'
+          import zipfile
+          from pathlib import Path
+          with zipfile.ZipFile('/tmp/smktron.zip') as z:
+              for n in z.namelist():
+                  p=Path(n)
+                  if p.is_absolute() or '..' in p.parts:
+                      raise ValueError(n)
+                  if n.startswith('.github/'):
+                      continue
+                  z.extract(n, '.')
+          PY
+      - name: Commit complete approved sources and binaries
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add .
+          if ! git diff --cached --quiet; then
+            git commit -m "Publish SMKTRON GR3 sources, firmware and V016 installer"
+            git push origin HEAD:main
+          fi
