@@ -1,0 +1,13 @@
+import{readFileSync}from'node:fs';import vm from'node:vm';import assert from'node:assert/strict';
+const src=readFileSync('web/app.js','utf8'),a=src.indexOf('let midiGeneration='),b=src.indexOf("$('#reset').onclick",a);let sent=[];
+const select={value:'one'},label={textContent:''};
+const port=id=>({id,name:id,state:'connected',open:async()=>{},close:async()=>{}});const one=port('one'),two=port('two');
+const context=vm.createContext({ready:true,ctx:{state:'running'},midiPort:null,midiAccess:{inputs:new Map([['one',one],['two',two]])},send:x=>sent.push(x),$:s=>s==='#midiInput'?select:s==='#midiStatus'?label:{},navigator:{}});
+vm.runInContext(src.slice(a,b),context);await vm.runInContext('attachMidi()',context);
+for(const data of [[0x90,60,100],[0x80,60,0],[0x91,65,127],[0xB0,64,127],[0xB0,1,80],[0xE0,0,90]])one.onmidimessage({data});
+assert.equal(sent.filter(m=>m.type==='midi').length,6);assert.deepEqual(Array.from(sent.at(-1).data),[0xE0,0,90]);
+select.value='two';await vm.runInContext('attachMidi()',context);assert.equal(one.onmidimessage,null);assert.equal(typeof two.onmidimessage,'function');assert.equal(sent.at(-1).type,'panic');
+context.midiAccess.inputs.clear();await vm.runInContext('attachMidi()',context);assert.equal(two.onmidimessage,null);assert.equal(sent.at(-1).type,'panic');
+const ui=readFileSync('web/ui.js','utf8');const {translate}=await import('data:text/javascript;base64,'+Buffer.from(ui).toString('base64'));
+assert.equal(translate('▶ Iniciar áudio','en'),'▶ Start audio');assert.equal(translate('Banco B','en'),'Bank B');assert.equal(translate('K1 · PARÂMETRO 1','en'),'K1 · PARAMETER 1');assert.equal(translate('Conectar MIDI','pt'),'Conectar MIDI');
+assert(!readFileSync('web/simulator.html','utf8').includes('grain-intro'));console.log('PASS: MIDI notes, CC, bend, channels, switching/disconnect panic; PT/EN dynamic strings; clean simulator');
