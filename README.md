@@ -6,8 +6,12 @@ Mellotron / lo-fi instrument firmware for M-VAVE SMK-37 Pro. FLUTE, CHOIR, CELLO
 
 Capturas reais do firmware: Patch e Layer. / Actual firmware captures: Patch and Layer.
 
-![SMKTRON Patch — FLUTE](web/images/smktron-patch.png)
-![SMKTRON Layer — FLUTE + VIOLINS](web/images/smktron-layer.png)
+<table>
+  <tr>
+    <td align="center"><img src="web/images/smktron-patch.png" alt="SMKTRON Patch — FLUTE" width="300"><br>Patch · FLUTE</td>
+    <td align="center"><img src="web/images/smktron-layer.png" alt="SMKTRON Layer — FLUTE + VIOLINS" width="300"><br>Layer · FLUTE + VIOLINS</td>
+  </tr>
+</table>
 
 ## Site · Simulador · Instalador / Website · Simulator · Installer
 
