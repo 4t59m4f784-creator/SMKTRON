@@ -5,9 +5,9 @@ export function translate(text,lang=language){
  if(lang!=='en')return text;
  const trimmed=text.trim();if(dictionary[trimmed])return text.replace(trimmed,dictionary[trimmed]);
  let s=text;
- const replacements={'PARÂMETRO':'PARAMETER','PÁGINAS':'PAGES','TIMBRE':'SOUND','GRAVADA':'SAVED','VAZIA':'EMPTY','VAZIO':'EMPTY','FIXADO · SAIR':'PINNED · EXIT','FIXAR PRESETS':'PIN PRESETS','REC · TOQUE ACORDE':'REC · PLAY CHORD','SAIR':'EXIT','Banco ':'Bank ','Erro no áudio: ':'Audio error: ','Pacote bloqueado: ':'Package blocked: ','Arquivo recusado: ':'File rejected: ','Identidade informada: ':'Reported identity: ','Identidade após reiniciar: ':'Identity after restart: ','Operação não concluída: ':'Operation incomplete: ','Retomar: ':'Resume: ','Teclado: ':'Keyboard: ','. Destino: ':'. Target: '};
+ const replacements={'Diminuir ':'Decrease ','Aumentar ':'Increase ','PARÂMETRO':'PARAMETER','PÁGINAS':'PAGES','TIMBRE':'SOUND','GRAVADA':'SAVED','VAZIA':'EMPTY','VAZIO':'EMPTY','FIXADO · SAIR':'PINNED · EXIT','FIXAR PRESETS':'PIN PRESETS','REC · TOQUE ACORDE':'REC · PLAY CHORD','SAIR':'EXIT','Banco ':'Bank ','Erro no áudio: ':'Audio error: ','Pacote bloqueado: ':'Package blocked: ','Arquivo recusado: ':'File rejected: ','Identidade informada: ':'Reported identity: ','Identidade após reiniciar: ':'Identity after restart: ','Operação não concluída: ':'Operation incomplete: ','Retomar: ':'Resume: ','Teclado: ':'Keyboard: ','. Destino: ':'. Target: '};
  for(const [a,b] of Object.entries(replacements))s=s.split(a).join(b);
- for(const [a,b] of Object.entries(dictionary))if(a.length>35&&s.includes(a))s=s.split(a).join(b);
+ for(const [a,b] of Object.entries(dictionary).sort((a,b)=>b[0].length-a[0].length))if(a.length>12&&s.includes(a))s=s.split(a).join(b);
  return s;
 }
 if(typeof document!=='undefined'){
