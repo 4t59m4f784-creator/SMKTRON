@@ -83,7 +83,7 @@ function onMessage(m){
 }
 $('#start').onclick=async()=>{
  if(starting)return;
- if(ready&&ctx){if(ctx.state==='running'){releaseAll();await ctx.suspend();$('#start').textContent='▶ Retomar áudio';status('Áudio pausado')}else{await ctx.resume();$('#start').textContent='Ⅱ Pausar áudio';status('Áudio ativo · 44,1 kHz')}return}
+ if(ready&&ctx){if(ctx.state==='running'){releaseAll();send({type:'panic'});await ctx.suspend();$('#start').textContent='▶ Retomar áudio';status('Áudio pausado')}else{await ctx.resume();$('#start').textContent='Ⅱ Pausar áudio';status('Áudio ativo · 44,1 kHz')}return}
  starting=true;$('#start').disabled=true;status('Carregando instrumento…');
  try{
   if(ctx)await ctx.close();ctx=new AudioContext({sampleRate:44100,latencyHint:'interactive'});await ctx.resume();
@@ -99,21 +99,34 @@ $('#start').onclick=async()=>{
   node.port.postMessage({type:'load',wasm,settings,sceneStore,chordStore});
  }catch(e){status(e.message);$('#start').disabled=false;starting=false;ready=false;if(ctx)await ctx.close();ctx=null}
 };
-function attachMidi(){
- if(midiPort)midiPort.onmidimessage=null;midiPort=midiAccess?.inputs.get($('#midiInput').value);
- if(midiPort)midiPort.onmidimessage=e=>{if(ready)send({type:'midi',data:Array.from(e.data)})};
+let midiGeneration=0;
+async function attachMidi(){
+ const generation=++midiGeneration;
+ const previous=midiPort;if(previous){previous.onmidimessage=null;await previous.close().catch(()=>{});}
+ if(ready)send({type:'panic'});
+ if(generation!==midiGeneration)return;
+ midiPort=midiAccess?.inputs.get($('#midiInput').value)||null;
+ const port=midiPort;
+ if(!port){$('#midiStatus').textContent='Conecte um teclado MIDI.';return;}
+ try{await port.open();if(generation!==midiGeneration)return;
+ port.onmidimessage=e=>{if(ready&&ctx?.state==='running')send({type:'midi',data:Array.from(e.data)})};
+ $('#midiStatus').textContent='MIDI: '+(port.name||'Entrada MIDI');
+ }catch(e){$('#midiStatus').textContent='MIDI: '+e.message;}
 }
 function midiList(){
- const old=$('#midiInput').value;$('#midiInput').replaceChildren();for(const p of midiAccess.inputs.values()){const o=document.createElement('option');o.value=p.id;o.textContent=p.name||'Entrada MIDI';$('#midiInput').append(o)}
- $('#midiInput').hidden=!midiAccess.inputs.size;if(old&&midiAccess.inputs.has(old))$('#midiInput').value=old;attachMidi();status(midiPort?'MIDI conectado: '+midiPort.name:'MIDI autorizado · conecte um teclado.');
+ const old=$('#midiInput').value;
+ $('#midiInput').replaceChildren();
+ for(const p of midiAccess.inputs.values()){if(p.state==='disconnected')continue;const o=document.createElement('option');o.value=p.id;o.textContent=p.name||'Entrada MIDI';$('#midiInput').append(o)}
+ $('#midiInput').hidden=!$('#midiInput').options.length;
+ if(old&&midiAccess.inputs.has(old))$('#midiInput').value=old;
+ if(!$('#midiInput').value&&$('#midiInput').options.length)$('#midiInput').selectedIndex=0;
+ attachMidi();
 }
-$('#midi').onclick=async()=>{try{if(!navigator.requestMIDIAccess)throw Error('MIDI não disponível neste navegador. Use Chrome ou Edge.');midiAccess=await navigator.requestMIDIAccess({sysex:false});midiAccess.onstatechange=midiList;midiList()}catch(e){status('MIDI: '+e.message)}};$('#midiInput').onchange=()=>{if(ready)send({type:'panic'});attachMidi()};
-$('#reset').onclick=()=>{if(confirm('Restaurar os ajustes e apagar as oito cenas e os acordes deste simulador? Isso não altera o teclado físico.')){localStorage.removeItem(STORE);localStorage.removeItem(SCSTORE);localStorage.removeItem(CHSTORE);location.reload()}};
+$('#midi').onclick=async()=>{try{
+ if(!navigator.requestMIDIAccess)throw Error('MIDI não disponível neste navegador. Use Chrome ou Edge.');
+ if(!ready)await $('#start').onclick();
+ midiAccess??=await navigator.requestMIDIAccess({sysex:false});midiAccess.onstatechange=midiList;midiList();
+}catch(e){$('#midiStatus').textContent='MIDI: '+e.message}};
+$('#midiInput').onchange=()=>attachMidi();
+$('#reset').onclick=()=>{if(confirm(window.smktronText('Restaurar os ajustes e apagar as oito cenas e os acordes deste simulador? Isso não altera o teclado físico.'))){localStorage.removeItem(STORE);localStorage.removeItem(SCSTORE);localStorage.removeItem(CHSTORE);location.reload()}};
 
-const grainPresets={bruma:[200,65,100,75],pulsos:[70,25,35,85],fragmentos:[35,100,85,100]};
-for(const b of $$('[data-grain]'))b.onclick=()=>{
- if(!ready){status('Inicie o áudio antes de escolher um exemplo.');return;}
- send({type:'button',id:6,down:true});setTimeout(()=>send({type:'button',id:6,down:false}),70);
- const style={bruma:1,pulsos:2,fragmentos:3}[b.dataset.grain];if(style)send({type:'grain-style',value:style});send({type:'grain-on',value:!!style});
- status(b.dataset.grain==='original'?'Fita original · GRAIN OFF':'GRAIN · '+b.textContent+' · toque notas ou um acorde');
-};
