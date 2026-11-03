@@ -2,6 +2,13 @@
 
 Mellotron / lo-fi instrument firmware for M-VAVE SMK-37 Pro. FLUTE, CHOIR, CELLO and VIOLINS; layer, chord pads, sequencer, GRAIN, tape wear, vibrato, Leslie, echo and reverb. Light / Dark / Zoom displays.
 
+## Telas / Displays
+
+Capturas reais do firmware: Patch e Layer. / Actual firmware captures: Patch and Layer.
+
+![SMKTRON Patch — FLUTE](web/images/smktron-patch.png)
+![SMKTRON Layer — FLUTE + VIOLINS](web/images/smktron-layer.png)
+
 ## Site · Simulador · Instalador / Website · Simulator · Installer
 
 - [Site / Website](https://4t59m4f784-creator.github.io/SMKTRON/)
