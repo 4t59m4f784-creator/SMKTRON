@@ -25,3 +25,5 @@ jobs:
           path: web
       - id: deployment
         uses: actions/deploy-pages@v4
+
+# Includes the firmware-rendered Patch and Layer images committed to web/images.
