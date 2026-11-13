@@ -1,0 +1,90 @@
+name: Publish official SMKTRON release
+on:
+  push:
+    paths: ['.github/workflows/release-smktron.yml']
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: smktron-official-release
+  cancel-in-progress: false
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ba5d498716e67a8ccb0a5c12f08df608819f2fb2
+      - name: Verify and package existing official firmware and sources
+        env:
+          SOURCE_COMMIT: ba5d498716e67a8ccb0a5c12f08df608819f2fb2
+        run: |
+          mkdir -p /tmp/smktron-release
+          python3 - <<'PY'
+          import hashlib,json,os,pathlib,subprocess,zipfile
+          out=pathlib.Path('/tmp/smktron-release')
+          firmware=pathlib.Path('web/install/firmware/smktron-0.3.0-gr3-pro.fwsc').read_bytes()
+          digest=hashlib.sha256(firmware).hexdigest()
+          assert digest=='f45220c62a124ca763fde3974039c95fad60ef3f6fbea3e9649e012aa51e684c'
+          assert len(firmware)==651266
+          manifest=json.loads(pathlib.Path('web/install/manifest.json').read_text())
+          assert manifest['version']=='0.3.0-gr3' and manifest['product']=='SMK-37 Pro_453'
+          assert manifest['firmware_sha256']==digest
+          (out/'SMKTRON-0.3.0-gr3-SMK37-Pro.fwsc').write_bytes(firmware)
+          subprocess.run(['git','archive','--format=zip','--prefix=SMKTRON-0.3.0-gr3/','-o',str(out/'SMKTRON-0.3.0-gr3-source.zip'),os.environ['SOURCE_COMMIT']],check=True)
+          with zipfile.ZipFile(out/'SMKTRON-0.3.0-gr3-source.zip') as z:
+              assert z.testzip() is None
+              names=z.namelist()
+              for required in ['README.md','LICENSE','web/CREDITOS.md','experiments/chords/build.py','web/install/firmware/smktron-0.3.0-gr3-pro.fwsc']:
+                  assert 'SMKTRON-0.3.0-gr3/'+required in names,required
+              assert any(n.startswith('SMKTRON-0.3.0-gr3/experiments/appearance/engine/src/') for n in names)
+          (out/'CREDITOS.md').write_bytes(pathlib.Path('web/CREDITOS.md').read_bytes())
+          (out/'RELEASE.json').write_text(json.dumps({'version':'0.3.0-gr3','source_commit':os.environ['SOURCE_COMMIT'],'product':'SMK-37 Pro_453','required_origin':'SMK-37 Pro_016','firmware_sha256':digest,'firmware_bytes':len(firmware),'firmware_changed':False},indent=2)+'\n')
+          (out/'SHA256SUMS.txt').write_text(''.join(hashlib.sha256(p.read_bytes()).hexdigest()+'  '+p.name+'\n' for p in sorted(out.iterdir()) if p.is_file()))
+          PY
+      - name: Publish release and verified assets
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          cat > /tmp/smktron-notes.md <<'NOTES'
+          ## Português
+          
+          Primeira Release formal do SMKTRON no GitHub. Publica a versão oficial 0.3.0-gr3 já distribuída pelo instalador web, sem alterações no firmware.
+          
+          Instrumento Mellotron/lo-fi para M-VAVE SMK-37 Pro: FLUTE, CHOIR, CELLO e VIOLINS, layer, cenas/favoritos, chord pads, sequenciador, GRAIN, tape wear, vibrato, Leslie, echo e reverb; temas Light/Dark/Zoom. O botão ARP abre GRAIN; o arpejador foi removido.
+          
+          **Instalação:** exige o firmware oficial M-VAVE V016, identidade `SMK-37 Pro_016`. Use o [instalador web](https://4t59m4f784-creator.github.io/SMKTRON/install/) em Chrome/Edge no computador, via USB. Selecione seu arquivo original V016 para o retorno; ele não é redistribuído aqui. Destino: `SMK-37 Pro_453`; confira `0.3.0-gr3` no boot. Registros novos são v7; AT2 não os lê. Preserve seus ajustes antes da troca.
+          
+          **Validação:** pacote idêntico ao instalador oficial, conferido por SHA-256. O README registra build nativo e verificações de simulador aprovados; esta publicação não representa um novo teste físico do wrapper de instalação V016.
+          
+          ## English
+          
+          First formal GitHub Release of SMKTRON. Packages the official 0.3.0-gr3 version already distributed by the web installer, with no firmware changes.
+          
+          Mellotron/lo-fi instrument for M-VAVE SMK-37 Pro: FLUTE, CHOIR, CELLO and VIOLINS, layer, scenes/favourites, chord pads, sequencer, GRAIN, tape wear, vibrato, Leslie, echo and reverb; Light/Dark/Zoom displays. The ARP button opens GRAIN; the arpeggiator is removed.
+          
+          **Installation:** requires official M-VAVE V016, identity `SMK-37 Pro_016`. Use the [web installer](https://4t59m4f784-creator.github.io/SMKTRON/install/) with desktop Chrome/Edge over USB. Select your original V016 return file; it is not redistributed here. Target: `SMK-37 Pro_453`; check `0.3.0-gr3` at boot. New records use v7; AT2 cannot read them. Preserve your settings before changing firmware.
+          
+          **Validation:** the package matches the official installer and is checked by SHA-256. The README records successful native build and simulator checks; this publication does not claim a new physical test of the V016 installer wrapper.
+          
+          ## Arquivos / Files
+          
+          - `SMKTRON-0.3.0-gr3-SMK37-Pro.fwsc`: firmware.
+          - `SMKTRON-0.3.0-gr3-source.zip`: repository snapshot with corresponding frozen engine, build scripts, sample data, licenses, documentation and web tools. See README for Zig 0.13 and native SDK/toolchain requirements.
+          - `SHA256SUMS.txt`: asset checksums.
+          - `RELEASE.json`: version, source commit and firmware identity.
+          - `CREDITOS.md`: credits and sample terms.
+          
+          ## Créditos e termos / Credits and terms
+          
+          Concepção, direção musical e testes / concept, musical direction and testing: Marcus Padrini. Adaptations, interface, controls, documentation and web tools developed with the participation of ChatGPT/Codex (OpenAI), under his direction. Upstream authors retain their credits.
+          
+          FMEL-1 / AntonioAltea; SMK-37 port / M. Geisler, genkigenki/makkuro; Dinghy / zvenson; Felucca / Leo Kuroshita, Hügelton Instruments; SLOOP / isod89; reverb adapted from OberVave / zvenson, based on Jon Dattorro's algorithm. Derived code: GPL-3.0-only; component licenses preserved.
+          
+          Samples: Bernie Kornowicz (Taijiguy), including MkII Violins. Separate noncommercial terms apply; samples are not covered by the code's GPL and are not claimed as public domain. Do not sell products containing these recordings. Distributed free of charge. See CREDITOS.md for full attribution and references. Independent project, without M-VAVE or upstream endorsement.
+          
+          [Site / Website](https://4t59m4f784-creator.github.io/SMKTRON/) · [Simulator](https://4t59m4f784-creator.github.io/SMKTRON/simulator.html)
+          
+          NOTES
+          gh release create v0.3.0-gr3 /tmp/smktron-release/* --target ba5d498716e67a8ccb0a5c12f08df608819f2fb2 --title "SMKTRON 0.3.0-gr3" --notes-file /tmp/smktron-notes.md --latest
