@@ -37,7 +37,7 @@ jobs:
               names=z.namelist()
               for required in ['README.md','LICENSE','web/CREDITOS.md','experiments/chords/build.py','web/install/firmware/smktron-0.3.0-gr3-pro.fwsc']:
                   assert 'SMKTRON-0.3.0-gr3/'+required in names,required
-              assert any(n.startswith('SMKTRON-0.3.0-gr3/experiments/appearance/engine/src/') for n in names)
+              assert any(n.startswith('SMKTRON-0.3.0-gr3/experiments/appearance/engine/firmware/') for n in names)
           (out/'CREDITOS.md').write_bytes(pathlib.Path('web/CREDITOS.md').read_bytes())
           (out/'RELEASE.json').write_text(json.dumps({'version':'0.3.0-gr3','source_commit':os.environ['SOURCE_COMMIT'],'product':'SMK-37 Pro_453','required_origin':'SMK-37 Pro_016','firmware_sha256':digest,'firmware_bytes':len(firmware),'firmware_changed':False},indent=2)+'\n')
           (out/'SHA256SUMS.txt').write_text(''.join(hashlib.sha256(p.read_bytes()).hexdigest()+'  '+p.name+'\n' for p in sorted(out.iterdir()) if p.is_file()))
