@@ -1,0 +1,26 @@
+{
+  "version": "0.3.0-mm1h",
+  "product": "SMK-37 Pro_462",
+  "status": "experimental-hardware-validation-pending",
+  "hardware_tested": false,
+  "user_approved": false,
+  "firmware_sha256": "0c3af65e1c7e2eb619af42b301ce87935ba991a8a682fdf0def84e4554b64b75",
+  "firmware_bytes": 651266,
+  "app_bytes": 599856,
+  "app_free": 19664,
+  "official_version": "0.3.0-mm1f",
+  "official_product": "SMK-37 Pro_460",
+  "source_branch": "experiment/mm1h-midi-bend",
+  "changes": [
+    "Retains MM1g low-latency keyboard service",
+    "Pitch bend and modulation polled during LCD/LED DMA waits, matching SMKSYNTH scheduling",
+    "14-bit bend encoding and calibration unchanged; editor stays on main loop"
+  ],
+  "tests": [
+    "native simulated LCD regression",
+    "11 WASM regression scenarios",
+    "package CRC/layout checks",
+    "USB/TRS routing tests",
+    "official publication checks"
+  ]
+}
