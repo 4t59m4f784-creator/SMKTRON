@@ -68,6 +68,7 @@ static void mm_keys_poll(void){
  }
  while(smk_extkey_take()>=0){} /* keys are read once as the complete 37-bit mask */
 }
+static void mm_wheels_poll(void);
 static void mm_lcd_idle(void){
  static unsigned busy,seen;
  static uint32_t last_ms;
@@ -77,7 +78,10 @@ static void mm_lcd_idle(void){
  unsigned now=fm1_ms;
  if(seen&&now==last_ms&&mm_r==mm_w&&!mm_panic_left)return;
  busy=1;
- if(!seen||now!=last_ms){seen=1;last_ms=now;mm_keys_poll();mm_sustain_poll();}
+ if(!seen||now!=last_ms){seen=1;last_ms=now;mm_keys_poll();mm_sustain_poll();
+  /* Preserve editor selection on the main loop; performance wheels must
+   * follow the ADC during display DMA just like the keyboard. */
+  if(!mm_edit&&!mm_settings&&!mm_reset_ask)mm_wheels_poll();}
  mm_service();
  busy=0;
 }

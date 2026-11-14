@@ -1,0 +1,5 @@
+PASS: reproduces MM1g wheel starvation during LCD DMA: no intermediate bends
+PASS: multiple monotonic, full-14-bit bends on selected channel during DMA, no duplicates and exact centre return
+PASS: intentionally remapped pitch wheel still sends CC instead of bend
+PASS: redraw callback cannot select controls or send wheels in editor
+PASS: disabled pitch mapping stays disabled during DMA

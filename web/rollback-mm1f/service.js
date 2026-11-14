@@ -19,9 +19,9 @@ export function readPending(storage){try{const p=JSON.parse(storage.getItem(PEND
 export function modeFor(kind,id,pending){
  const text=id?.text;if(!text)throw Error('Conecte e consulte o teclado.');
  if(id.model!=='SMK-37 Pro'&&id.model!=='ota-SMK-37 Pro')throw Error('Modelo recusado: somente SMK-37 Pro.');
- if(kind==='rc'&&["SMK-37 Pro_016","SMK-37 Pro_451","SMK-37 Pro_452","SMK-37 Pro_453","SMK-37 Pro_454","SMK-37 Pro_455","SMK-37 Pro_456","SMK-37 Pro_457","SMK-37 Pro_458","SMK-37 Pro_459","SMK-37 Pro_460","SMK-37 Pro_461"].includes(text))return 'install';
- if(kind==='stock'&&["SMK-37 Pro_451","SMK-37 Pro_452","SMK-37 Pro_453","SMK-37 Pro_454","SMK-37 Pro_455","SMK-37 Pro_456","SMK-37 Pro_457","SMK-37 Pro_458","SMK-37 Pro_459","SMK-37 Pro_460","SMK-37 Pro_461"].includes(text))return 'install';
- if(text==='ota-SMK-37 Pro_900'&&(kind==='stock'||(pending?.kind===kind&&["SMK-37 Pro_016","SMK-37 Pro_451","SMK-37 Pro_452","SMK-37 Pro_453","SMK-37 Pro_454","SMK-37 Pro_455","SMK-37 Pro_456","SMK-37 Pro_457","SMK-37 Pro_458","SMK-37 Pro_459","SMK-37 Pro_460","SMK-37 Pro_461"].includes(pending?.source))))return 'resume';
+ if(kind==='rc'&&["SMK-37 Pro_016","SMK-37 Pro_451","SMK-37 Pro_452","SMK-37 Pro_453","SMK-37 Pro_454","SMK-37 Pro_455","SMK-37 Pro_456","SMK-37 Pro_457","SMK-37 Pro_458","SMK-37 Pro_459","SMK-37 Pro_460","SMK-37 Pro_461","SMK-37 Pro_462"].includes(text))return 'install';
+ if(kind==='stock'&&["SMK-37 Pro_451","SMK-37 Pro_452","SMK-37 Pro_453","SMK-37 Pro_454","SMK-37 Pro_455","SMK-37 Pro_456","SMK-37 Pro_457","SMK-37 Pro_458","SMK-37 Pro_459","SMK-37 Pro_460","SMK-37 Pro_461","SMK-37 Pro_462"].includes(text))return 'install';
+ if(text==='ota-SMK-37 Pro_900'&&(kind==='stock'||(pending?.kind===kind&&["SMK-37 Pro_016","SMK-37 Pro_451","SMK-37 Pro_452","SMK-37 Pro_453","SMK-37 Pro_454","SMK-37 Pro_455","SMK-37 Pro_456","SMK-37 Pro_457","SMK-37 Pro_458","SMK-37 Pro_459","SMK-37 Pro_460","SMK-37 Pro_461","SMK-37 Pro_462"].includes(pending?.source))))return 'resume';
  if(text==='ota-SMK-37 Pro_016'&&kind==='stock'&&pending?.kind==='stock')return 'resume';
  throw Error(text==='SMK-37 Pro_016'?'O teclado já informa V016.':
   /^ota-/.test(text)?'Modo de atualização não autorizado para esta operação. Preserve o log.':

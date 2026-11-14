@@ -1,5 +1,7 @@
 # MM1g / _461 - experimental MIDI latency correction
 
+Historical MM1g report. This branch now includes MM1h for continuous wheel handling; `build.py` builds MM1h. See `../midi-wheel/README.md`.
+
 Status: native build and host tests passed; **physical validation pending**. MM1f / _460 remains the official release.
 
 The MM1f MIDI loop processes the complete keyboard mask, sends queued messages, then redraws the display. Its SPI wait does not yield, so a note arriving after the first poll can wait for a large LCD transfer. SMKSYNTH/OberVave uses `LCD_IDLE` to keep notes moving while SPI is busy, including its separate outer-key queue.

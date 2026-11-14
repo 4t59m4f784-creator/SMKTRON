@@ -32,6 +32,7 @@ static void fm1_irq_off(void){assert(!irq_depth);irq_depth=1;}
 static void fm1_irq_on(void){assert(irq_depth);irq_depth=0;}
 static int smk_extkey_take(void){return -1;}
 static void mm_sustain_poll(void){sustain_polls++;}
+static void mm_wheels_poll(void){}
 '''+f'#include "{SRC}/smk_midi_mode.h"\n'+helpers+r'''
 static unsigned loops,reg,inject,sim_us,release_at;
 static unsigned *spi_reg(void){
