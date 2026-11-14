@@ -1,0 +1,16 @@
+
+> test
+> node --test tests/release-midi.test.mjs tests/web-midi-language.test.mjs
+
+✔ approved package, source, manifest and installer agree; model/resume checks remain enforced (43.144285ms)
+✔ published simulator has exclusive MIDI, physical navigation, keys, K5, pad CC and return (23.712589ms)
+✔ manual chapter, images, local links and all firmware sources are included (2.102048ms)
+✔ PT/EN covers MIDI pages and existing dynamic controls (1.418014ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 4
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 159.553521

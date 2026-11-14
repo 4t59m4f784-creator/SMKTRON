@@ -1,0 +1,20 @@
+Compared 407040 stereo/mono output values without changing samples
+✔ baseline physical-key audio bit identical to GR3 for all tapes, layer and GRAIN (136.558091ms)
+✔ physical sequencer recording/playback, favorite save and boot bytes stay identical to GR3 (55.745586ms)
+✔ instrument ignores incoming musical MIDI and emits no musical MIDI (24.879158ms)
+✔ real global page enters by K1; synth audio and SEQ stop, returning never restarts (16.813576ms)
+✔ all 37 keys, velocity, octave, shared notes, releases match MM1a (8.231992ms)
+✔ ABS accelerated per encoder, direction reversal fine; REL sends signed 64 deltas (8.531069ms)
+✔ A/B banks, faders, note pads, momentary CC, toggle and fixed channels (10.507227ms)
+✔ physical editor selects without sending, edits type/number/channel/colour; BT persists four maps (35.26278ms)
+✔ interrupted CRC saves keep the previous valid copy; no boot/scene/chord bytes changed (15.233805ms)
+✔ pitch and mod wheels, both sustain polarities, panic and held-control rearm (20.249015ms)
+✔ entry and exit preserve GRAIN settings, chord mode, favorites and theme; screenshots in Light Dark Zoom (34.985994ms)
+ℹ tests 11
+ℹ suites 0
+ℹ pass 11
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 442.843011

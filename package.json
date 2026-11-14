@@ -1,0 +1,1 @@
+{"name":"smktron","private":true,"type":"module","scripts":{"test":"node --test tests/release-midi.test.mjs tests/web-midi-language.test.mjs"}}

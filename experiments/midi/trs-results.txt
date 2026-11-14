@@ -1,0 +1,8 @@
+PASS: reproduced old full-USB gate; actual new native router remains ready
+PASS: 80 entry messages plus note-on/off leave TRS while USB is open but unread
+PASS: stalled USB recovers through its own 80-message safety reset, without resetting TRS
+PASS: active USB and UART sustain 400 complete messages in order
+PASS: TRS works with USB disconnected
+PASS: unread USB cannot trap mode return; instrument mode emits no musical MIDI
+PASS: suspended/disconnected USB cannot replay stale note-ons after returning to synth
+PASS: entry resets diagnostic counters; measured completion and pin samples use actual ring

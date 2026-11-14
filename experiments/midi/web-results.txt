@@ -1,0 +1,12 @@
+✔ MM1 and direct GR3 rollback validate exact package and reject other models/damage; resume isolated (65.938479ms)
+✔ updater/parser and package loader/first 16KiB are unchanged from GR3; images stop before VM (8.988517ms)
+✔ local simulator and installer assets resolve; handlers never install on page load (0.70627ms)
+✔ actual AudioWorklet carries controller output, map saves and mode return without audio or state errors (33.166165ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 4
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 196.014806

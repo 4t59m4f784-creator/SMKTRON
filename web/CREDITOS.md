@@ -62,3 +62,8 @@ Author's statement: https://www.kvraudio.com/forum/viewtopic.php?t=561309
 The current bank is VIOLINS from Taijiguy's MkII Violins collection; historical references to STRINGS do not identify the current bank. The source archive was identified by the user; no new binary comparison against an archived ZIP is claimed.
 
 Original FMEL-1 illustrations: Javi, with separate rights. Terminus and DejaVu fonts and JieLi SDK components retain their respective licenses. Independent project for the M-VAVE SMK-37 Pro.
+
+
+## MIDI MODE
+
+Convenções de controlador e mapeamento derivadas de Snoop37 / M. Geisler e do MIDI MODE do SMKSYNTH. Adaptação ao SMKTRON, integração e testes sob direção de Marcus Padrini, com ChatGPT/Codex. Avisos originais preservados nos fontes.

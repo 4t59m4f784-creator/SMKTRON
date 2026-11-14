@@ -1,0 +1,14 @@
+{
+  "wasm_sha256": "901f8880896b0f98220748cbea72ba19edc8af6adce341585b9f284609e97423",
+  "captures": [
+    "midi-entry-light",
+    "midi-global-light",
+    "midi-edit-light",
+    "midi-entry-dark",
+    "midi-global-dark",
+    "midi-edit-dark",
+    "midi-entry-zoom",
+    "midi-global-zoom",
+    "midi-edit-zoom"
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "version": "0.3.0-mm1f",
+  "product": "SMK-37 Pro_460",
+  "firmware_sha256": "9249b40ad1c7c30f564790a6be90a5561ff0cee29ac5351c331f60a2fd3d7545",
+  "firmware_bytes": 651266,
+  "app_bytes": 599296,
+  "app_limit": 619520,
+  "hardware_tested": false,
+  "midi_transport_hardware_tested": true,
+  "midi_transport_base": "MM1d / 458",
+  "midi_sectors": [
+    "0xA2000",
+    "0xA3000"
+  ],
+  "base": "GR3 / MM1a controller",
+  "source": "../midi-preview/source.zip",
+  "rollback": "./official/",
+  "app_free": 20224
+}

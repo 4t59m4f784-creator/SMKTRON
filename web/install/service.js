@@ -2,10 +2,10 @@
 import {Updater} from './protocol.js';
 import {productOf,logicalImage,filesOk} from './package.js';
 export const PINS=Object.freeze({
- rc:Object.freeze({name:'SMKTRON 0.3.0-gr3',product:'SMK-37 Pro_453',size:651266,sha:'f45220c62a124ca763fde3974039c95fad60ef3f6fbea3e9649e012aa51e684c',url:'./firmware/smktron-0.3.0-gr3-pro.fwsc'}),
+ rc:Object.freeze({name:'SMKTRON 0.3.0-mm1f',product:'SMK-37 Pro_460',size:651266,sha:'9249b40ad1c7c30f564790a6be90a5561ff0cee29ac5351c331f60a2fd3d7545',url:'./firmware/smktron-0.3.0-mm1f-pro.fwsc'}),
  stock:Object.freeze({name:'M-VAVE V016',product:'SMK-37 Pro_016',size:705252,sha:'2d98ce72530e71d617384963423820536f094501299e2cfec0a8d3c3fb6bcfb0'})
 });
-export const PENDING='smktron.installer.official.gr3.v016.pending.v1';
+export const PENDING='smktron.installer.official.mm1f.pending.v1';
 export async function validate(raw,kind){
  const p=PINS[kind];if(!p)throw Error('Operação inválida.');
  if(raw.length!==p.size)throw Error('Tamanho diferente do pacote esperado.');
@@ -19,13 +19,13 @@ export function readPending(storage){try{const p=JSON.parse(storage.getItem(PEND
 export function modeFor(kind,id,pending){
  const text=id?.text;if(!text)throw Error('Conecte e consulte o teclado.');
  if(id.model!=='SMK-37 Pro'&&id.model!=='ota-SMK-37 Pro')throw Error('Modelo recusado: somente SMK-37 Pro.');
- if(kind==='rc'&&text==='SMK-37 Pro_016')return 'install';
- if(kind==='stock'&&['SMK-37 Pro_451','SMK-37 Pro_452','SMK-37 Pro_453','SMK-37 Pro_454'].includes(text))return 'install';
- if(text==='ota-SMK-37 Pro_900'&&(kind==='stock'||(pending?.kind===kind&&pending?.source==='SMK-37 Pro_016')))return 'resume';
+ if(kind==='rc'&&["SMK-37 Pro_016","SMK-37 Pro_451","SMK-37 Pro_452","SMK-37 Pro_453","SMK-37 Pro_454","SMK-37 Pro_455","SMK-37 Pro_456","SMK-37 Pro_457","SMK-37 Pro_458","SMK-37 Pro_459","SMK-37 Pro_460"].includes(text))return 'install';
+ if(kind==='stock'&&["SMK-37 Pro_451","SMK-37 Pro_452","SMK-37 Pro_453","SMK-37 Pro_454","SMK-37 Pro_455","SMK-37 Pro_456","SMK-37 Pro_457","SMK-37 Pro_458","SMK-37 Pro_459","SMK-37 Pro_460"].includes(text))return 'install';
+ if(text==='ota-SMK-37 Pro_900'&&(kind==='stock'||(pending?.kind===kind&&["SMK-37 Pro_016","SMK-37 Pro_451","SMK-37 Pro_452","SMK-37 Pro_453","SMK-37 Pro_454","SMK-37 Pro_455","SMK-37 Pro_456","SMK-37 Pro_457","SMK-37 Pro_458","SMK-37 Pro_459","SMK-37 Pro_460"].includes(pending?.source))))return 'resume';
  if(text==='ota-SMK-37 Pro_016'&&kind==='stock'&&pending?.kind==='stock')return 'resume';
  throw Error(text==='SMK-37 Pro_016'?'O teclado já informa V016.':
   /^ota-/.test(text)?'Modo de atualização não autorizado para esta operação. Preserve o log.':
-  'Instalação inicial exige M-VAVE oficial V016 (SMK-37 Pro_016).');
+  'Origem recusada. Use V016 oficial ou uma versão SMKTRON reconhecida pelo instalador.');
 }
 function guardFor(kind,source){return (phase,id)=>{
  if(phase==='start'){

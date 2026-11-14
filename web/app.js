@@ -2,7 +2,7 @@
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
 const STORE='smktron-grain-gr3-boot-v1',SCSTORE='smktron-grain-gr3-scenes-v1',CHSTORE='smktron-grain-gr3-chords-v1';
 try{if(!localStorage.getItem('smktron-gr3-imported')){for(const [to,from] of [[STORE,'smktron-scenes-sc1-boot-v1'],[SCSTORE,'smktron-scenes-sc1-slots-v1'],[CHSTORE,'smktron-pad-chords-global-v1']]){const value=localStorage.getItem(from);if(value&&!localStorage.getItem(to))localStorage.setItem(to,value)}localStorage.setItem('smktron-gr3-imported','1')}}catch{}
-const PAGES=['PLAY','LAYER','TAPE','WEAR','VIBRATO','LESLIE','ECHO','REVERB','EQ','SETUP','GRAIN','SEQ','SYSTEM','PAD CHORDS'];
+const PAGES=['PLAY','LAYER','TAPE','WEAR','VIBRATO','LESLIE','ECHO','REVERB','EQ','SETUP','GRAIN','SEQ','SYSTEM','PAD CHORDS','MIDI MODE'];
 const SOUNDS=['FLUTE','CHOIR','CELLO','VIOLINS'];
 let ctx,node,ready=false,starting=false,midiAccess,midiPort,lastState=[];
 const sources=new Map(), pointerNotes=new Map(),heldButtons=new Set(),heldPads=new Set();
@@ -27,9 +27,9 @@ for(const b of $$('[data-btn]')){
  b.addEventListener('pointerdown',e=>{e.preventDefault();b.setPointerCapture(e.pointerId);down()});b.addEventListener('pointerup',up);b.addEventListener('pointercancel',cancel);b.addEventListener('lostpointercapture',cancel);
  b.addEventListener('click',e=>{if(e.detail===0){down();setTimeout(up,70)}});
 }
-const knobDefs=[[0,'K1 · PARÂMETRO 1'],[1,'K2 · PARÂMETRO 2'],[2,'K3 · PARÂMETRO 3'],[3,'K4 · PARÂMETRO 4'],[5,'K6 · PÁGINAS'],[6,'K7 · TEMPO'],[7,'K8 · TIMBRE']];
+const knobDefs=[[0,'K1 · PARÂMETRO 1'],[1,'K2 · PARÂMETRO 2'],[2,'K3 · PARÂMETRO 3'],[3,'K4 · PARÂMETRO 4'],[4,'K5 · CONTROLE'],[5,'K6 · PÁGINAS'],[6,'K7 · TEMPO'],[7,'K8 · TIMBRE']];
 for(const [id,label] of knobDefs){
- let w=document.createElement('div');w.className='knob-wrap';w.dataset.knob=id;w.innerHTML=`<div class="knob" role="slider" aria-label="${label}" aria-valuemin="-1000" aria-valuemax="1000" aria-valuenow="0" tabindex="0"></div><label>${label}</label><div class="nudge"><button aria-label="Diminuir ${label}">−</button><button aria-label="Aumentar ${label}">+</button></div>`;$('#knobs').append(w);
+ let w=document.createElement('div');w.className='knob-wrap';w.dataset.knob=id;w.hidden=id===4;w.innerHTML=`<div class="knob" role="slider" aria-label="${label}" aria-valuemin="-1000" aria-valuemax="1000" aria-valuenow="0" tabindex="0"></div><label>${label}</label><div class="nudge"><button aria-label="Diminuir ${label}">−</button><button aria-label="Aumentar ${label}">+</button></div>`;$('#knobs').append(w);
  let val=0,y;const knob=w.querySelector('.knob');function turn(n){if(send({type:'enc',id,n})){val+=n;knob.style.setProperty('--angle',`${val*8-30}deg`);knob.setAttribute('aria-valuenow',val)}}
  w.querySelectorAll('button').forEach((b,i)=>b.onclick=()=>turn(i?1:-1));
  knob.onpointerdown=e=>{y=e.clientY;knob.setPointerCapture(e.pointerId)};knob.onpointermove=e=>{if(y===undefined)return;let d=Math.trunc((y-e.clientY)/5);if(d){turn(d);y-=d*5}};knob.onpointerup=knob.onpointercancel=()=>{y=undefined};
@@ -60,17 +60,19 @@ window.addEventListener('blur',()=>{releaseAll();if(ready){send({type:'midi',dat
 $('#volume').oninput=e=>{$('#volumeVal').textContent=Math.round(+e.target.value/1023*100)+'%';send({type:'master',value:+e.target.value})};
 $('#pitch').oninput=e=>send({type:'wheel',id:0,value:+e.target.value});const resetPitch=()=>{$('#pitch').value=535;send({type:'wheel',id:0,value:535})};$('#pitch').onpointerup=$('#pitch').onpointercancel=resetPitch;$('#pitch').onkeyup=resetPitch;
 $('#mod').oninput=e=>send({type:'wheel',id:1,value:+e.target.value});
-$('#sustain').onchange=e=>send({type:'midi',data:[0xB0,64,e.target.checked?127:0]});
+$('#sustain').onchange=e=>send({type:'pedal',value:e.target.checked?1023:0});
 $('#panic').onclick=panic;
 const canvas=$('#screen'),g=canvas.getContext('2d'),pixels=g.createImageData(240,240);
-const PARAMS=[["TONE", "PITCH", "ATTACK", "RELEASE"], ["SOUND", "MIX", "OCTAVE", "DETUNE"], ["WOW", "FLUTTER", "DRIVE", "HISS"], ["AGE", "DROPOUT", "DRIFT", "CRUSH"], ["RATE", "DEPTH", "TONE", "MAX MIX"], ["SPEED", "DRIVE", "SPREAD", "MIX"], ["TIME", "REPEATS", "TONE", "MIX"], ["SIZE", "TONE", "PRE", "MIX"], ["LOW", "MID", "FREQ", "HIGH"], ["TEMPO", "TUNE", "LENGTH", "SCREEN"], ["SIZE", "SPREAD", "DENSITY", "MIX"], ["LENGTH", "GATE", "STEP", "SWING"], ["PAD LIGHT", "THEME", "MASTER", "\u2014"],["MIX","PAN MELODY","PAN CHORDS","MODE"]];
+const PARAMS=[["TONE", "PITCH", "ATTACK", "RELEASE"], ["SOUND", "MIX", "OCTAVE", "DETUNE"], ["WOW", "FLUTTER", "DRIVE", "HISS"], ["AGE", "DROPOUT", "DRIFT", "CRUSH"], ["RATE", "DEPTH", "TONE", "MAX MIX"], ["SPEED", "DRIVE", "SPREAD", "MIX"], ["TIME", "REPEATS", "TONE", "MIX"], ["SIZE", "TONE", "PRE", "MIX"], ["LOW", "MID", "FREQ", "HIGH"], ["TEMPO", "TUNE", "LENGTH", "SCREEN"], ["SIZE", "SPREAD", "DENSITY", "MIX"], ["LENGTH", "GATE", "STEP", "SWING"], ["PAD LIGHT", "THEME", "MASTER", "\u2014"],["MIX","PAN MELODY","PAN CHORDS","MODE"],["MIDI MODE","—","—","—"]];
 function onMessage(m){
+ if(m.type==='midi-out'){for(const data of m.data){const port=midiAccess?.outputs.get($('#midiOutput').value);if(port)port.send(data)}return;}
  if(m.type==='error'){status('Erro no áudio: '+m.message);$('#start').textContent='Tentar novamente';$('#start').disabled=false;ready=false;starting=false;return}
  if(m.type==='ready'){ready=true;$('#volume').value=m.master;$('#volumeVal').textContent=Math.round(m.master/1023*100)+'%';starting=false;$('#start').disabled=false;$('#start').textContent='Ⅱ Pausar áudio';$('#screenCover').style.display='none';status('Áudio ativo · 44,1 kHz');return}
  if(m.type!=='frame')return;
+ if(m.maps){try{localStorage.setItem('smktron-midi-mm1-maps',JSON.stringify(m.maps))}catch{}}
  if(m.fb){for(let i=0;i<m.fb.length;i++){const p=m.fb[i],j=i*4;pixels.data[j]=((p>>11)&31)*255/31;pixels.data[j+1]=((p>>5)&63)*255/63;pixels.data[j+2]=(p&31)*255/31;pixels.data[j+3]=255}g.putImageData(pixels,0,0)}
  if(m.state){lastState=m.state;$('#volume').value=m.state[17];$('#volumeVal').textContent=Math.round(m.state[17]/1023*100)+'%';$('#screenState').textContent=(PAGES[m.state[0]]||'PLAY')+' · '+(SOUNDS[m.state[1]]||'FLUTE');for(const [id,on] of [[6,m.grain?.[0]||0],[16,m.state[6]],[17,m.state[7]]]){$(`[data-btn="${id}"]`)?.setAttribute('aria-pressed',!!on)}}
- if(m.state){const pg=m.state[0];const k6=document.querySelector('[data-knob="5"]');k6.querySelector('label').textContent=pg===10?'K6 · STYLE':'K6 · PÁGINAS';k6.querySelector('.knob').setAttribute('aria-label',pg===10?'K6 · STYLE':'K6 · PÁGINAS');for(let i=0;i<4;i++){const w=document.querySelector('[data-knob="'+i+'"]'),name='K'+(i+1)+' · '+PARAMS[pg][i];w.querySelector('label').textContent=name;w.querySelector('.knob').setAttribute('aria-label',name);}}
+ if(m.state){const pg=m.state[0];const k6=document.querySelector('[data-knob="5"]');k6.querySelector('label').textContent=pg===10?'K6 · STYLE':'K6 · PÁGINAS';k6.querySelector('.knob').setAttribute('aria-label',pg===10?'K6 · STYLE':'K6 · PÁGINAS');for(let i=0;i<4;i++){const w=document.querySelector('[data-knob="'+i+'"]'),name='K'+(i+1)+' · '+(m.mm?.[0]?(m.mm[6]?['SYNTH','MAP','CHANNEL','ABS / REL']:m.mm[5]?['TYPE','NUMBER','CHANNEL','COLOUR']:['MIDI CC','MIDI CC','MIDI CC','MIDI CC']):PARAMS[pg])[i];w.querySelector('label').textContent=name;w.querySelector('.knob').setAttribute('aria-label',name);}}
  if(m.bank!==undefined){$('#faderBank').textContent='Banco '+(m.bank?'B':'A');$('#faderBank').setAttribute('aria-pressed',!!m.bank);const names=m.bank?['AGE','DRIVE','DELAY','PLATE']:['LYR MIX','TONE','WOW','FLUTTER'];$$('.fader').forEach((f,i)=>{f.querySelector('small').textContent='F'+(i+1)+' · '+names[i];f.querySelector('input').setAttribute('aria-label','Fader '+(i+1)+' '+names[i]);});}
  if(m.pads){$$('.pad').forEach((b,i)=>{const c=m.pads[i],r=(c>>8)&255,green=(c>>16)&255,blue=c&255;b.style.background=`rgb(${r},${green},${blue})`;b.style.color=green>90?'#142725':'#f1d2ad'})}
  if(m.settings){try{localStorage.setItem(STORE,JSON.stringify(m.settings))}catch{}}
@@ -80,15 +82,18 @@ function onMessage(m){
  if(m.scenes){const [on,pin,mask,selected,lastLoaded=selected]=m.scenes;$$('.pad').forEach((b,i)=>{const label=!on?padNames[i]:i<8?`S${String(i+1).padStart(2,'0')} · ${mask&(1<<i)?'GRAVADA':'VAZIA'}`:i===8?(pin?'FIXADO · SAIR':'FIXAR PRESETS'):'';b.querySelector('small').textContent=label;b.disabled=!!on&&i>8;b.setAttribute('aria-label',`Pad ${i+1} ${label}`);b.setAttribute('aria-pressed',!!on&&(i<8?i===lastLoaded:i===8&&!!pin))});if(on)$('#screenState').textContent+=(pin?' · PRESETS':' · SCENES')+(selected<8?' S'+String(selected+1).padStart(2,'0'):'')}
  if(m.chords&&m.chords.state[0]){const [on,hold,rec,target,playing,tape]=m.chords.state;const labels=[...m.chords.bank.map((notes,i)=>rec&&target===i?'REC · TOQUE ACORDE':notes.length?notes.map(n=>noteNames[n%12]+(Math.floor(n/12)-1)).join(' '):'VAZIO'),'REC','HOLD',...SOUNDS,'STOP / CANCEL','SAIR'];$$('.pad').forEach((b,i)=>{b.disabled=false;b.querySelector('small').textContent=labels[i];b.setAttribute('aria-label',`Pad ${i+1} ${labels[i]}`);b.setAttribute('aria-pressed',i<8?i===playing:i===8?!!rec:i===9?!!hold:i>=10&&i<=13?i===tape+10:false);});}
 
+ if(m.mm){const on=!!m.mm[0];document.querySelector('.instrument').classList.toggle('midi-mode',on);document.querySelector('.volume').hidden=on;$('#screenState').textContent=on?'MIDI MODE · MAP '+(m.mm[1]+1)+' · CH '+m.mm[2]:$('#screenState').textContent;$('#modeMidi').setAttribute('aria-pressed',on);$('#modeSynth').setAttribute('aria-pressed',!on);$('#padBankMidi').hidden=!on;document.querySelector('[data-knob="4"]').hidden=!on;$('#volume').disabled=on;
+ if(on){const labels=m.mm[6]?['K1 · MODE','K2 · MAP','K3 · CHANNEL','K4 · ABS / REL','K5 · --','K6 · --','K7 · --','K8 · --']:m.mm[5]?['K1 · TYPE','K2 · CC / NOTE','K3 · CHANNEL','K4 · COLOR','K5 · SELECT','K6 · --','K7 · --','K8 · --']:Array.from({length:8},(_,i)=>'K'+(i+1)+' · MIDI CC');for(let i=0;i<8;i++){const w=document.querySelector('[data-knob="'+i+'"]');w.querySelector('label').textContent=labels[i];w.querySelector('.knob').setAttribute('aria-label',labels[i]);}}else{for(const [i,label]of knobDefs)if(i>=4){const w=document.querySelector('[data-knob="'+i+'"]');w.querySelector('label').textContent=label;w.querySelector('.knob').setAttribute('aria-label',label);}}
+ if(on){$('#padModeLabel').textContent='MIDI / '+(m.mm[9]?'B':'A');$$('.pad').forEach((b,i)=>{b.disabled=false;b.querySelector('small').textContent='PAD '+(m.mm[9]?'B':'A')+(i+1)});$$('.fader').forEach((f,i)=>f.querySelector('small').textContent='F'+(m.mm[8]?'B':'A')+(i+1));$('#faderBank').textContent='FADERS '+(m.mm[8]?'B':'A');}}
 }
 $('#start').onclick=async()=>{
  if(starting)return;
- if(ready&&ctx){if(ctx.state==='running'){releaseAll();send({type:'panic'});await ctx.suspend();$('#start').textContent='▶ Retomar áudio';status('Áudio pausado')}else{await ctx.resume();$('#start').textContent='Ⅱ Pausar áudio';status('Áudio ativo · 44,1 kHz')}return}
+ if(ready&&ctx){if(ctx.state==='running'){releaseAll();send({type:'panic'});await new Promise(resolve=>setTimeout(resolve,120));await ctx.suspend();$('#start').textContent='▶ Retomar áudio';status('Áudio pausado')}else{await ctx.resume();$('#start').textContent='Ⅱ Pausar áudio';status('Áudio ativo · 44,1 kHz')}return}
  starting=true;$('#start').disabled=true;status('Carregando instrumento…');
  try{
   if(ctx)await ctx.close();ctx=new AudioContext({sampleRate:44100,latencyHint:'interactive'});await ctx.resume();
   if(ctx.sampleRate!==44100)throw Error('Este navegador não disponibilizou áudio em 44,1 kHz. Tente Chrome ou Edge.');
-  if(!ctx.audioWorklet)throw Error('Áudio indisponível neste contexto. Abra o simulador pelo endereço HTTPS em um navegador compatível.');await ctx.audioWorklet.addModule('worklet.js?v=grain-gr3');const response=await fetch('mel.wasm?v=grain-gr3');if(!response.ok)throw Error('Não foi possível carregar o motor de áudio.');const wasm=await response.arrayBuffer();
+  if(!ctx.audioWorklet)throw Error('Áudio indisponível neste contexto. Abra o simulador pelo endereço HTTPS em um navegador compatível.');await ctx.audioWorklet.addModule('worklet.js?v=midi-mm1');const response=await fetch('mel.wasm?v=midi-mm1');if(!response.ok)throw Error('Não foi possível carregar o motor de áudio.');const wasm=await response.arrayBuffer();
   node=new AudioWorkletNode(ctx,'smktron',{numberOfInputs:0,numberOfOutputs:1,outputChannelCount:[2]});node.connect(ctx.destination);node.port.onmessage=e=>onMessage(e.data);
   let settings;try{settings=JSON.parse(localStorage.getItem(STORE))}catch{}
   if(!Array.isArray(settings)||settings.some(n=>!Number.isInteger(n)||n<0||n>255))settings=null;
@@ -96,37 +101,25 @@ $('#start').onclick=async()=>{
   if(!Array.isArray(sceneStore)||sceneStore.length!==8192||sceneStore.some(n=>!Number.isInteger(n)||n<0||n>255))sceneStore=null;
   let chordStore;try{chordStore=JSON.parse(localStorage.getItem(CHSTORE))}catch{}
   if(!Array.isArray(chordStore)||chordStore.length!==8192||chordStore.some(n=>!Number.isInteger(n)||n<0||n>255))chordStore=null;
-  node.port.postMessage({type:'load',wasm,settings,sceneStore,chordStore});
+  let maps;try{maps=JSON.parse(localStorage.getItem('smktron-midi-mm1-maps'))}catch{}
+  node.port.postMessage({type:'load',wasm,settings,sceneStore,chordStore,maps});
  }catch(e){status(e.message);$('#start').disabled=false;starting=false;ready=false;if(ctx)await ctx.close();ctx=null}
 };
-let midiGeneration=0;
-async function attachMidi(){
- const generation=++midiGeneration;
- const previous=midiPort;if(previous){previous.onmidimessage=null;await previous.close().catch(()=>{});}
- if(ready)send({type:'panic'});
- if(generation!==midiGeneration)return;
- midiPort=midiAccess?.inputs.get($('#midiInput').value)||null;
- const port=midiPort;
- if(!port){$('#midiStatus').textContent='Conecte um teclado MIDI.';return;}
- try{await port.open();if(generation!==midiGeneration)return;
- port.onmidimessage=e=>{if(ready&&ctx?.state==='running')send({type:'midi',data:Array.from(e.data)})};
- $('#midiStatus').textContent='MIDI: '+(port.name||'Entrada MIDI');
- }catch(e){$('#midiStatus').textContent='MIDI: '+e.message;}
+function attachMidi(){
+ if(midiPort)midiPort.onmidimessage=null;midiPort=midiAccess?.inputs.get($('#midiInput').value);
+ if(midiPort)midiPort.onmidimessage=e=>{if(ready)send({type:'midi',data:Array.from(e.data)})};
 }
 function midiList(){
- const old=$('#midiInput').value;
- $('#midiInput').replaceChildren();
- for(const p of midiAccess.inputs.values()){if(p.state==='disconnected')continue;const o=document.createElement('option');o.value=p.id;o.textContent=p.name||'Entrada MIDI';$('#midiInput').append(o)}
- $('#midiInput').hidden=!$('#midiInput').options.length;
- if(old&&midiAccess.inputs.has(old))$('#midiInput').value=old;
- if(!$('#midiInput').value&&$('#midiInput').options.length)$('#midiInput').selectedIndex=0;
- attachMidi();
+ const old=$('#midiInput').value;$('#midiInput').replaceChildren();for(const p of midiAccess.inputs.values()){const o=document.createElement('option');o.value=p.id;o.textContent=p.name||'Entrada MIDI';$('#midiInput').append(o)}
+ $('#midiInput').hidden=!midiAccess.inputs.size;if(old&&midiAccess.inputs.has(old))$('#midiInput').value=old;attachMidi();status(midiPort?'MIDI conectado: '+midiPort.name:'MIDI autorizado · conecte um teclado.');
 }
-$('#midi').onclick=async()=>{try{
- if(!navigator.requestMIDIAccess)throw Error('MIDI não disponível neste navegador. Use Chrome ou Edge.');
- if(!ready)await $('#start').onclick();
- midiAccess??=await navigator.requestMIDIAccess({sysex:false});midiAccess.onstatechange=midiList;midiList();
-}catch(e){$('#midiStatus').textContent='MIDI: '+e.message}};
-$('#midiInput').onchange=()=>attachMidi();
-$('#reset').onclick=()=>{if(confirm(window.smktronText('Restaurar os ajustes e apagar as oito cenas e os acordes deste simulador? Isso não altera o teclado físico.'))){localStorage.removeItem(STORE);localStorage.removeItem(SCSTORE);localStorage.removeItem(CHSTORE);location.reload()}};
+$('#midi').onclick=async()=>{try{if(!navigator.requestMIDIAccess)throw Error('MIDI não disponível neste navegador. Use Chrome ou Edge.');midiAccess=await navigator.requestMIDIAccess({sysex:false});midiAccess.onstatechange=midiList;midiList()}catch(e){status('MIDI: '+e.message)}};$('#midiInput').onchange=()=>{if(ready)send({type:'panic'});attachMidi()};
+$('#reset').onclick=()=>{if(confirm('Restaurar ajustes, cenas, acordes e mapas MIDI deste simulador? Isso não altera o teclado físico.')){localStorage.removeItem(STORE);localStorage.removeItem(SCSTORE);localStorage.removeItem(CHSTORE);localStorage.removeItem('smktron-midi-mm1-maps');location.reload()}};
 
+
+$('#modeMidi').onclick=()=>{releaseAll();send({type:'mode',value:1})};
+$('#modeSynth').onclick=()=>{releaseAll();send({type:'mode',value:0})};
+$('#padBankMidi').onclick=()=>send({type:'pad-bank'});
+const fillOutputs=()=>{const old=$('#midiOutput').value;$('#midiOutput').innerHTML='<option value="">MIDI OUT: monitor</option>';for(const p of midiAccess?.outputs.values()||[]){const o=document.createElement('option');o.value=p.id;o.textContent=p.name;$('#midiOutput').append(o)}if(midiAccess?.outputs.has(old))$('#midiOutput').value=old;};
+midiList=()=>{if(midiPort)midiPort.onmidimessage=null;$('#midiInput').hidden=true;fillOutputs();status('MIDI OUT: escolha uma saída / choose an output');};
+let previousMidiOutput='';$('#midiOutput').onchange=()=>{const old=midiAccess?.outputs.get(previousMidiOutput);if(old){for(let c=0;c<16;c++){old.send([0xB0|c,64,0]);old.send([0xB0|c,123,0]);old.send([0xB0|c,120,0]);}}previousMidiOutput=$('#midiOutput').value;send({type:'panic'});};

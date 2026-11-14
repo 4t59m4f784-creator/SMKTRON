@@ -61,22 +61,22 @@
   },
   {
     "id": "setup",
-    "title": "SETUP / Global 1 de 3",
+    "title": "SETUP / Global 1 de 4",
     "group": "Editar"
   },
   {
     "id": "system",
-    "title": "SYSTEM / Global 2 de 3",
+    "title": "SYSTEM / Global 2 de 4",
     "group": "Editar"
   },
   {
     "id": "chords",
-    "title": "PAD CHORDS / Global 3 de 3",
+    "title": "PAD CHORDS / Global 3 de 4",
     "group": "Tocar"
   },
   {
     "id": "arp",
-    "title": "ARP / Arpejador",
+    "title": "GRAIN / Grãos de fita",
     "group": "Tocar"
   },
   {
@@ -91,7 +91,7 @@
   },
   {
     "id": "interacao",
-    "title": "Teclado, acordes, ARP e SEQ",
+    "title": "Teclado, acordes e SEQ",
     "group": "Tocar"
   },
   {
@@ -128,5 +128,10 @@
     "id": "creditos",
     "title": "Créditos e referência",
     "group": "Consultar"
+  },
+  {
+    "id": "midi-mode",
+    "title": "MIDI MODE / Controlador",
+    "group": "MIDI"
   }
 ]

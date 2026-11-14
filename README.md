@@ -1,62 +1,47 @@
-# SMKTRON — Mellotron for SMK-37 Pro
+# SMKTRON — Mellotron + MIDI controller for SMK-37 Pro
 
-Mellotron / lo-fi instrument firmware for M-VAVE SMK-37 Pro. FLUTE, CHOIR, CELLO and VIOLINS; layer, chord pads, sequencer, GRAIN, tape wear, vibrato, Leslie, echo and reverb. Light / Dark / Zoom displays.
+**Official / Oficial: 0.3.0-mm1f · SMK-37 Pro_460.** Approved on hardware by Marcus Padrini. The published firmware is byte-for-byte the approved MM1f test package.
 
-## Telas / Displays
+[Website / Site](https://4t59m4f784-creator.github.io/SMKTRON/) · [Installer / Instalador](https://4t59m4f784-creator.github.io/SMKTRON/install/) · [Simulator / Simulador](https://4t59m4f784-creator.github.io/SMKTRON/simulator.html) · [Manual](https://4t59m4f784-creator.github.io/SMKTRON/manual/) · [Changelog](CHANGELOG.md) · [Releases](https://github.com/4t59m4f784-creator/SMKTRON/releases)
 
-Capturas reais do firmware: Patch e Layer. / Actual firmware captures: Patch and Layer.
+## Português
 
-<table>
-  <tr>
-    <td align="center"><img src="web/images/smktron-patch.png" alt="SMKTRON Patch — FLUTE" width="300"><br>Patch · FLUTE</td>
-    <td align="center"><img src="web/images/smktron-layer.png" alt="SMKTRON Layer — FLUTE + VIOLINS" width="300"><br>Layer · FLUTE + VIOLINS</td>
-  </tr>
-</table>
+Instrumento Mellotron/lo-fi com FLUTE, CHOIR, CELLO e VIOLINS; layer, cenas/favoritos, acordes nos pads, sequenciador, GRAIN, tape wear, vibrato, Leslie, echo e reverb. Light/Dark/Zoom. Todos os sons e recursos da GR3 foram preservados.
 
-## Site · Simulador · Instalador / Website · Simulator · Installer
+**MIDI MODE independente:** synth não transmite nem interpreta MIDI musical; controlador silencia áudio interno e envia MIDI USB/TRS. Quatro mapas editáveis no teclado, ABS/REL, pads com cores, velocity, pitch bend, modulação, sustain e Panic. Sem Bluetooth.
 
-- [Site / Website](https://4t59m4f784-creator.github.io/SMKTRON/)
-- [Simulador / Simulator](https://4t59m4f784-creator.github.io/SMKTRON/simulator.html)
-- [Instalador / Installer](https://4t59m4f784-creator.github.io/SMKTRON/install/)
+- GLOBE → MIDI MODE → K1 à direita: entrar. No controlador, GLOBE e K1 à esquerda: voltar ao synth.
+- GLOBAL: K1 modo, K2 mapa, K3 canal principal, K4 ABS/REL.
+- PARA: escolher/editar controle. K1 tipo, K2 CC/nota, K3 canal, K4 cor do pad; K5 seleciona controle, PATCH escolhe por toque, BT salva os quatro mapas.
+- KNOB BANK/FADER BANK alternam os bancos correspondentes; ambos juntos alternam pads A/B. GLOBE + SEQ PLAY: Panic.
+- K5 fica exclusivo do controlador no MIDI; no synth preserva seu comportamento de volume.
 
-Site, simulador e instalador estão disponíveis em português e inglês. / The website, simulator and installer are available in Portuguese and English.
+O teclado sempre inicia como synth. Mapas MIDI são separados de boot, cenas e acordes e não integram o backup musical. Consulte o [manual MIDI](https://4t59m4f784-creator.github.io/SMKTRON/manual/#midi-mode).
 
-## Origem e proposta / Origins and purpose
+**Instalação:** somente SMK-37 Pro. Primeira instalação exige V016 oficial M-VAVE. Versões SMKTRON reconhecidas, incluindo GR3 (_453), atualizam diretamente. Chrome/Edge no computador, HTTPS, cabo USB de dados, demais aplicativos MIDI fechados. Selecione seu V016 original como arquivo de retorno; ele não é redistribuído. O instalador verifica modelo, SHA-256, CRC e identidade e pede confirmação antes de gravar. Confira **0.3.0-mm1f / _460**. Não desconecte durante a escrita. OCT− ao ligar abre a recuperação USB. Preserve seus dados antes de trocar firmware; o retorno a versões antigas pode não ler dados mais novos.
 
-O SMKTRON surgiu do excelente FMEL-1 para o FM-1, que consegue soar muito bem em um dispositivo com tão pouco armazenamento. A proposta do SMKTRON foi ajustar alguns samples e, principalmente, adaptar a interface e os controles para um instrumento focado em performance no M-VAVE SMK-37 Pro.
+## English
 
-SMKTRON grew out of the excellent FMEL-1 for the FM-1, which achieves an impressive sound on a device with very little storage. SMKTRON's goal was to adjust selected samples and, above all, adapt the interface and controls into a performance-focused instrument for the M-VAVE SMK-37 Pro.
+Mellotron/lo-fi instrument: FLUTE, CHOIR, CELLO, VIOLINS, layers, scenes/favourites, chord pads, sequencer, GRAIN and tape/FX. Light/Dark/Zoom. All GR3 sounds and features retained.
 
-Concepção, direção musical e testes: Marcus Padrini. Desenvolvimento das adaptações, interface, controles, documentação e ferramentas web com participação do ChatGPT/Codex (OpenAI). Os projetos e autores originais permanecem creditados por suas contribuições.
+Exclusive MIDI controller mode with USB/TRS OUT, four on-device editable maps, ABS/REL encoders, coloured pads, velocity, bend, modulation, sustain and Panic. Synth mode neither sends nor interprets musical MIDI. Controller mode silences audio. No Bluetooth.
 
-Concept, musical direction and testing: Marcus Padrini. Adaptations, interface, controls, documentation and web tools developed with the participation of ChatGPT/Codex (OpenAI). The original projects and authors retain credit for their contributions.
+GLOBE → MIDI MODE → K1 right enters. In the controller, GLOBE then K1 left returns. GLOBAL: K2 map, K3 main channel, K4 ABS/REL. PARA edits controls: K1 type, K2 CC/note, K3 channel, K4 pad colour, K5 selects control, PATCH picks by touch, BT saves. KNOB BANK/FADER BANK select A/B; both select pad bank. GLOBE + SEQ PLAY sends Panic. Maps have separate storage, excluded from musical backups. Boot always starts in synth mode. See the manual's MIDI chapter for an English guide.
 
-## Install / Instalação
+SMK-37 Pro only. First install requires official V016; recognized SMKTRON versions including GR3 update directly. Use desktop Chrome/Edge, HTTPS and a data cable; close MIDI apps. Supply your original V016 for restore. SHA-256/CRC/model verification and explicit confirmation precede every write. Check **0.3.0-mm1f / _460**. Do not disconnect while writing. OCT− at boot opens USB recovery. Back up data; older firmware may not read newer saves.
 
-First installation requires official M-VAVE **SMK-37 Pro V016**, identity `SMK-37 Pro_016`. Use M-UPGRADE to return to V016 first. Back up or note your settings before changing firmware. Other models and firmware origins are rejected. Use Chrome/Edge on desktop, HTTPS, USB data cable; close MIDI applications. Select your original V016 file, connect, prepare and confirm. Never disconnect during writing. Check `0.3.0-gr3` at boot.
+## Sources and build
 
-A primeira instalação exige V016 oficial. O instalador verifica SHA-256, CRCs e modelo. O arquivo V016 é selecionado localmente, não é redistribuído neste projeto. Não existe instalação automática ao abrir a página. Registros novos são v7; a versão AT2 não os lê.
-
-## Controls / Controles
-
-- K1–K4: page parameters; K5 scene volume. Global master is separate.
-- ARP button opens GRAIN; K6 selects FREE / BRUMA / PULSOS / FRAGMENTOS. Performance pad 10 toggles GRAIN.
-- GRAIN: SIZE / SPREAD / DENSITY / MIX. Saved with boot settings and favorites.
-- Modulation wheel opens VIBRATO and controls mix up to MAX MIX.
-- KNOB BANK: Performance → Favorites → Chord Pads.
-- Chord top 8 pads: chords; bottom: REC, HOLD, FLUTE, CHOIR, CELLO, VIOLINS, STOP, EXIT.
-- Sequencer remains available; arpeggiator is removed.
-
-## Source / Build
-
-Complete frozen engine: `experiments/appearance/engine`. Overlay build: `python experiments/chords/build.py --grain3` (Zig 0.13); native: add `--native` and provide `JIELI_TOOLCHAIN` and `AC79_SDK`. See build scripts for tool paths. Preserve original four sample banks and license files. Firmware binary: `web/install/firmware/`. App 586032/619520 bytes, 33488 free; static RAM 31744 bytes. Native build and simulator checks passed; no new physical test is claimed for the V016-only installer wrapper.
-
-## GitHub Pages
-
-The public site, simulator and installer are hosted on GitHub Pages at the links above. The Pages workflow publishes `web/` when its files change on `main`. Firmware writing always requires explicit confirmation in the installer.
+- `firmware/`: complete frozen MM1f engine, source and corresponding build tools. `cd firmware && BOARD=smk37 MODEL=pro sh build.sh --release 0.3.0-mm1f`, with `JIELI_TOOLCHAIN` and `AC79_SDK` as described in its documentation. Identity _460 is pinned in its build tools.
+- `experiments/midi/`: integration overlay and regression tests. `python experiments/midi/build.py` generates the simulator; add `--native` for the hardware package. Set `ZIG` (Zig 0.13) and the native SDK/toolchain variables. The overlay uses the GR3 base under `experiments/appearance/engine` and `experiments/chords`.
+- `web/`: GitHub Pages website, simulator, installer, manual and source archive. `manual/` contains editable documentation sources; `python tools/build_manual.py` regenerates the manual.
+- Exact package SHA-256: `9249b40ad1c7c30f564790a6be90a5561ff0cee29ac5351c331f60a2fd3d7545`; 651266 bytes. App 599296/619520 bytes; 20224 free. Static RAM 33376 bytes. Sample tables unchanged.
+- Verification: `npm test`; native K5 regression: `python experiments/midi/k5_test.py` after generating the engine. Physical USB/TRS, controller screens and K5 approved by the user. Browser checks do not substitute for electrical testing.
 
 ## Credits and licenses
 
-See `web/CREDITOS.md` and licenses in the frozen engine. Derived code: GPL-3.0-only. Upstream: FMEL-1 / AntonioAltea, SMK port genkigenki, Dinghy / zvenson, Felucca / Hügelton, SLOOP / isod89; reverb adapted from OberVave (Dattorro).
+See [CREDITOS.md](web/CREDITOS.md) and component notices in `firmware/`. Derived code GPL-3.0-only. FMEL-1 / AntonioAltea; SMK port / M. Geisler (genkigenki/makkuro); Dinghy / zvenson; Felucca / Leo Kuroshita, Hügelton; SLOOP / isod89; OberVave / zvenson and Jon Dattorro for reverb; MIDI controller conventions from Snoop37 and SMKSYNTH.
 
-Samples: Bernie Kornowicz (Taijiguy), with separate noncommercial terms; they are not GPL or public domain. Do not sell products containing these recordings. This project is distributed free of charge. Concept, musical direction and testing: Marcus Padrini. Adaptations, interface, controls, documentation and web tools developed with the participation of ChatGPT/Codex (OpenAI). The original projects and authors retain credit for their contributions.
+Samples: Bernie Kornowicz (Taijiguy), including MkII Violins. Separate noncommercial terms apply; they are not GPL or public domain. Do not sell products containing these recordings. Distributed free of charge. Original notices and licenses retained.
+
+Concepção, direção musical e testes / concept, musical direction and tests: **Marcus Padrini**. Adaptations, UI, controls, documentation and web tools developed with ChatGPT/Codex (OpenAI) under his direction. Independent project, without M-VAVE or upstream endorsement.

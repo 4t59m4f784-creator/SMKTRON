@@ -1,0 +1,4 @@
+PASS: MM1e native master reader consumes K5 before MIDI sees its steps
+PASS: MIDI retains every K5 step in both directions and preserves synth master/gain
+PASS: controller idle polling never drains K5; platform services keep running
+PASS: synth K5 volume behavior matches MM1e exactly after leaving MIDI

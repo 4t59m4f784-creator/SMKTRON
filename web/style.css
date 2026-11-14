@@ -14,3 +14,7 @@ header{padding:15px 24px;gap:16px}header nav{display:flex;align-items:center;gap
 header{padding-top:12px;padding-bottom:12px}header nav{gap:16px}.session-bar{padding:10px 0}.smktron-credits{margin:12px 0 0}footer{padding:10px 0 14px}.section-label span+span{opacity:.7}
 
 .grain-intro,.grain-help{font-size:13px;line-height:1.6}.grain-tools{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:14px 0}.grain-tools>span{font-size:11px;letter-spacing:.12em;color:#596b60;margin-right:6px}.grain-tools button{padding:9px 14px}.grain-help{color:#596b60;margin:8px 0 18px}
+
+.mode-actions{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:16px}.mode-actions [aria-pressed="true"]{border-color:#53a58e;background:#284d40;color:#fff}
+
+.midi-mode .knobs{grid-template-columns:repeat(4,minmax(0,1fr))}.volume[hidden],.knob-wrap[hidden]{display:none}
