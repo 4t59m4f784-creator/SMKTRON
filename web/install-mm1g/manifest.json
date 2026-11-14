@@ -1,0 +1,26 @@
+{
+  "version": "0.3.0-mm1g",
+  "product": "SMK-37 Pro_461",
+  "status": "experimental-hardware-validation-pending",
+  "hardware_tested": false,
+  "user_approved": false,
+  "firmware_sha256": "85bfdd6616faa746ed41949cfb695210d42b2089ac5b1e01004f8dcb1ddc83c7",
+  "firmware_bytes": 651266,
+  "app_bytes": 599736,
+  "app_free": 19784,
+  "official_version": "0.3.0-mm1f",
+  "official_product": "SMK-37 Pro_460",
+  "source_branch": "experiment/mm1g-midi-latency",
+  "changes": [
+    "MIDI note processing and queue service during LCD/LED SPI waits",
+    "37-key coherent snapshot shared with main poll",
+    "Velocity, MIDI maps and synth sound retained"
+  ],
+  "tests": [
+    "native simulated LCD regression",
+    "11 WASM regression scenarios",
+    "package CRC/layout checks",
+    "USB/TRS routing tests",
+    "official publication checks"
+  ]
+}

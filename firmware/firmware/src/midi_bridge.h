@@ -35,9 +35,9 @@ static void mm_enter(void){
  memset(smk_ext_note,0,sizeof smk_ext_note);for(unsigned k=0;k<27;k++)held_note[k]=255;
  mm_clear_audio();scene_pending=255u;scene_gain=scene_target=32768u;gr_focus=0;sc_save_down=0;save_req=0;
  mm_drain_panel();mm_edit=mm_settings=mm_pick=mm_reset_ask=mm_exiting=0;mm_oct=mm_kbank=mm_fbank=mm_pbank=0;
- mm_pedal.blocked=mm_pedal.down||mm_pedal.candidate;mm_pedal.down=0;mm_safety();mm_discard_midi();mm_status="READY";boot_done=1;
+ mm_pedal.blocked=mm_pedal.down||mm_pedal.candidate;mm_pedal.down=0;mm_safety();mm_discard_midi();mm_status="READY";boot_done=1;mm_lcd_live=1;
 }
-static void mm_leave(void){mm_safety();midi_wire_begin_leave();mm_discard_midi();mm_exiting=1;mm_edit=mm_settings=mm_pick=mm_reset_ask=0;mm_pedal.blocked=mm_pedal.down||mm_pedal.candidate;mm_pedal.down=0;mm_status="RETURNING TO TAPE";}
+static void mm_leave(void){mm_lcd_live=0;mm_safety();midi_wire_begin_leave();mm_discard_midi();mm_exiting=1;mm_edit=mm_settings=mm_pick=mm_reset_ask=0;mm_pedal.blocked=mm_pedal.down||mm_pedal.candidate;mm_pedal.down=0;mm_status="RETURNING TO TAPE";}
 static void mm_finish_leave(void){
  mm_exiting=0;mm_wait_release=1;page=PG_MIDI;ch_on=mm_return_ch;sc_on=mm_return_sc;sc_pin=mm_return_pin;
  mm_drain_panel();prev_keys=fm1_in.notes;memset(smk_ext_note,0,sizeof smk_ext_note);p_bend16=0;p_mod=0;apply();

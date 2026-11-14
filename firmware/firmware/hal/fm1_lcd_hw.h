@@ -93,8 +93,11 @@ FM1_INLINE void fm1_lcd_baud(uint32_t b)
 static void fm1_lcd_wait(void)
 {
     uint32_t n;
-    for (n = 0; n < 4000000u && !(FM1_LCD_SPI_CON & 0x8000u); n++)
-        ;
+    for (n = 0; n < 4000000u && !(FM1_LCD_SPI_CON & 0x8000u); n++) {
+#ifdef LCD_IDLE
+        LCD_IDLE(); /* main context only; never draw or write flash here */
+#endif
+    }
     if (n == 4000000u)
         fm1_lcd_timeouts++;
     FM1_LCD_SPI_CON |= 0x4000u;

@@ -1,0 +1,21 @@
+✔ MM1g is pinned; direct update and official rollback accept 460/461 only on Pro (81.605837ms)
+Compared 407040 stereo/mono output values without changing samples
+✔ baseline physical-key audio bit identical to MM1f for all tapes, layer and GRAIN (215.038504ms)
+✔ physical sequencer recording/playback, favorite save and boot bytes stay identical to MM1f (70.923282ms)
+✔ instrument ignores incoming musical MIDI and emits no musical MIDI (32.655392ms)
+✔ real global page enters by K1; synth audio and SEQ stop, returning never restarts (24.469443ms)
+✔ all 37 keys, velocity, octave, shared notes, releases match MM1a (12.180356ms)
+✔ ABS accelerated per encoder, direction reversal fine; REL sends signed 64 deltas (12.190581ms)
+✔ A/B banks, faders, note pads, momentary CC, toggle and fixed channels (15.015754ms)
+✔ physical editor selects without sending, edits type/number/channel/colour; BT persists four maps (51.20923ms)
+✔ interrupted CRC saves keep the previous valid copy; no boot/scene/chord bytes changed (26.418292ms)
+✔ pitch and mod wheels, both sustain polarities, panic and held-control rearm (35.296982ms)
+✔ entry and exit preserve GRAIN settings, chord mode, favorites and theme; screenshots in Light Dark Zoom (48.558996ms)
+ℹ tests 12
+ℹ suites 0
+ℹ pass 12
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 679.327784

@@ -39,6 +39,8 @@ static volatile unsigned int smktron_output=70u; /* global output amplitude, nev
 static volatile unsigned int mm_on,mm_fx_reset;
 static unsigned int mm_wheel_sync;
 static void mm_boot(void);
+static void mm_lcd_idle(void);
+#define LCD_IDLE() mm_lcd_idle() /* notes keep moving while SPI transfers the UI */
 #include "platform.c"
 
 typedef struct {
