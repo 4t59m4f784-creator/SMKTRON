@@ -58,6 +58,33 @@ static void mm_edit_turn(unsigned k,int e){
  else if(mm_sel>=MM_PAD&&mm_sel<MM_BTN){uint8_t *c=&mm_profile()->color[mm_sel-MM_PAD];*c=(uint8_t)clampi((int)*c+(e>0?1:-1),0,9);}
  mm_dirty=1;mm_screen_dirty=1;mm_status="EDIT / BT SAVE";
 }
+/* Shared by the normal panel poll and LCD yields. No navigation, flash or drawing. */
+static void mm_keys_poll(void){
+ /* Timer ISR publishes a 64-bit mask on a 32-bit CPU: take one coherent snapshot. */
+ fm1_irq_off();uint64_t keys=fm1_in.keys;fm1_irq_on();mm_keys_blocked&=keys;uint64_t down=keys&~mm_keys_prev&~mm_keys_blocked,up=mm_keys_prev&~keys;mm_keys_prev=keys;
+ for(unsigned k=0;k<37;k++){
+  if(up>>k&1u)mm_release(71+k);
+  if((down>>k&1u)&&!mm_edit&&!mm_settings&&!mm_reset_ask){mm_entry_t e={MM_NOTE,(uint8_t)clampi(48+(int)k+12*mm_oct,0,127),0};mm_press(71+k,&e,fm1_in.key_vel[k]?fm1_in.key_vel[k]:100);mm_touch(MM_KEYS,e.num);}
+ }
+ while(smk_extkey_take()>=0){} /* keys are read once as the complete 37-bit mask */
+}
+static void mm_wheels_poll(void);
+static void mm_lcd_idle(void){
+ static unsigned busy,seen;
+ static uint32_t last_ms;
+ if(!mm_on||!mm_lcd_live||mm_exiting||busy)return;
+ /* At most 1 ms between input opportunities; a pending queue can drain
+  * between those opportunities. This is main-context cooperation, not an ISR. */
+ unsigned now=fm1_ms;
+ if(seen&&now==last_ms&&mm_r==mm_w&&!mm_panic_left)return;
+ busy=1;
+ if(!seen||now!=last_ms){seen=1;last_ms=now;mm_keys_poll();mm_sustain_poll();
+  /* Preserve editor selection on the main loop; performance wheels must
+   * follow the ADC during display DMA just like the keyboard. */
+  if(!mm_edit&&!mm_settings&&!mm_reset_ask)mm_wheels_poll();}
+ mm_service();
+ busy=0;
+}
 #include "midi_draw.h"
 static void mm_input(void){
  uint32_t rel,b=fm1_input_edges(&rel),cur=fm1_in.buttons;
@@ -82,12 +109,7 @@ static void mm_input(void){
   if(mm_edit){int i=(int)mm_sel;do{i=(i+(b>>BTN_OCT_UP&1u?1:MM_N-1))%MM_N;}while(mm_reserved((unsigned)i));mm_select((unsigned)i);}
   else {mm_oct=clampi(mm_oct+(b>>BTN_OCT_UP&1u?1:-1),-3,3);mm_screen_dirty=1;}
  }
- uint64_t keys=fm1_in.keys;mm_keys_blocked&=keys;uint64_t down=keys&~mm_keys_prev&~mm_keys_blocked,up=mm_keys_prev&~keys;mm_keys_prev=keys;
- for(unsigned k=0;k<37;k++){
-  if(up>>k&1u)mm_release(71+k);
-  if((down>>k&1u)&&!mm_edit&&!mm_settings&&!mm_reset_ask){mm_entry_t e={MM_NOTE,(uint8_t)clampi(48+(int)k+12*mm_oct,0,127),0};mm_press(71+k,&e,fm1_in.key_vel[k]?fm1_in.key_vel[k]:100);mm_touch(MM_KEYS,e.num);}
- }
- while(smk_extkey_take()>=0){} /* keys are read once as the complete 37-bit mask */
+ mm_keys_poll();
  int ev;while((ev=smk_pad_take())>=0){unsigned p=((unsigned)ev>>8)&15u,vel=(unsigned)ev&127u,i=MM_PAD+16*mm_pbank+p;
   if(!vel){mm_pad_blocked[p]=0;mm_pad_down&=~(1u<<p);mm_release(MM_PAD+p);mm_release(MM_PAD+16+p);mm_screen_dirty=1;continue;}
   if(mm_edit){mm_select(i);continue;}
@@ -105,7 +127,7 @@ static void mm_input(void){
   if(rel&bit)mm_release(i);
   if(b&bit){if(mm_edit){if(mm_pick)mm_select(i);}else if(!mm_settings&&!mm_reset_ask)mm_press(i,&mm_profile()->map[i],127);}
  }
- mm_buttons_prev=cur;mm_keys_blocked&=keys;
+ mm_buttons_prev=cur;
  mm_sustain_poll();
 }
 static void mm_wheels_poll(void){

@@ -1,9 +1,9 @@
 {
   "version": "0.3.0-mm1h",
   "product": "SMK-37 Pro_462",
-  "status": "experimental-hardware-validation-pending",
-  "hardware_tested": false,
-  "user_approved": false,
+  "status": "official-user-approved",
+  "hardware_tested": true,
+  "user_approved": true,
   "firmware_sha256": "0c3af65e1c7e2eb619af42b301ce87935ba991a8a682fdf0def84e4554b64b75",
   "firmware_bytes": 651266,
   "app_bytes": 599856,

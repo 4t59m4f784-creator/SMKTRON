@@ -26,6 +26,7 @@ typedef struct {uint32_t tag,seq;uint8_t selected,version,reserved[2];mm_profile
 static mm_store_t mm_data __attribute__((section(".pool")));
 static mm_store_t mm_verify __attribute__((section(".pool")));
 
+static unsigned mm_lcd_live;
 static unsigned mm_slot,mm_dirty,mm_edit,mm_settings,mm_pick,mm_sel,mm_kbank,mm_fbank,mm_pbank,mm_reset_ask;
 static int mm_oct;
 static uint32_t mm_screen_dirty,mm_draw_t;

@@ -4,8 +4,8 @@ const sha=b=>createHash('sha256').update(b).digest('hex');
 const manifest=JSON.parse(readFileSync('web/install/manifest.json'));
 test('approved package, source, manifest and installer agree; model/resume checks remain enforced',async()=>{
  const {PINS,validate,modeFor,readPending}=await import('../web/install/service.js');const raw=readFileSync('web/install/'+PINS.rc.url);
- assert.equal(sha(raw),'9249b40ad1c7c30f564790a6be90a5561ff0cee29ac5351c331f60a2fd3d7545');assert.equal(sha(raw),manifest.firmware_sha256);assert.equal(manifest.hardware_tested,true);assert.equal((await validate(raw,'rc')).product,'SMK-37 Pro_460');
- for(const n of[16,453,458,459,460])assert.equal(modeFor('rc',{model:'SMK-37 Pro',text:'SMK-37 Pro_'+String(n).padStart(3,'0')},null),'install');
+ assert.equal(sha(raw),'0c3af65e1c7e2eb619af42b301ce87935ba991a8a682fdf0def84e4554b64b75');assert.equal(sha(raw),manifest.firmware_sha256);assert.equal(manifest.hardware_tested,true);assert.equal((await validate(raw,'rc')).product,'SMK-37 Pro_462');
+ for(const n of[16,453,458,459,460,461,462])assert.equal(modeFor('rc',{model:'SMK-37 Pro',text:'SMK-37 Pro_'+String(n).padStart(3,'0')},null),'install');
  for(const model of['FM-1','SMK-37 Elite','MKE-P37'])assert.throws(()=>modeFor('rc',{model,text:model+'_016'},null));
  assert.throws(()=>modeFor('rc',{model:'ota-SMK-37 Pro',text:'ota-SMK-37 Pro_900'},null));assert.equal(modeFor('rc',{model:'ota-SMK-37 Pro',text:'ota-SMK-37 Pro_900'},{kind:'rc',source:'SMK-37 Pro_453'}),'resume');assert.equal(readPending({getItem:()=>'{"kind":"rc","sha":"wrong"}'}),null);
  const bad=Buffer.from(raw);bad[22000]^=1;await assert.rejects(validate(bad,'rc'));
@@ -19,10 +19,10 @@ test('published simulator has exclusive MIDI, physical navigation, keys, K5, pad
  assert(new Float32Array(e.memory.buffer,e.web_out_l(),128).every(x=>x===0));button(e,10);assert.equal(e.web_mm_state(6),1);e.web_enc(0,-1);run(e,500);assert.equal(e.web_mm_state(0),0);drain(e);e.web_key(1,100);run(e);assert.equal(e.web_mm_tx_count(),0);
 });
 test('manual chapter, images, local links and all firmware sources are included',()=>{
- const html=readFileSync('web/manual/index.html','utf8'),ids=[...html.matchAll(/\bid="([^"]+)"/g)].map(m=>m[1]);assert.equal(ids.length,new Set(ids).size);assert(ids.includes('midi-mode'));
+ const html=readFileSync('web/manual/index.html','utf8'),ids=[...html.matchAll(/\bid="([^"]+)"/g)].map(m=>m[1]);assert.equal(ids.length,new Set(ids).size);assert(ids.includes('midi-mode'));assert(html.includes('releases/download/v0.3.0-mm1h/SMKTRON-0.3.0-mm1h-source.zip'));
  for(const token of['K5','ABS','REL','MIDI PANIC','English — MIDI MODE','CC64','quatro mapas','GLOBE'])assert(html.includes(token),token);
  assert(!html.includes('O SMKTRON recebe notas MIDI'));assert(html.includes('GRAIN / Grãos de fita'));
  for(const m of html.matchAll(/(?:href|src)="([^"]+)"/g)){const u=m[1].split('?')[0].split('#')[0];if(!u||/^https?:/.test(u))continue;assert(existsSync(resolve('web/manual',u)),u);}
- for(const file of['firmware/firmware/src/mel.c','firmware/firmware/hal/smk_uart_tx.h','experiments/midi/build.py','manual/midi.html','web/source.zip','CHANGELOG.md'])assert(existsSync(file),file);
+ for(const file of['firmware/firmware/src/mel.c','firmware/firmware/hal/smk_uart_tx.h','experiments/midi/build.py','manual/midi.html','CHANGELOG.md'])assert(existsSync(file),file);
  const captures=JSON.parse(readFileSync('web/manual/midi-captures.json'));assert.equal(captures.wasm_sha256,sha(readFileSync('web/mel.wasm')));assert.equal(captures.captures.length,9);
 });

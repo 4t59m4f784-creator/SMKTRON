@@ -1,0 +1,7 @@
+PASS: reproduces MM1f scheduling: a whole chord waits until the LCD finishes
+PASS: first, central and last keys transmit during LCD DMA, within 1 ms of the simulated scan, preserving velocity, without duplicates
+PASS: short taps and releases are preserved even when both occur during one LCD transfer
+PASS: edit mode does not play notes, and leaving edit cannot retrigger a held key
+PASS: held-key entry blocking and release/repress remain intact
+PASS: synth and mode exit cannot emit MIDI through the LCD hook
+PASS: complete channel safety reset drains during redraw without queue starvation
