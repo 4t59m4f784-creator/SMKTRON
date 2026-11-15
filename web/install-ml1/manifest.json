@@ -1,0 +1,49 @@
+{
+  "version": "0.3.0-ml1",
+  "product": "SMK-37 Pro_463",
+  "firmware_sha256": "8b975a1f38fb09727e697107603680325cb5bcca2a90807ef46d62e683a1b16f",
+  "firmware_bytes": 651266,
+  "app_bytes": 603060,
+  "app_limit": 619520,
+  "hardware_tested": false,
+  "midi_transport_hardware_tested": true,
+  "midi_transport_base": "MM1h / 462",
+  "midi_sectors": [
+    "0xA2000",
+    "0xA3000"
+  ],
+  "base": "GR3 / MM1a controller",
+  "source": "https://github.com/4t59m4f784-creator/SMKTRON/tree/experiment/ml1-midi-layers",
+  "rollback": "https://github.com/4t59m4f784-creator/SMKTRON/releases/tag/v0.3.0-mm1f",
+  "app_free": 16460,
+  "status": "experimental-hardware-validation-pending",
+  "user_approved": false,
+  "accepted_origins": [
+    "SMK-37 Pro_016",
+    "SMK-37 Pro_451",
+    "SMK-37 Pro_452",
+    "SMK-37 Pro_453",
+    "SMK-37 Pro_454",
+    "SMK-37 Pro_455",
+    "SMK-37 Pro_456",
+    "SMK-37 Pro_457",
+    "SMK-37 Pro_458",
+    "SMK-37 Pro_459",
+    "SMK-37 Pro_460",
+    "SMK-37 Pro_461",
+    "SMK-37 Pro_462",
+    "SMK-37 Pro_463"
+  ],
+  "scene_sectors": [
+    "0x9E000",
+    "0x9F000"
+  ],
+  "chord_sectors": [
+    "0xA0000",
+    "0xA1000"
+  ],
+  "boot_sector": "0x9D000",
+  "midi_timing_hardware_tested": false,
+  "pitch_bend_hardware_tested": false,
+  "source_smksynth": "752c785bb4a3805add097dcde3b6e19000476f4a"
+}
