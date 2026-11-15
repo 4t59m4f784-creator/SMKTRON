@@ -6,6 +6,7 @@ static void fmt_u(char *s,unsigned v){put_int(s,(int32_t)v,0);}
 static void fmt_s(char *s,int v){put_int(s,v,0);}
 #include "midi_storage.h"
 #include "smk_midi_mode.h"
+static void mm_safety_complete(void){} /* SMKTRON synth never transmits musical MIDI. */
 static unsigned mm_exiting,mm_return_page,mm_return_ch,mm_return_sc,mm_return_pin;
 static struct {uint32_t since,ready,rest_high,candidate,down,blocked;} mm_pedal;
 static void mm_sustain_poll(void){
@@ -35,7 +36,7 @@ static void mm_enter(void){
  memset(smk_ext_note,0,sizeof smk_ext_note);for(unsigned k=0;k<27;k++)held_note[k]=255;
  mm_clear_audio();scene_pending=255u;scene_gain=scene_target=32768u;gr_focus=0;sc_save_down=0;save_req=0;
  mm_drain_panel();mm_edit=mm_settings=mm_pick=mm_reset_ask=mm_exiting=0;mm_oct=mm_kbank=mm_fbank=mm_pbank=0;
- mm_pedal.blocked=mm_pedal.down||mm_pedal.candidate;mm_pedal.down=0;mm_safety();mm_discard_midi();mm_status="READY";boot_done=1;mm_lcd_live=1;
+ mm_pedal.blocked=mm_pedal.down||mm_pedal.candidate;mm_pedal.down=0;mm_safety();mm_key_channels=(uint16_t)(1u<<(mm_main_ch()-1u));mm_discard_midi();mm_status="READY";boot_done=1;mm_lcd_live=1;
 }
 static void mm_leave(void){mm_lcd_live=0;mm_safety();midi_wire_begin_leave();mm_discard_midi();mm_exiting=1;mm_edit=mm_settings=mm_pick=mm_reset_ask=0;mm_pedal.blocked=mm_pedal.down||mm_pedal.candidate;mm_pedal.down=0;mm_status="RETURNING TO TAPE";}
 static void mm_finish_leave(void){

@@ -2,8 +2,9 @@
 /* Included after the synth's input/panic handlers. */
 static void mm_pedal_event(unsigned down){
  if(mm_edit||mm_settings||mm_panic_left)return;
- mm_entry_t e={MM_CC,64,0};
- if(down)mm_press(108,&e,127);else mm_release(108);
+ mm_pedal_down=!!down;
+ if(down){unsigned m=mm_key_channels;for(unsigned k=0;k<37;k++)m|=mm_key_sent[k]|mm_key_target[k];mm_pedal_target|=(uint16_t)m;}else mm_pedal_target=0;
+ mm_touch(108,down?127:0);
 }
 static void mm_setting_turn(unsigned k,int e){
  if(!e)return;
@@ -12,6 +13,7 @@ static void mm_setting_turn(unsigned k,int e){
  if(k==1)mm_data.selected=(uint8_t)clampi((int)mm_data.selected+(e>0?1:-1),0,3);
  else if(k==2)mm_profile()->ch=(uint8_t)clampi((int)mm_main_ch()+e,1,16);
  else mm_profile()->relative=e>0;
+ if(k==1||k==2)mm_key_channels=(uint16_t)(1u<<(mm_main_ch()-1u));
  memset(mm_values,0,sizeof mm_values);mm_dirty=1;mm_screen_dirty=1;
 }
 static void mm_save(void){
@@ -41,22 +43,36 @@ static void mm_leds(void){
  fm1_led_key(BTN_OCT_DOWN,mm_oct<0);fm1_led_key(BTN_OCT_UP,mm_oct>0);
  for(unsigned b=0;b<13;b++)if(!mm_reserved(MM_BTN+b))fm1_led_key(MM_BUTTON[b],mm_toggle[MM_BTN+b]||((mm_buttons_prev>>MM_BUTTON[b])&1u));
  for(unsigned p=0;p<16;p++){
-  unsigned i=MM_PAD+16*mm_pbank+p,c=mm_pad_colour(i),active=mm_toggle[i]||(mm_pad_down>>p&1u),level=active?255:80;
-  if(mm_profile()->map[i].type==MM_OFF)level=12;
-  if(mm_edit&&!mm_pick&&mm_sel==i){c=9;level=(fm1_ms/200u&1u)?230:45;}
+  unsigned i=MM_PAD+16*mm_pbank+p,c=mm_pbank?(mm_key_channels>>p&1u?5u:6u):mm_pad_colour(i),active=mm_pbank?(mm_key_channels>>p&1u):(mm_toggle[i]||(mm_pad_down>>p&1u)),level=active?255:(mm_pbank?24:80);
+  if(!mm_pbank&&mm_profile()->map[i].type==MM_OFF)level=12;
+  if(!mm_pbank&&mm_edit&&!mm_pick&&mm_sel==i){c=9;level=(fm1_ms/200u&1u)?230:45;}
   padled_set(p,(uint8_t)(MM_COLOR[c][0]*level*smktron_pad_scale/1020u),(uint8_t)(MM_COLOR[c][1]*level*smktron_pad_scale/1020u),(uint8_t)(MM_COLOR[c][2]*level*smktron_pad_scale/1020u));
  }
  padled_flush();
 }
-static void mm_select(unsigned i){if(mm_reserved(i))return;mm_sel=i;mm_pick=0;mm_screen_dirty=1;}
+static void mm_select(unsigned i){if(mm_edit_reserved(i))return;mm_sel=i;mm_pick=0;mm_screen_dirty=1;}
 static void mm_edit_turn(unsigned k,int e){
- if(!e||mm_reserved(mm_sel))return;
+ if(!e||mm_edit_reserved(mm_sel))return;
  mm_entry_t *v=&mm_profile()->map[mm_sel];
  if(!k){int t=v->type;do{t=(t+(e>0?1:MM_TYPES-1))%MM_TYPES;}while(!(mm_types(mm_sel)>>t&1u));v->type=(uint8_t)t;}
  else if(k==1)v->num=(uint8_t)clampi((int)v->num+e,0,127);
  else if(k==2)v->ch=(uint8_t)clampi((int)v->ch+e,0,16);
  else if(mm_sel>=MM_PAD&&mm_sel<MM_BTN){uint8_t *c=&mm_profile()->color[mm_sel-MM_PAD];*c=(uint8_t)clampi((int)*c+(e>0?1:-1),0,9);}
  mm_dirty=1;mm_screen_dirty=1;mm_status="EDIT / BT SAVE";
+}
+static void mm_pads_poll(void){
+ int ev;while((ev=smk_pad_take())>=0){unsigned p=((unsigned)ev>>8)&15u,vel=(unsigned)ev&127u,i=MM_PAD+16*mm_pbank+p;
+  if(!vel){mm_channel_held&=(uint16_t)~(1u<<p);mm_pad_blocked[p]=0;mm_pad_down&=~(1u<<p);mm_release(MM_PAD+p);mm_release(MM_PAD+16+p);mm_screen_dirty=1;continue;}
+  if(mm_pbank){if(mm_edit){mm_status="CHANNEL BANK / FIXED";mm_full_dirty();continue;}if(mm_pad_blocked[p]||mm_settings||mm_reset_ask)continue;if(!(mm_pad_down>>p&1u)){mm_pad_down|=1u<<p;mm_channels_press(p);}continue;}
+  if(mm_edit){mm_select(i);continue;}
+  if(mm_pad_blocked[p]||mm_settings||mm_reset_ask)continue;
+  if(!(mm_pad_down>>p&1u)){mm_pad_down|=1u<<p;mm_press(i,&mm_profile()->map[i],vel);}
+ }
+}
+static int mm_layer_work(void){
+ if(mm_pedal_sent!=mm_pedal_target||mm_prime_bend||mm_prime_mod||mm_bend_pending)return 1;
+ for(unsigned k=0;k<37;k++)if(mm_key_sent[k]!=mm_key_target[k]||(mm_key_retrigger>>k&1u))return 1;
+ return 0;
 }
 /* Shared by the normal panel poll and LCD yields. No navigation, flash or drawing. */
 static void mm_keys_poll(void){
@@ -76,9 +92,9 @@ static void mm_lcd_idle(void){
  /* At most 1 ms between input opportunities; a pending queue can drain
   * between those opportunities. This is main-context cooperation, not an ISR. */
  unsigned now=fm1_ms;
- if(seen&&now==last_ms&&mm_r==mm_w&&!mm_panic_left)return;
+ if(seen&&now==last_ms&&mm_r==mm_w&&!mm_panic_left&&!mm_layer_work())return;
  busy=1;
- if(!seen||now!=last_ms){seen=1;last_ms=now;mm_keys_poll();mm_sustain_poll();
+ if(!seen||now!=last_ms){seen=1;last_ms=now;if(!mm_edit&&!mm_settings&&!mm_reset_ask)mm_pads_poll();mm_keys_poll();mm_sustain_poll();
   /* Preserve editor selection on the main loop; performance wheels must
    * follow the ADC during display DMA just like the keyboard. */
   if(!mm_edit&&!mm_settings&&!mm_reset_ask)mm_wheels_poll();}
@@ -103,23 +119,18 @@ static void mm_input(void){
   if(b>>BTN_HOME&1u){if(mm_edit){mm_pick=1;mm_screen_dirty=1;}else if(mm_settings){mm_settings=0;mm_screen_dirty=1;}}
   if(mm_settings&&(b>>BTN_REC&1u)){mm_reset_ask=1;mm_screen_dirty=1;}
  }
- if((b&3u)==3u||(cur&3u)==3u){if(b&3u){mm_pbank^=1;mm_screen_dirty=1;}b&=~3u;}
+ if((b&3u)==3u||(cur&3u)==3u){if(b&3u){mm_pbank^=1;mm_channel_held=0;mm_screen_dirty=1;}b&=~3u;}
  else {if(b>>BTN_KNOB_BANK&1u){mm_kbank^=1;mm_abs_reset();mm_screen_dirty=1;}if(b>>BTN_FADER_BANK&1u){mm_fbank^=1;mm_screen_dirty=1;}}
  if(b&((1u<<BTN_OCT_DOWN)|(1u<<BTN_OCT_UP))){
-  if(mm_edit){int i=(int)mm_sel;do{i=(i+(b>>BTN_OCT_UP&1u?1:MM_N-1))%MM_N;}while(mm_reserved((unsigned)i));mm_select((unsigned)i);}
+  if(mm_edit){int i=(int)mm_sel;do{i=(i+(b>>BTN_OCT_UP&1u?1:MM_N-1))%MM_N;}while(mm_edit_reserved((unsigned)i));mm_select((unsigned)i);}
   else {mm_oct=clampi(mm_oct+(b>>BTN_OCT_UP&1u?1:-1),-3,3);mm_screen_dirty=1;}
  }
+ mm_pads_poll();
  mm_keys_poll();
- int ev;while((ev=smk_pad_take())>=0){unsigned p=((unsigned)ev>>8)&15u,vel=(unsigned)ev&127u,i=MM_PAD+16*mm_pbank+p;
-  if(!vel){mm_pad_blocked[p]=0;mm_pad_down&=~(1u<<p);mm_release(MM_PAD+p);mm_release(MM_PAD+16+p);mm_screen_dirty=1;continue;}
-  if(mm_edit){mm_select(i);continue;}
-  if(mm_pad_blocked[p]||mm_settings||mm_reset_ask)continue;
-  if(!(mm_pad_down>>p&1u)){mm_pad_down|=1u<<p;mm_press(i,&mm_profile()->map[i],vel);}
- }
  for(unsigned k=0;k<8;k++){int e=fm1_enc_take(k);if(!e)continue;unsigned i=8*mm_kbank+k;
   if(mm_reset_ask)continue;
   if(mm_settings){if(k<4)mm_setting_turn(k,e);if(!mm_on||mm_exiting)return;}
-  else if(mm_edit){if(mm_pick){mm_select(i);}else if(k<4)mm_edit_turn(k,e);else if(k==4){int n=(int)mm_sel;unsigned steps=(unsigned)(e<0?-e:e);if(steps>MM_N)steps=MM_N;while(steps--){do{n=(n+(e>0?1:MM_N-1))%MM_N;}while(mm_reserved((unsigned)n));}mm_select((unsigned)n);}}
+  else if(mm_edit){if(mm_pick){mm_select(i);}else if(k<4)mm_edit_turn(k,e);else if(k==4){int n=(int)mm_sel;unsigned steps=(unsigned)(e<0?-e:e);if(steps>MM_N)steps=MM_N;while(steps--){do{n=(n+(e>0?1:MM_N-1))%MM_N;}while(mm_edit_reserved((unsigned)n));}mm_select((unsigned)n);}}
   else {if(mm_relative())mm_cv(i,e,1);else{mm_values[i]=(uint8_t)clampi((int)mm_values[i]+mm_abs_delta(i,e),0,127);mm_cv(i,mm_values[i],0);}}
  }
  for(unsigned f=0;f<4;f++){unsigned v=fm1_in.fader[f],i=16+4*mm_fbank+f;if(v==mm_fader_prev[f])continue;mm_fader_prev[f]=(uint8_t)v;if(mm_edit){if(mm_pick)mm_select(i);}else if(!mm_settings&&!mm_reset_ask)mm_cv(i,(int)v,0);}
@@ -142,7 +153,7 @@ static void mm_wheels_poll(void){
   if(mm_edit){if(mm_pick)mm_select(i);continue;}
   if(mm_settings||mm_reset_ask||mm_panic_left)continue;
   mm_entry_t *e=&mm_profile()->map[i];
-  if(e->type==MM_BEND){/* coalesced separately from 7-bit CC values */mm_bend_value=(unsigned)value[w];mm_bend_pending=1;mm_touch(i,(unsigned)value[w]);}
+  if(e->type==MM_BEND){/* coalesced separately from 7-bit CC values */mm_bend_value=(unsigned)value[w];mm_bend_pending=1;mm_bend_channels=mm_key_channels;mm_touch(i,(unsigned)value[w]);}
   else if(e->type==MM_CC)mm_cv(i,w?value[w]:value[w]>>7,0);
  }
 }

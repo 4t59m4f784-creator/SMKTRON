@@ -1,0 +1,1 @@
+PASS ML1: selector/chord gestures, no B notes/CCs, solo replacement, original note destinations, shared pitches, same-frame selection, sustain history, full bend/mod fan-out, independent control channels, 37x16, backpressure/retrigger, panic/exit and unchanged saved maps.

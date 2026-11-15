@@ -33,6 +33,9 @@ static void fm1_irq_on(void){assert(irq_depth);irq_depth=0;}
 static int smk_extkey_take(void){return -1;}
 static void mm_sustain_poll(void){sustain_polls++;}
 static void mm_wheels_poll(void){}
+static void mm_pads_poll(void){}
+static void mm_safety_complete(void){}
+static int mm_layer_work(void){return 0;}
 '''+f'#include "{SRC}/smk_midi_mode.h"\n'+helpers+r'''
 static unsigned loops,reg,inject,sim_us,release_at;
 static unsigned *spi_reg(void){
@@ -49,6 +52,7 @@ static unsigned fm1_lcd_timeouts;
 static void reset(void){
  memset(&fm1_in,0,sizeof fm1_in);memset(mm_owned,0,sizeof mm_owned);memset(mm_release_type,0,sizeof mm_release_type);
  mm_r=mm_w=mm_panic_left=tx_n=mm_keys_prev=mm_keys_blocked=0;mm_data.selected=0;mm_default(&mm_data.profile[0]);
+ memset(mm_key_target,0,sizeof mm_key_target);memset(mm_key_sent,0,sizeof mm_key_sent);mm_key_retrigger=mm_prime_bend=mm_prime_mod=mm_pedal_target=mm_pedal_sent=mm_pedal_down=mm_bend_channels=0;mm_key_channels=1;
  mm_on=mm_lcd_live=1;mm_edit=mm_settings=mm_reset_ask=mm_exiting=0;loops=reg=inject=sim_us=0;release_at=10000;fm1_ms+=100;
 }
 int main(void){

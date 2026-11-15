@@ -1,0 +1,26 @@
+✔ bank B selects channels without transmitting mapped pads; held combinations latch and solo replaces (46.831643ms)
+✔ channel selection wins over same-scan keys; bank A still plays its stored maps (26.990973ms)
+✔ sustain spans old/new channels; bend/mod follow layer; independent knobs keep their channel (22.338872ms)
+✔ all 37 keys on all 16 channels stream without queue overflow; panic and mode exit release everything (20.906983ms)
+✔ selection is transient; GLOBAL K3 selects a single channel; maps retain version/bytes (31.169243ms)
+✔ ML1 install and MM1h return pin exact packages and accept _463 safely (78.319682ms)
+Compared 407040 stereo/mono output values without changing samples
+✔ baseline physical-key audio bit identical to MM1f for all tapes, layer and GRAIN (215.988389ms)
+✔ physical sequencer recording/playback, favorite save and boot bytes stay identical to MM1f (71.358656ms)
+✔ instrument ignores incoming musical MIDI and emits no musical MIDI (31.488689ms)
+✔ real global page enters by K1; synth audio and SEQ stop, returning never restarts (25.923619ms)
+✔ all 37 keys, velocity, octave, shared notes, releases match MM1a (12.773483ms)
+✔ ABS accelerated per encoder, direction reversal fine; REL sends signed 64 deltas (12.065926ms)
+✔ A/B banks, faders, note pads, momentary CC, toggle and fixed channels (13.173762ms)
+✔ physical editor selects without sending, edits type/number/channel/colour; BT persists four maps (46.43586ms)
+✔ interrupted CRC saves keep the previous valid copy; no boot/scene/chord bytes changed (23.59252ms)
+✔ pitch and mod wheels, both sustain polarities, panic and held-control rearm (32.641624ms)
+✔ entry and exit preserve GRAIN settings, chord mode, favorites and theme; screenshots in Light Dark Zoom (50.685559ms)
+ℹ tests 17
+ℹ suites 0
+ℹ pass 17
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 629.514496

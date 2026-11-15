@@ -372,7 +372,7 @@ def main():
         VERSION = a.release  # retain the release-candidate suffix in the displayed version
         PRODUCT = BOARD_PREFIX[BOARD] + m[2]
         name = f"mel-{a.release}{suffix}.fwsc"
-    PRODUCT="SMK-37 Pro_462" # MM1h experimental LCD/wheel latency fix
+    PRODUCT="SMK-37 Pro_463" # ML1 experimental MIDI channel layers
     fm1pkg_make.SDK = a.sdk
     for rel, sha in SDK_SHA256.items():          # fail early without the SDK
         if hashlib.sha256(fm1pkg_make.sdk_file(rel)).hexdigest() != sha:

@@ -48,7 +48,7 @@ static void mm_sheet(unsigned entry){
    mm_heading("EDIT MIDI","SELECT A CONTROL");
    sp_text(12,81,&SP_F17,"TOUCH A CONTROL",SP_GREEN,SP_BG);
    mm_large(12,118,"KNOB / FADER",SP_INK);
-   mm_large(12,146,"PAD / BUTTON / WHEEL",SP_INK);
+   mm_large(12,146,"PAD A / BUTTON / WHEEL",SP_INK);
    mm_large(12,199,"BT SAVE",SP_INK);
    mm_large(12,221,mm_hint("PARA BACK"),SP_MUT);
   }else{
@@ -58,7 +58,7 @@ static void mm_sheet(unsigned entry){
    mm_cell(0,"K1 TYPE",type[e->type],1);
    unsigned numbered=e->type!=MM_OFF&&e->type!=MM_BEND;
    if(numbered)fmt_u(v,e->num);else put(v,"--");mm_cell(1,e->type==MM_NOTE?"K2 NOTE":e->type==MM_CC||e->type==MM_TOGGLE?"K2 CC":"K2 NUM",v,numbered);
-   if(e->ch)fmt_u(v,e->ch);else put(v,"MAIN");mm_cell(2,"K3 CH",v,e->type!=MM_OFF);
+   if(mm_sel>=MM_PITCH)put(v,"KEYS");else if(e->ch)fmt_u(v,e->ch);else put(v,"MAIN");mm_cell(2,"K3 CH",v,e->type!=MM_OFF&&mm_sel<MM_PITCH);
    mm_cell(3,"K4 COLOR",pad?MM_COLOR_NAME[mm_profile()->color[mm_sel-MM_PAD]]:"--",pad);
    mm_large(12,199,"K5 SELECT / PATCH PICK",SP_INK);
    mm_large(12,221,mm_hint("BT SAVE / PARA BACK"),SP_MUT);
@@ -75,12 +75,12 @@ static void mm_draw(void){
  char b[48],v[24];uint16_t amber=smktron_theme?RGB(215,163,87):RGB(133,87,29);
  cv_oy=0;cv_begin(240,120,SP_BG);mm_text(12,4,"SMKTRON",SP_MUT);mm_text(161,4,"USB + TRS",amber);
  cv_rect(12,23,216,2,SP_GREEN);sp_text(12,30,&SP_F17,"MIDI MODE",SP_INK,SP_BG);
- put(b,"MAP ");fmt_u(b+4,mm_data.selected+1);scat(b,mm_dirty?" *  CH ":"    CH ");fmt_u(b+slen(b),mm_main_ch());mm_large(12,58,b,SP_GREEN);
+ put(b,"MAP ");fmt_u(b+4,mm_data.selected+1);scat(b,mm_dirty?" * ":"   ");scat(b,mm_channel_count()>1?"LAYER ":"KEY CH ");fmt_u(b+slen(b),mm_channel_count()>1?mm_channel_count():mm_first_channel(mm_key_channels)+1);mm_large(12,58,b,SP_GREEN);
  mm_name(mm_last,b);sp_text(12,79,&SP_F13,b,SP_INK,SP_BG);fmt_u(v,mm_last_v);if(smktron_zoom)tx(228-tw(&F24,v),75,&F24,v,SP_GREEN);else sp_right(228,77,&SP_F17,v,SP_GREEN,SP_BG);b[0]=0;
- if(mm_last<MM_N){mm_entry_t *e=&mm_profile()->map[mm_last];scat(b,MM_TYPE_NAME[e->type]);if(e->type!=MM_BEND){scat(b," ");fmt_u(b+slen(b),e->num);}scat(b," CH ");fmt_u(b+slen(b),mm_channel(e)+1);}else{scat(b,"NOTE ");fmt_u(b+5,mm_last_v);}mm_large(12,102,b,amber);
+ if(mm_last<MM_N){mm_entry_t *e=&mm_profile()->map[mm_last];scat(b,MM_TYPE_NAME[e->type]);if(e->type!=MM_BEND){scat(b," ");fmt_u(b+slen(b),e->num);}if(mm_last>=MM_PITCH){scat(b,mm_channel_count()>1?" LAYER ":" CH ");fmt_u(b+slen(b),mm_channel_count()>1?mm_channel_count():mm_first_channel(mm_key_channels)+1);}else{scat(b," CH ");fmt_u(b+slen(b),mm_channel(e)+1);}}else{scat(b,"NOTE ");fmt_u(b+5,mm_last_v);}mm_large(12,102,b,amber);
  cv_blit(0,0);cv_begin(240,120,SP_BG);
  for(unsigned k=0;k<8;k++){unsigned x=12+k*27,h=mm_values[8*mm_kbank+k]*24u/127u;cv_rect(x,7,18,26,SP_PANEL);cv_rect(x,32-h,18,h+1,SP_GREEN);}
- for(unsigned p=0;p<16;p++){unsigned i=MM_PAD+16*mm_pbank+p,c=mm_pad_colour(i),x=12+p%8*27,y=43+p/8*21;const uint8_t *rgb=MM_COLOR[c];uint16_t col=RGB(rgb[0],rgb[1],rgb[2]);cv_rect(x,y,18,15,mix565(SP_PANEL,col,mm_toggle[i]||(mm_pad_down>>p&1u)?16:6));}
+ for(unsigned p=0;p<16;p++){unsigned i=MM_PAD+16*mm_pbank+p,active=mm_pbank?(mm_key_channels>>p&1u):(mm_toggle[i]||(mm_pad_down>>p&1u)),c=mm_pbank?(active?5u:6u):mm_pad_colour(i),x=12+p%8*27,y=43+p/8*21;const uint8_t *rgb=MM_COLOR[c];uint16_t col=RGB(rgb[0],rgb[1],rgb[2]);cv_rect(x,y,22,17,mix565(SP_PANEL,col,active?16:4));if(mm_pbank){fmt_u(v,p+1);mm_text((int)x+2,(int)y+3,v,active?RGB(16,32,24):SP_INK);}}
  put(b,"K ");scat(b,mm_kbank?"B":"A");scat(b," F ");scat(b,mm_fbank?"B":"A");scat(b," P ");scat(b,mm_pbank?"B":"A");scat(b," OCT ");fmt_s(b+slen(b),mm_oct);mm_large(12,80,b,SP_MUT);
- sp_text(12,104,&SP_F10,mm_status,SP_INK,SP_BG);cv_blit(0,120);
+ sp_text(12,104,&SP_F10,mm_pbank?"HOLD PADS: LAYER":mm_status,SP_INK,SP_BG);cv_blit(0,120);
 }
