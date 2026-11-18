@@ -1,6 +1,6 @@
 # SMKTRON — Mellotron + MIDI controller for SMK-37 Pro
 
-**Official / Oficial: 0.3.0-mm1h · SMK-37 Pro_462.** Approved on hardware by Marcus Padrini. The published firmware is byte-for-byte the approved MM1h test package.
+**Official / Oficial: 0.3.0-ml1 · SMK-37 Pro_463.** Approved on hardware by Marcus Padrini. The published firmware is byte-for-byte the approved ML1 test package.
 
 [Website / Site](https://4t59m4f784-creator.github.io/SMKTRON/) · [Installer / Instalador](https://4t59m4f784-creator.github.io/SMKTRON/install/) · [Simulator / Simulador](https://4t59m4f784-creator.github.io/SMKTRON/simulator.html) · [Manual](https://4t59m4f784-creator.github.io/SMKTRON/manual/) · [Changelog](CHANGELOG.md) · [Releases](https://github.com/4t59m4f784-creator/SMKTRON/releases)
 
@@ -14,11 +14,12 @@ Instrumento Mellotron/lo-fi com FLUTE, CHOIR, CELLO e VIOLINS; layer, cenas/favo
 - GLOBAL: K1 modo, K2 mapa, K3 canal principal, K4 ABS/REL.
 - PARA: escolher/editar controle. K1 tipo, K2 CC/nota, K3 canal, K4 cor do pad; K5 seleciona controle, PATCH escolhe por toque, BT salva os quatro mapas.
 - KNOB BANK/FADER BANK alternam os bancos correspondentes; ambos juntos alternam pads A/B. GLOBE + SEQ PLAY: Panic.
+- **MIDI Layers:** banco B = canais 1–16. Toque sozinho para um canal; segure e adicione pads para layer; solte para manter. Um novo toque sozinho substitui o conjunto. Rodas e sustain seguem o layer; notas são liberadas nos canais de origem. Banco A e canais dos demais controles permanecem mapeados. Seleção temporária; GLOBAL/K3, mapa ou nova entrada restauram um canal único.
 - K5 fica exclusivo do controlador no MIDI; no synth preserva seu comportamento de volume.
 
 O teclado sempre inicia como synth. Mapas MIDI são separados de boot, cenas e acordes e não integram o backup musical. Consulte o [manual MIDI](https://4t59m4f784-creator.github.io/SMKTRON/manual/#midi-mode).
 
-**Instalação:** somente SMK-37 Pro. Primeira instalação exige V016 oficial M-VAVE. Versões SMKTRON reconhecidas, incluindo GR3 (_453), atualizam diretamente. Chrome/Edge no computador, HTTPS, cabo USB de dados, demais aplicativos MIDI fechados. Selecione seu V016 original como arquivo de retorno; ele não é redistribuído. O instalador verifica modelo, SHA-256, CRC e identidade e pede confirmação antes de gravar. Confira **0.3.0-mm1h / _462**. Não desconecte durante a escrita. OCT− ao ligar abre a recuperação USB. Preserve seus dados antes de trocar firmware; o retorno a versões antigas pode não ler dados mais novos.
+**Instalação:** somente SMK-37 Pro. Primeira instalação exige V016 oficial M-VAVE. Versões SMKTRON reconhecidas, incluindo GR3 (_453), atualizam diretamente. Chrome/Edge no computador, HTTPS, cabo USB de dados, demais aplicativos MIDI fechados. Selecione seu V016 original como arquivo de retorno; ele não é redistribuído. O instalador verifica modelo, SHA-256, CRC e identidade e pede confirmação antes de gravar. Confira **0.3.0-ml1 / _463**. Não desconecte durante a escrita. OCT− ao ligar abre a recuperação USB. Preserve seus dados antes de trocar firmware; o retorno a versões antigas pode não ler dados mais novos.
 
 ## English
 
@@ -28,15 +29,17 @@ Exclusive MIDI controller mode with USB/TRS OUT, four on-device editable maps, A
 
 GLOBE → MIDI MODE → K1 right enters. In the controller, GLOBE then K1 left returns. GLOBAL: K2 map, K3 main channel, K4 ABS/REL. PARA edits controls: K1 type, K2 CC/note, K3 channel, K4 pad colour, K5 selects control, PATCH picks by touch, BT saves. KNOB BANK/FADER BANK select A/B; both select pad bank. GLOBE + SEQ PLAY sends Panic. Maps have separate storage, excluded from musical backups. Boot always starts in synth mode. See the manual's MIDI chapter for an English guide.
 
-SMK-37 Pro only. First install requires official V016; recognized SMKTRON versions including GR3 update directly. Use desktop Chrome/Edge, HTTPS and a data cable; close MIDI apps. Supply your original V016 for restore. SHA-256/CRC/model verification and explicit confirmation precede every write. Check **0.3.0-mm1h / _462**. Do not disconnect while writing. OCT− at boot opens USB recovery. Back up data; older firmware may not read newer saves.
+**MIDI Layers:** pad bank B selects channels 1–16. Tap for solo, hold and add pads for a latched layer; a new solo tap replaces it. Wheels and sustain follow the selection; notes release on their original channels. Bank A and ordinary controls retain their mappings. Layer selection is temporary; GLOBAL/K3, map change or re-entry selects one main channel.
+
+SMK-37 Pro only. First install requires official V016; recognized SMKTRON versions including GR3 update directly. Use desktop Chrome/Edge, HTTPS and a data cable; close MIDI apps. Supply your original V016 for restore. SHA-256/CRC/model verification and explicit confirmation precede every write. Check **0.3.0-ml1 / _463**. Do not disconnect while writing. OCT− at boot opens USB recovery. Back up data; older firmware may not read newer saves.
 
 ## Sources and build
 
-- `firmware/`: complete frozen MM1h engine, source and corresponding build tools. `python3 experiments/midi-latency/build.py`, with `JIELI_TOOLCHAIN` and `AC79_SDK` as described in its documentation. Identity _462 is pinned in its build tools. Complete versioned source archives are attached to the GitHub Release.
-- `experiments/midi/`: integration overlay and regression tests. `python3 experiments/midi-latency/build.py --web` generates the simulator; omit `--web` for the hardware package. Historical `experiments/midi/build.py` reconstructs MM1f only. Set `ZIG` (Zig 0.13) and the native SDK/toolchain variables. The overlay uses the GR3 base under `experiments/appearance/engine` and `experiments/chords`.
+- `firmware/`: complete frozen ML1 engine, source and corresponding build tools. `python3 experiments/midi-layers/build.py`, with `JIELI_TOOLCHAIN` and `AC79_SDK` as described in its documentation. Identity _463 is pinned in its build tools. Complete versioned source archives are attached to the GitHub Release.
+- `experiments/midi/`: integration overlay and regression tests. `python3 experiments/midi-layers/build.py --web` generates the simulator; omit `--web` for the hardware package. Historical `experiments/midi/build.py` reconstructs MM1f only. Set `ZIG` (Zig 0.13) and the native SDK/toolchain variables. The overlay uses the GR3 base under `experiments/appearance/engine` and `experiments/chords`.
 - `web/`: GitHub Pages website, simulator, installer, manual and source archive. `manual/` contains editable documentation sources; `python tools/build_manual.py` regenerates the manual.
-- Exact package SHA-256: `0c3af65e1c7e2eb619af42b301ce87935ba991a8a682fdf0def84e4554b64b75`; 651266 bytes. App 599856/619520 bytes; 19664 free. Static RAM 33392 bytes. Sample tables unchanged.
-- Verification: `npm test`; native latency regressions: `python3 tests/midi-lcd-latency-test.py` and `python3 tests/midi-wheel-lcd-test.py`. Physical USB/TRS, controller screens, K5, chord timing and pitch bend approved by the user. Browser checks do not substitute for electrical testing.
+- Exact package SHA-256: `8b975a1f38fb09727e697107603680325cb5bcca2a90807ef46d62e683a1b16f`; 651266 bytes. App 603060/619520 bytes; 16460 free. Static RAM 33712 bytes. Sample tables unchanged.
+- Verification: `npm test`; native latency regressions: `python3 tests/midi-lcd-latency-test.py` and `python3 tests/midi-wheel-lcd-test.py`. Physical USB/TRS, controller screens, K5, chord timing, pitch bend and channel layers approved by the user. Browser checks do not substitute for electrical testing.
 
 ## Credits and licenses
 

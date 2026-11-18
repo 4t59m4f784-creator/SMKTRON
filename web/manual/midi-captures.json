@@ -1,14 +1,20 @@
 {
-  "wasm_sha256": "3c4e59923df0b4828777a91b55703a3101ac1404271097f5690311573f3344ce",
+  "wasm_sha256": "546c44f7140d0a8b666acfb397f697f6a369b1e0382bb8002f2e3fae3c66a008",
   "captures": [
     "midi-entry-light",
     "midi-global-light",
     "midi-edit-light",
+    "midi-layer-light",
+    "midi-channel-light",
     "midi-entry-dark",
     "midi-global-dark",
     "midi-edit-dark",
+    "midi-layer-dark",
+    "midi-channel-dark",
     "midi-entry-zoom",
     "midi-global-zoom",
-    "midi-edit-zoom"
+    "midi-edit-zoom",
+    "midi-layer-zoom",
+    "midi-channel-zoom"
   ]
 }

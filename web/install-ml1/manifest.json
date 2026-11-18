@@ -5,7 +5,7 @@
   "firmware_bytes": 651266,
   "app_bytes": 603060,
   "app_limit": 619520,
-  "hardware_tested": false,
+  "hardware_tested": true,
   "midi_transport_hardware_tested": true,
   "midi_transport_base": "MM1h / 462",
   "midi_sectors": [
@@ -16,8 +16,8 @@
   "source": "https://github.com/4t59m4f784-creator/SMKTRON/tree/experiment/ml1-midi-layers",
   "rollback": "https://github.com/4t59m4f784-creator/SMKTRON/releases/tag/v0.3.0-mm1f",
   "app_free": 16460,
-  "status": "experimental-hardware-validation-pending",
-  "user_approved": false,
+  "status": "official-user-approved",
+  "user_approved": true,
   "accepted_origins": [
     "SMK-37 Pro_016",
     "SMK-37 Pro_451",
@@ -45,5 +45,6 @@
   "boot_sector": "0x9D000",
   "midi_timing_hardware_tested": false,
   "pitch_bend_hardware_tested": false,
-  "source_smksynth": "752c785bb4a3805add097dcde3b6e19000476f4a"
+  "source_smksynth": "752c785bb4a3805add097dcde3b6e19000476f4a",
+  "midi_layers_hardware_tested": true
 }

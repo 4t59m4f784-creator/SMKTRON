@@ -32,6 +32,16 @@ class Smktron extends AudioWorkletProcessor {
    case 'panic':e.web_mm_panic();break;
    case 'mode':e.web_midi_mode(m.value);break;
    case 'pedal':e.web_mm_pedal(m.value);break;
+   // Desktop-only convenience: replay the firmware's held-pad gesture.
+   // No alternate channel routing: the same pad handler latches the result.
+   case 'layer-add':{
+    if(!e.web_mm_state(0)||!e.web_mm_state(9)||e.web_mm_state(5)||e.web_mm_state(6)||!Number.isInteger(m.k)||m.k<0||m.k>15)break;
+    const mask=e.web_mm_state(13)|(1<<m.k);
+    for(let p=0;p<16;p++)if(mask>>p&1)e.web_pad(p,100);
+    e.web_render(128);
+    for(let p=0;p<16;p++)if(mask>>p&1)e.web_pad(p,0);
+    e.web_render(128);break;
+   }
    case 'pad-bank':e.web_button(0,1);e.web_button(1,1);e.web_render(128);e.web_button(0,0);e.web_button(1,0);break;
   }
  }
@@ -44,7 +54,7 @@ class Smktron extends AudioWorkletProcessor {
    if(currentTime-this.last>1/25){this.last=currentTime;
     const fb=new Uint16Array(e.memory.buffer,e.web_screen(),240*240).slice();
     const msg={type:'frame',fb,pads:Array.from({length:16},(_,i)=>e.web_pad_color(i)),state:Array.from({length:30},(_,i)=>e.web_probe(i))};
-    msg.mm=Array.from({length:13},(_,i)=>e.web_mm_state(i));if(this.mapWas!==e.web_mm_writes()){this.mapWas=e.web_mm_writes();msg.maps=Array.from(new Uint8Array(e.memory.buffer,e.web_mm_flash(),8192));}
+    msg.mm=Array.from({length:15},(_,i)=>e.web_mm_state(i));if(this.mapWas!==e.web_mm_writes()){this.mapWas=e.web_mm_writes();msg.maps=Array.from(new Uint8Array(e.memory.buffer,e.web_mm_flash(),8192));}
     msg.grain=[e.web_grain_state(0),e.web_grain_state(1)];msg.bank=e.web_fader_bank();msg.scenes=[e.web_scene_mode(),e.web_scene_pin(),e.web_scene_mask(),e.web_scene_selected(),e.web_scene_loaded()];
     msg.chords={state:Array.from({length:10},(_,i)=>e.web_chord_state(i)),bank:Array.from({length:8},(_,p)=>Array.from({length:6},(_,i)=>e.web_chord_note(p,i)).filter(n=>n>=0))};
     if(this.chordWas!==e.web_chord_writes()){this.chordWas=e.web_chord_writes();msg.chordStore=Array.from(new Uint8Array(e.memory.buffer,e.web_chord_flash(),8192))}

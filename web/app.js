@@ -4,7 +4,7 @@ const STORE='smktron-grain-gr3-boot-v1',SCSTORE='smktron-grain-gr3-scenes-v1',CH
 try{if(!localStorage.getItem('smktron-gr3-imported')){for(const [to,from] of [[STORE,'smktron-scenes-sc1-boot-v1'],[SCSTORE,'smktron-scenes-sc1-slots-v1'],[CHSTORE,'smktron-pad-chords-global-v1']]){const value=localStorage.getItem(from);if(value&&!localStorage.getItem(to))localStorage.setItem(to,value)}localStorage.setItem('smktron-gr3-imported','1')}}catch{}
 const PAGES=['PLAY','LAYER','TAPE','WEAR','VIBRATO','LESLIE','ECHO','REVERB','EQ','SETUP','GRAIN','SEQ','SYSTEM','PAD CHORDS','MIDI MODE'];
 const SOUNDS=['FLUTE','CHOIR','CELLO','VIOLINS'];
-let ctx,node,ready=false,starting=false,midiAccess,midiPort,lastState=[];
+let ctx,node,ready=false,starting=false,midiAccess,midiPort,lastState=[],currentMm=[];
 const sources=new Map(), pointerNotes=new Map(),heldButtons=new Set(),heldPads=new Set();
 function status(s){$('#status').textContent=s}
 function send(m){if(ready&&node){node.port.postMessage(m);return true}if(!starting)status('Clique em Iniciar áudio para tocar.');return false}
@@ -38,7 +38,7 @@ for(const [id,label] of knobDefs){
 const padNames=['FLUTE','CHOIR','CELLO','VIOLINS','LYR FLUTE','LYR CHOIR','LYR CELLO','LYR VIOLINS','LOFI','GRAIN','LESLIE','FAST/SLOW','ECHO','REVERB','HALF','8s / HELD'];
 for(let i=0;i<16;i++){
  let b=document.createElement('button');b.className='pad';b.innerHTML=`<strong>${String(i+1).padStart(2,'0')}</strong><small>${padNames[i]}</small>`;b.setAttribute('aria-label',`Pad ${i+1} ${padNames[i]}`);$('#pads').append(b);
- b.onpointerdown=e=>{e.preventDefault();b.setPointerCapture(e.pointerId);heldPads.add(i);send({type:'pad',k:i,vel:100})};b.onpointerup=()=>{if(heldPads.delete(i))send({type:'pad',k:i,vel:0})};b.onpointercancel=b.onlostpointercapture=()=>{if(heldPads.delete(i))send({type:'pad-cancel',k:i})};b.onclick=e=>{if(e.detail===0){send({type:'pad',k:i,vel:100});setTimeout(()=>send({type:'pad',k:i,vel:0}),70)}};
+ b.onpointerdown=e=>{e.preventDefault();b.setPointerCapture(e.pointerId);if(e.shiftKey&&currentMm[0]&&currentMm[9]&&!currentMm[5]&&!currentMm[6]){send({type:'layer-add',k:i});return;}heldPads.add(i);send({type:'pad',k:i,vel:100})};b.onpointerup=()=>{if(heldPads.delete(i))send({type:'pad',k:i,vel:0})};b.onpointercancel=b.onlostpointercapture=()=>{if(heldPads.delete(i))send({type:'pad-cancel',k:i})};b.onclick=e=>{if(e.detail===0){send({type:'pad',k:i,vel:100});setTimeout(()=>send({type:'pad',k:i,vel:0}),70)}};
 }
 for(let i=0;i<4;i++){
  let d=document.createElement('label');d.className='fader';d.innerHTML=`<input aria-label="Fader ${i+1}" type="range" min="0" max="127" value="0"><small>F${i+1}</small>`;$('#faders').append(d);d.querySelector('input').oninput=e=>send({type:'fader',id:i,value:+e.target.value});
@@ -82,9 +82,9 @@ function onMessage(m){
  if(m.scenes){const [on,pin,mask,selected,lastLoaded=selected]=m.scenes;$$('.pad').forEach((b,i)=>{const label=!on?padNames[i]:i<8?`S${String(i+1).padStart(2,'0')} · ${mask&(1<<i)?'GRAVADA':'VAZIA'}`:i===8?(pin?'FIXADO · SAIR':'FIXAR PRESETS'):'';b.querySelector('small').textContent=label;b.disabled=!!on&&i>8;b.setAttribute('aria-label',`Pad ${i+1} ${label}`);b.setAttribute('aria-pressed',!!on&&(i<8?i===lastLoaded:i===8&&!!pin))});if(on)$('#screenState').textContent+=(pin?' · PRESETS':' · SCENES')+(selected<8?' S'+String(selected+1).padStart(2,'0'):'')}
  if(m.chords&&m.chords.state[0]){const [on,hold,rec,target,playing,tape]=m.chords.state;const labels=[...m.chords.bank.map((notes,i)=>rec&&target===i?'REC · TOQUE ACORDE':notes.length?notes.map(n=>noteNames[n%12]+(Math.floor(n/12)-1)).join(' '):'VAZIO'),'REC','HOLD',...SOUNDS,'STOP / CANCEL','SAIR'];$$('.pad').forEach((b,i)=>{b.disabled=false;b.querySelector('small').textContent=labels[i];b.setAttribute('aria-label',`Pad ${i+1} ${labels[i]}`);b.setAttribute('aria-pressed',i<8?i===playing:i===8?!!rec:i===9?!!hold:i>=10&&i<=13?i===tape+10:false);});}
 
- if(m.mm){const on=!!m.mm[0];document.querySelector('.instrument').classList.toggle('midi-mode',on);document.querySelector('.volume').hidden=on;$('#screenState').textContent=on?'MIDI MODE · MAP '+(m.mm[1]+1)+' · CH '+m.mm[2]:$('#screenState').textContent;$('#modeMidi').setAttribute('aria-pressed',on);$('#modeSynth').setAttribute('aria-pressed',!on);$('#padBankMidi').hidden=!on;document.querySelector('[data-knob="4"]').hidden=!on;$('#volume').disabled=on;
+ if(m.mm){currentMm=m.mm;const on=!!m.mm[0];document.querySelector('.instrument').classList.toggle('midi-mode',on);document.querySelector('.volume').hidden=on;$('#screenState').textContent=on?'MIDI MODE · MAP '+(m.mm[1]+1)+(m.mm[14]>1?' · LAYER '+m.mm[14]:' · CH '+(Math.log2(m.mm[13])+1)):$('#screenState').textContent;$('#modeMidi').setAttribute('aria-pressed',on);$('#modeSynth').setAttribute('aria-pressed',!on);$('#padBankMidi').hidden=!on;document.querySelector('[data-knob="4"]').hidden=!on;$('#volume').disabled=on;
  if(on){const labels=m.mm[6]?['K1 · MODE','K2 · MAP','K3 · CHANNEL','K4 · ABS / REL','K5 · --','K6 · --','K7 · --','K8 · --']:m.mm[5]?['K1 · TYPE','K2 · CC / NOTE','K3 · CHANNEL','K4 · COLOR','K5 · SELECT','K6 · --','K7 · --','K8 · --']:Array.from({length:8},(_,i)=>'K'+(i+1)+' · MIDI CC');for(let i=0;i<8;i++){const w=document.querySelector('[data-knob="'+i+'"]');w.querySelector('label').textContent=labels[i];w.querySelector('.knob').setAttribute('aria-label',labels[i]);}}else{for(const [i,label]of knobDefs)if(i>=4){const w=document.querySelector('[data-knob="'+i+'"]');w.querySelector('label').textContent=label;w.querySelector('.knob').setAttribute('aria-label',label);}}
- if(on){$('#padModeLabel').textContent='MIDI / '+(m.mm[9]?'B':'A');$$('.pad').forEach((b,i)=>{b.disabled=false;b.querySelector('small').textContent='PAD '+(m.mm[9]?'B':'A')+(i+1)});$$('.fader').forEach((f,i)=>f.querySelector('small').textContent='F'+(m.mm[8]?'B':'A')+(i+1));$('#faderBank').textContent='FADERS '+(m.mm[8]?'B':'A');}}
+ if(on){$('#padModeLabel').textContent='MIDI / '+(m.mm[9]?'CHANNELS B':'A');$$('.pad').forEach((b,i)=>{b.disabled=false;b.querySelector('small').textContent=m.mm[9]?'CH '+(i+1):'PAD A'+(i+1)});$$('.fader').forEach((f,i)=>f.querySelector('small').textContent='F'+(m.mm[8]?'B':'A')+(i+1));$('#faderBank').textContent='FADERS '+(m.mm[8]?'B':'A');}}
 }
 $('#start').onclick=async()=>{
  if(starting)return;
@@ -93,7 +93,7 @@ $('#start').onclick=async()=>{
  try{
   if(ctx)await ctx.close();ctx=new AudioContext({sampleRate:44100,latencyHint:'interactive'});await ctx.resume();
   if(ctx.sampleRate!==44100)throw Error('Este navegador não disponibilizou áudio em 44,1 kHz. Tente Chrome ou Edge.');
-  if(!ctx.audioWorklet)throw Error('Áudio indisponível neste contexto. Abra o simulador pelo endereço HTTPS em um navegador compatível.');await ctx.audioWorklet.addModule('worklet.js?v=midi-mm1');const response=await fetch('mel.wasm?v=midi-mm1');if(!response.ok)throw Error('Não foi possível carregar o motor de áudio.');const wasm=await response.arrayBuffer();
+  if(!ctx.audioWorklet)throw Error('Áudio indisponível neste contexto. Abra o simulador pelo endereço HTTPS em um navegador compatível.');await ctx.audioWorklet.addModule('worklet.js?v=midi-ml1');const response=await fetch('mel.wasm?v=midi-ml1');if(!response.ok)throw Error('Não foi possível carregar o motor de áudio.');const wasm=await response.arrayBuffer();
   node=new AudioWorkletNode(ctx,'smktron',{numberOfInputs:0,numberOfOutputs:1,outputChannelCount:[2]});node.connect(ctx.destination);node.port.onmessage=e=>onMessage(e.data);
   let settings;try{settings=JSON.parse(localStorage.getItem(STORE))}catch{}
   if(!Array.isArray(settings)||settings.some(n=>!Number.isInteger(n)||n<0||n>255))settings=null;

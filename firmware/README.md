@@ -1,3 +1,7 @@
+# SMKTRON official firmware snapshot
+
+This directory contains **SMKTRON 0.3.0-ml1 / SMK-37 Pro_463**, based on FMEL-1. For the current SMKTRON installer, MIDI Layers instructions, supported model and build command, use the [project README](../README.md) and [MIDI manual](../manual/midi.html). Build from the repository root with `python3 experiments/midi-layers/build.py`; add `--web` for the simulator. Historical FMEL-1 information and original credits follow unchanged below.
+
 # FMEL-1
 
 This is a personal project to create a few sounds I'm interested in for the M-VAVE FM-1.

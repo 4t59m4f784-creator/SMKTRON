@@ -1,0 +1,15 @@
+firmware/src/mel.c:627:26: warning: unused variable 'ARP_MODE' [-Wunused-const-variable]
+static const char *const ARP_MODE[5] = {"UP", "DOWN", "UP+DN", "RANDOM", "PLAYED"};
+                         ^
+firmware/src/mel.c:628:26: warning: unused variable 'ARP_RATE' [-Wunused-const-variable]
+static const char *const ARP_RATE[6] = {"1/4", "1/8", "1/8T", "1/16", "1/16T", "1/32"};
+                         ^
+2 warnings generated.
+loader: image 8424 B at 0x1c0a800, bss end 0x1c0f4c0
+loader: ota.bin 7150 B
+  ok    .ram_text: 980 insns, no calls
+  ok    image 603060 B of 619520; RAM .data+.bss 33712 B of 98304; pool 233204 B of 344064
+  ok    register access: hal/ only (src/, loader/ clean)
+app      /workspace/scratch/8e339722b076/smktron/firmware/build/mel.bin  603060 B
+loader   /workspace/scratch/8e339722b076/smktron/firmware/build/loader/ota.bin  7150 B
+package  /workspace/scratch/8e339722b076/smktron/firmware/build/mel-0.3.0-ml1-smk37.fwsc  651266 B, identity SMK-37 Pro_463, board smk37

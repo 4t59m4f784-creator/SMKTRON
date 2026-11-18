@@ -18,6 +18,11 @@ jobs:
         with:
           node-version: '22'
       - run: npm test
+      - name: Validate controller ownership and LCD service
+        run: |
+          python3 tests/midi-layers-native.py
+          python3 tests/midi-lcd-latency-test.py
+          python3 tests/midi-wheel-lcd-test.py
       - name: Verify exact approved package and archive corresponding repository
         run: |
           mkdir -p /tmp/smktron-release
@@ -25,16 +30,16 @@ jobs:
           import hashlib,json,os,pathlib,subprocess,zipfile
           out=pathlib.Path('/tmp/smktron-release')
           m=json.loads(pathlib.Path('RELEASE.json').read_text())
-          fw=pathlib.Path('web/install/firmware/smktron-0.3.0-mm1h-pro.fwsc').read_bytes()
-          assert m['version']=='0.3.0-mm1h' and m['product']=='SMK-37 Pro_462'
-          assert hashlib.sha256(fw).hexdigest()==m['firmware_sha256']=='0c3af65e1c7e2eb619af42b301ce87935ba991a8a682fdf0def84e4554b64b75'
+          fw=pathlib.Path('web/install/firmware/smktron-0.3.0-ml1-pro.fwsc').read_bytes()
+          assert m['version']=='0.3.0-ml1' and m['product']=='SMK-37 Pro_463'
+          assert hashlib.sha256(fw).hexdigest()==m['firmware_sha256']=='8b975a1f38fb09727e697107603680325cb5bcca2a90807ef46d62e683a1b16f'
           assert len(fw)==m['firmware_bytes']==651266 and m['user_approved']
-          (out/'SMKTRON-0.3.0-mm1h-SMK37-Pro.fwsc').write_bytes(fw)
-          subprocess.run(['git','archive','--format=zip','--prefix=SMKTRON-0.3.0-mm1h/','-o',str(out/'SMKTRON-0.3.0-mm1h-source.zip'),os.environ['GITHUB_SHA']],check=True)
-          with zipfile.ZipFile(out/'SMKTRON-0.3.0-mm1h-source.zip') as z:
+          (out/'SMKTRON-0.3.0-ml1-SMK37-Pro.fwsc').write_bytes(fw)
+          subprocess.run(['git','archive','--format=zip','--prefix=SMKTRON-0.3.0-ml1/','-o',str(out/'SMKTRON-0.3.0-ml1-source.zip'),os.environ['GITHUB_SHA']],check=True)
+          with zipfile.ZipFile(out/'SMKTRON-0.3.0-ml1-source.zip') as z:
               assert z.testzip() is None
-              for p in ['firmware/firmware/src/mel.c','firmware/firmware/hal/smk_uart_tx.h','experiments/midi/build.py','web/install/firmware/smktron-0.3.0-mm1h-pro.fwsc','manual/midi.html','README.md','LICENSE']:
-                  assert 'SMKTRON-0.3.0-mm1h/'+p in z.namelist(),p
+              for p in ['firmware/firmware/src/mel.c','firmware/firmware/hal/smk_uart_tx.h','experiments/midi/build.py','web/install/firmware/smktron-0.3.0-ml1-pro.fwsc','manual/midi.html','README.md','LICENSE']:
+                  assert 'SMKTRON-0.3.0-ml1/'+p in z.namelist(),p
           m['source_commit']=os.environ['GITHUB_SHA']
           (out/'RELEASE.json').write_text(json.dumps(m,indent=2)+'\n')
           for p in ['web/CREDITOS.md','CHANGELOG.md']:(out/pathlib.Path(p).name).write_bytes(pathlib.Path(p).read_bytes())
@@ -45,4 +50,4 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           GH_REPO: ${{ github.repository }}
         run: |
-          gh release create v0.3.0-mm1h /tmp/smktron-release/* --target "$GITHUB_SHA" --title "SMKTRON 0.3.0-mm1h — MIDI MODE" --notes-file docs/release-0.3.0-mm1h.md --latest
+          gh release create v0.3.0-ml1 /tmp/smktron-release/* --target "$GITHUB_SHA" --title "SMKTRON 0.3.0-ml1 — MIDI MODE" --notes-file docs/release-0.3.0-ml1.md --latest

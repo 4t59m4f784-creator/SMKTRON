@@ -15,7 +15,7 @@ function refresh(){
 async function fetchRc(){try{
  const r=await fetch(PINS.rc.url,{cache:'no-store'});if(!r.ok)throw Error('Download indisponível.');
  const raw=new Uint8Array(await r.arrayBuffer());await validate(raw,'rc');rawRc=raw;
- status('rcStatus','SMKTRON 0.3.0-mm1h verificado: modelo, SHA-256 e CRCs aprovados.');
+ status('rcStatus','SMKTRON 0.3.0-ml1 verificado: modelo, SHA-256 e CRCs aprovados.');
 }catch(e){rawRc=null;status('rcStatus','Pacote bloqueado: '+e.message);log('Pacote SMKTRON: '+e.message)}refresh()}
 $('stockFile').addEventListener('change',async e=>{
  rawStock=null;refresh();const file=e.target.files?.[0];if(!file)return;
@@ -47,9 +47,9 @@ $('confirmation').addEventListener('close',async()=>{
  const run=async()=>{
   const labels={start:'Atualização confirmada',verify:'Teclado conferindo o pacote',loader:'Aguardando modo de atualização',write:'Gravando',reboot:'Aguardando reinicialização',done:'Identidade de destino confirmada'};
   const result=await service.execute(kind,rawRc,rawStock,(step,n)=>{const s=(labels[step]||step)+(n!==undefined?' · '+n:'');status('operationStatus',s);if(step!=='write'&&step!=='verify'||Number(n)%100===0)log(s)});
-  device={text:result,model:'SMK-37 Pro',version:kind==='rc'?462:16};
+  device={text:result,model:'SMK-37 Pro',version:kind==='rc'?463:16};
   $('progress').value=1;status('deviceStatus','Identidade após reiniciar: '+result);
-  status('operationStatus',kind==='rc'?'Concluído: o teclado informa SMK-37 Pro_462. Confira v0.3.0-mm1h na tela do instrumento.':'Concluído: o teclado informa SMK-37 Pro_016.');log('Concluído: '+result);
+  status('operationStatus',kind==='rc'?'Concluído: o teclado informa SMK-37 Pro_463. Confira v0.3.0-ml1 na tela do instrumento.':'Concluído: o teclado informa SMK-37 Pro_016.');log('Concluído: '+result);
  };
  try{
   if(!navigator.locks?.request)throw Error('Este navegador não oferece o bloqueio necessário entre abas. Use Chrome ou Edge atualizado.');

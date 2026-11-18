@@ -17,7 +17,7 @@ c=c.replace('if(inject&&loops==20){','if(inject&&loops%10==0)fm1_in.wheel[0]=(ui
 c+=r'''
 static unsigned bends(void){unsigned n=0;for(unsigned i=0;i<tx_n;i++)if((tx[i].st&0xf0)==0xe0)n++;return n;}
 static unsigned bend(unsigned i){return tx[i].n|(tx[i].v<<7);}
-static void init(void){reset();fm1_in.frames=400;fm1_in.wheel[0]=500;fm1_in.wheel[1]=615;smk_pitch_calibration=(smk_pw_t){0};mm_wheel_prev[0]=mm_wheel_prev[1]=-1;mm_profile()->ch=7;mm_keys_blocked=~0ull;mm_wheels_poll();mm_service();tx_n=0;}
+static void init(void){reset();fm1_in.frames=400;fm1_in.wheel[0]=500;fm1_in.wheel[1]=615;smk_pitch_calibration=(smk_pw_t){0};mm_wheel_prev[0]=mm_wheel_prev[1]=-1;mm_profile()->ch=7;mm_key_channels=1u<<6;mm_keys_blocked=~0ull;mm_wheels_poll();mm_service();tx_n=0;}
 int main(void){
  init();mm_lcd_live=0;inject=1;fm1_lcd_wait();assert(bends()==0);mm_wheels_poll();mm_service();assert(bends()==1);
  puts("PASS: reproduces MM1g wheel starvation during LCD DMA: no intermediate bends");

@@ -1,21 +1,21 @@
 {
-  "version": "0.3.0-mm1h",
-  "product": "SMK-37 Pro_462",
-  "firmware_sha256": "0c3af65e1c7e2eb619af42b301ce87935ba991a8a682fdf0def84e4554b64b75",
+  "version": "0.3.0-ml1",
+  "product": "SMK-37 Pro_463",
+  "firmware_sha256": "8b975a1f38fb09727e697107603680325cb5bcca2a90807ef46d62e683a1b16f",
   "firmware_bytes": 651266,
-  "app_bytes": 599856,
+  "app_bytes": 603060,
   "app_limit": 619520,
   "hardware_tested": true,
   "midi_transport_hardware_tested": true,
-  "midi_transport_base": "MM1h / 462",
+  "midi_transport_base": "ML1 / 463",
   "midi_sectors": [
     "0xA2000",
     "0xA3000"
   ],
   "base": "GR3 / MM1a controller",
-  "source": "https://github.com/4t59m4f784-creator/SMKTRON/releases/download/v0.3.0-mm1h/SMKTRON-0.3.0-mm1h-source.zip",
-  "rollback": "https://github.com/4t59m4f784-creator/SMKTRON/releases/tag/v0.3.0-mm1f",
-  "app_free": 19664,
+  "source": "https://github.com/4t59m4f784-creator/SMKTRON/releases/download/v0.3.0-ml1/SMKTRON-0.3.0-ml1-source.zip",
+  "rollback": "https://github.com/4t59m4f784-creator/SMKTRON/releases/tag/v0.3.0-mm1h",
+  "app_free": 16460,
   "status": "official-user-approved",
   "user_approved": true,
   "accepted_origins": [
@@ -31,7 +31,8 @@
     "SMK-37 Pro_459",
     "SMK-37 Pro_460",
     "SMK-37 Pro_461",
-    "SMK-37 Pro_462"
+    "SMK-37 Pro_462",
+    "SMK-37 Pro_463"
   ],
   "scene_sectors": [
     "0x9E000",
@@ -43,5 +44,8 @@
   ],
   "boot_sector": "0x9D000",
   "midi_timing_hardware_tested": true,
-  "pitch_bend_hardware_tested": true
+  "pitch_bend_hardware_tested": true,
+  "source_smksynth": "752c785bb4a3805add097dcde3b6e19000476f4a",
+  "midi_layers_hardware_tested": true,
+  "approval_date": "2026-11-18"
 }

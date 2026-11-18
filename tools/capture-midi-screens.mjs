@@ -18,6 +18,9 @@ function shot(name){run(250);capture(name);copyFileSync('web/images/smktron-'+na
 for(const t of[0,1,2]){
  e.web_boot();run(1800);e.web_mm_view(t);page(14);shot('midi-entry-'+['light','dark','zoom'][t]);
  e.web_midi_mode(1);run(400);btn(10);shot('midi-global-'+['light','dark','zoom'][t]);btn(10);btn(13);e.web_pad(0,100);run();e.web_pad(0,0);run();e.web_mm_control(24,2,127,16,7);shot('midi-edit-'+['light','dark','zoom'][t]);
+ btn(13);e.web_button(0,1);e.web_button(1,1);run(40);e.web_button(0,0);e.web_button(1,0);run(40);
+ for(const p of[0,2,5]){e.web_pad(p,100);run(30);}for(const p of[0,2,5]){e.web_pad(p,0);run(30);}
+ shot('midi-layer-'+['light','dark','zoom'][t]);e.web_pad(8,100);run(30);e.web_pad(8,0);run(30);shot('midi-channel-'+['light','dark','zoom'][t]);
  e.web_midi_mode(0);run(500);
 }
 writeFileSync('web/manual/midi-captures.json',JSON.stringify({wasm_sha256:createHash('sha256').update(readFileSync('web/mel.wasm')).digest('hex'),captures:records},null,2)+'\n');

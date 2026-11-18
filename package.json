@@ -1,1 +1,8 @@
-{"name":"smktron","private":true,"type":"module","scripts":{"test":"node --test tests/release-midi.test.mjs tests/web-midi-language.test.mjs"}}
+{
+  "name": "smktron",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test tests/release-midi.test.mjs tests/web-midi-language.test.mjs tests/midi-layers.test.mjs tests/simulator-layer-gesture.test.mjs"
+  }
+}
