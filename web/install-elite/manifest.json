@@ -1,0 +1,22 @@
+{
+  "version": "0.3.0-elite1",
+  "product": "SMK-37 Elite_463",
+  "status": "experimental",
+  "hardware_tested": false,
+  "base": "0.3.0-ml1 / Pro_463",
+  "base_commit": "a9a319cc58a6b1cb4c73230fa61126638b46a502",
+  "firmware_sha256": "4e78c864ea788298c81b14ee6ed68d70b2d3249cc7094b91191b59201b9684f4",
+  "firmware_bytes": 651270,
+  "app_bytes": 603068,
+  "app_limit": 619520,
+  "accepted_origins": [
+    "SMK-37 Elite_016",
+    "SMK-37 Elite_463"
+  ],
+  "stock": {
+    "product": "SMK-37 Elite_016",
+    "size": 705236,
+    "sha": "b2ee38abfef3ae922e4eecdb8a551e14345300ae6f270265feacd33b6ef99cb6"
+  },
+  "official_pro_unchanged": true
+}

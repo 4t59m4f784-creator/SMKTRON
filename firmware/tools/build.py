@@ -372,7 +372,8 @@ def main():
         VERSION = a.release  # retain the release-candidate suffix in the displayed version
         PRODUCT = BOARD_PREFIX[BOARD] + m[2]
         name = f"mel-{a.release}{suffix}.fwsc"
-    PRODUCT="SMK-37 Pro_463" # ML1 official, hardware-approved MIDI channel layers
+    if BOARD == "smk37":
+        PRODUCT = MODELS[model] + "_463" # ML1 identity, preserving the selected hardware model
     fm1pkg_make.SDK = a.sdk
     for rel, sha in SDK_SHA256.items():          # fail early without the SDK
         if hashlib.sha256(fm1pkg_make.sdk_file(rel)).hexdigest() != sha:
