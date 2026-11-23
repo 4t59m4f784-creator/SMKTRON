@@ -1,0 +1,24 @@
+name: SMKSTAGE B3 installer tests
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'web/smkstage/install/**'
+      - 'tests/stage-installer.test.mjs'
+      - '.github/workflows/smkstage-installer.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Check all JS modules and protocol
+        run: |
+          for f in web/smkstage/install/{controller,service,protocol,package}.js; do node --check "$f"; done
+      - name: Test device allowlist, pending-update safeguards and UI wiring
+        run: node --test tests/stage-installer.test.mjs
