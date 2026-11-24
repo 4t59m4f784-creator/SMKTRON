@@ -16,6 +16,8 @@ const FAILED_STAGE_SHA='2d992f98864558b24d61a007e20c7c6c192a441489c5be4c90c2ca20
 const DIAG_PENDING='smkstage.b3.diag.d1.pending.v1';
 const D2_PENDING='smkstage.b3.full.d2.pending.v1';
 const D3_PENDING='smkstage.b3.irq.d3.pending.v1';
+const D4_PENDING='smkstage.b3.cpu0.d4.pending.v1';
+const FAILED_D4_SHA='e0ef655f4f02a9c1d0d966b280e995e213a99c96afc902e9facaf43f8b10b26a';
 const FAILED_D3_SHA='02504176970bc7d34b04cb0af2a23c1a56accfa4f8af67a442102e7557157405';
 const FAILED_D2_SHA='4eb116f58c014ed0906ac7372b1f537bae1801cd7e4887b4925f0c51d8a3ffd2';
 const FAILED_DIAG_SHA='61372501e13b6fed9fa24febad26ac4effc95266c4e2fca40b903831be3e7887';
@@ -53,6 +55,9 @@ export function readPending(storage){
    return {model:MODEL,kind:'stage',sha:PINS.stage.sha,source:RESCUE_ID,recovery:true};
   const d3=JSON.parse(storage.getItem(D3_PENDING));
   if(d3?.model===MODEL&&d3.kind==='stage'&&d3.sha===FAILED_D3_SHA&&d3.source==='SMK-37 Pro_19703')
+   return {model:MODEL,kind:'stage',sha:PINS.stage.sha,source:RESCUE_ID,recovery:true};
+  const d4=JSON.parse(storage.getItem(D4_PENDING));
+  if(d4?.model===MODEL&&d4.kind==='stage'&&d4.sha===FAILED_D4_SHA&&d4.source==='SMK-37 Pro_19703')
    return {model:MODEL,kind:'stage',sha:PINS.stage.sha,source:RESCUE_ID,recovery:true};
   return null;
  }catch{return null}
