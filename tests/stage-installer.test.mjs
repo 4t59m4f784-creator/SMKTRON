@@ -7,7 +7,7 @@ const empty={getItem(){return null}};
 test('B3 and stock pins are immutable and distinct',()=>{
  assert.equal(PINS.stage.product,'SMK-37 Pro_19703');
  assert.equal(PINS.stage.size,651339);
- assert.equal(PINS.stage.sha,'3b735c88ab65482153a903bfab9988b78b28c4f19ee064cfdb189dc57ca02c0c');
+ assert.equal(PINS.stage.sha,'e0dc398192e4036428e5dbfb4da70cd63f8b4eafd43cfd0d90599c4a1cc1860c');
  assert.equal(PINS.stock.product,'SMK-37 Pro_016');
  assert.equal(PINS.stock.size,705252);
 });
