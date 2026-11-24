@@ -14,6 +14,8 @@ export const PENDING='smkstage.b3.alpha.19703.pending.v1';
  * The 0.1.1 package remains independently SHA-256 pinned. */
 const FAILED_STAGE_SHA='2d992f98864558b24d61a007e20c7c6c192a441489c5be4c90c2ca20881cd97b';
 const DIAG_PENDING='smkstage.b3.diag.d1.pending.v1';
+const D2_PENDING='smkstage.b3.full.d2.pending.v1';
+const FAILED_D2_SHA='4eb116f58c014ed0906ac7372b1f537bae1801cd7e4887b4925f0c51d8a3ffd2';
 const FAILED_DIAG_SHA='61372501e13b6fed9fa24febad26ac4effc95266c4e2fca40b903831be3e7887';
 const RESCUE_ID='SMK-37 Pro_000';
 const isLoader=(id)=>id?.text==='ota-SMK-37 Pro_900';
@@ -43,6 +45,9 @@ export function readPending(storage){
   const d=JSON.parse(storage.getItem(DIAG_PENDING));
   if(d?.model===MODEL&&d.kind==='stage'&&d.sha===FAILED_DIAG_SHA&&
      (d.source==='SMK-37 Pro_19703'||d.source===RESCUE_ID))
+   return {model:MODEL,kind:'stage',sha:PINS.stage.sha,source:RESCUE_ID,recovery:true};
+  const d2=JSON.parse(storage.getItem(D2_PENDING));
+  if(d2?.model===MODEL&&d2.kind==='stage'&&d2.sha===FAILED_D2_SHA&&d2.source==='SMK-37 Pro_19703')
    return {model:MODEL,kind:'stage',sha:PINS.stage.sha,source:RESCUE_ID,recovery:true};
   return null;
  }catch{return null}
