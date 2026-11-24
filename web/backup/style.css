@@ -1,0 +1,25 @@
+:root {
+    color-scheme: dark;
+    font-family: system-ui, sans-serif;
+    background: #151716;
+    color: #f2efe5;
+    accent-color: #a9e4b2;
+}
+* { box-sizing: border-box; }
+main { width: min(100% - 2rem, 43rem); margin: 3rem auto; }
+header { margin-bottom: 2rem; }
+.brand { color: #a9e4b2; font-size: .85rem; font-weight: 750; letter-spacing: .17em; }
+h1 { font-size: clamp(2.1rem, 6vw, 3.2rem); line-height: 1; margin: .65rem 0 1rem; }
+h2 { font-size: 1.18rem; margin-top: 0; }
+p { line-height: 1.5; color: #cbcfc7; }
+section, details { padding: 1.25rem; margin-bottom: .8rem; background: #1e2320; border: 1px solid #424c45; border-radius: .65rem; }
+button { border: 1px solid #a9e4b2; border-radius: .35rem; padding: .7rem .9rem; background: #a9e4b2; color: #142218; font: inherit; font-weight: 700; cursor: pointer; }
+button:disabled { opacity: .48; cursor: default; }
+#restore, details button { background: transparent; color: #c9efd1; }
+label, input { display: block; }
+input { margin-top: .5rem; max-width: 100%; }
+summary { cursor: pointer; }
+.status { margin: 1rem 0; }
+.status p:empty, #summary:empty { display: none; }
+progress { width: 100%; }
+.buttons { display: flex; gap: .6rem; flex-wrap: wrap; }

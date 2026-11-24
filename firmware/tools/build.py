@@ -217,6 +217,8 @@ def build_app():
         if not re.fullmatch(r"[A-Z0-9]{1,7}", fam):
             raise SystemExit("MEL_DATA_FAMILY: 1..7 of A-Z 0-9")
         flags.append(f'-DMEL_DATA_FAMILY="{fam}"')
+    if VERSION == "0.3.0-bk1":
+        flags.append("-DSMKTRON_BACKUP=1")
     cmds = [("cc", "-c", FW / "crt0.S", "-o", OUT / "crt0.o"),
             ("cc", "-c", FW / "hal" / "fm1_vec.S", "-o", OUT / "fm1_vec.o"),
             ("cc", "-c", FW / "hal" / "fm1_isr.S", "-o", OUT / "fm1_isr.o"),
@@ -373,7 +375,9 @@ def main():
         PRODUCT = BOARD_PREFIX[BOARD] + m[2]
         name = f"mel-{a.release}{suffix}.fwsc"
     if BOARD == "smk37":
-        PRODUCT = MODELS[model] + "_463" # ML1 identity, preserving the selected hardware model
+        PRODUCT = MODELS[model] + ("_464" if VERSION == "0.3.0-bk1" else "_463")
+    if VERSION == "0.3.0-bk1" and (BOARD != "smk37" or model != "pro" or os.environ.get("SMKTRON_SCENES") != "1"):
+        raise SystemExit("0.3.0-bk1 requires an SMK-37 Pro build with scenes")
     fm1pkg_make.SDK = a.sdk
     for rel, sha in SDK_SHA256.items():          # fail early without the SDK
         if hashlib.sha256(fm1pkg_make.sdk_file(rel)).hexdigest() != sha:

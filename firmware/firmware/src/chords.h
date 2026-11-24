@@ -25,16 +25,23 @@ static void ch_mode(uint32_t on){
  if(on){sc_on=sc_pin=0;page=PG_CHORD;}
  apply();redraw=0xFFu;say(on?"PAD CHORDS ON":"PAD CHORDS OFF");
 }
+static int ch_valid(const ch_bank_t *bank){
+ if(bank->version!=2u||bank->tape>=4u||bank->mix>100u||bank->pan_m< -100||bank->pan_m>100||bank->pan_c< -100||bank->pan_c>100)return 0;
+ for(unsigned i=0;i<8u;i++){
+  if(bank->count[i]>6u)return 0;
+  for(unsigned j=0;j<bank->count[i];j++)if(bank->notes[i][j]>127u)return 0;
+ }
+ return 1;
+}
 static void ch_init(void){
- uint32_t i,j;ch_bank_v1_t old;
+ ch_bank_v1_t old;
  int valid=!ch_store_store_load(&ch_bank,sizeof ch_bank)&&ch_bank.version==2u;
  if(!valid&&!ch_store_store_load(&old,sizeof old)&&old.version==1u){
   memset(&ch_bank,0,sizeof ch_bank);memcpy(&ch_bank,&old,sizeof old);
   ch_bank.version=2;ch_bank.mix=50;valid=1;
  }
- valid=valid&&ch_bank.tape<4u&&ch_bank.mix<=100u&&ch_bank.pan_m>=-100&&ch_bank.pan_m<=100&&ch_bank.pan_c>=-100&&ch_bank.pan_c<=100;
- for(i=0;i<8u&&valid;i++){if(ch_bank.count[i]>6u)valid=0;for(j=0;j<ch_bank.count[i]&&valid;j++)if(ch_bank.notes[i][j]>127u)valid=0;}
- if(!valid){memset(&ch_bank,0,sizeof ch_bank);ch_bank.version=2;ch_bank.tape=1;ch_bank.mix=50;}
+
+ if(!valid||!ch_valid(&ch_bank)){memset(&ch_bank,0,sizeof ch_bank);ch_bank.version=2;ch_bank.tape=1;ch_bank.mix=50;}
  ch_mix=ch_bank.mix;ch_pan_m=ch_bank.pan_m;ch_pan_c=ch_bank.pan_c;
  ch_sound=ch_bank.tape;
 }

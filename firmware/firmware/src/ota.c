@@ -181,6 +181,10 @@ static void ota_service(void)
     uint32_t d = ota_take();
     if (d == 7u && ota_dec[2] == 0x11)
         ota_reply_identity();
+#if SMKTRON_BACKUP
+    else if (d && ota_dec[2] == 0x62u)
+        backup_command(ota_dec + 6, d - 7u);
+#endif
 }
 
 /* one read request (3 tries x 5 s); data -> dst */

@@ -41,6 +41,9 @@ static unsigned int mm_wheel_sync;
 static void mm_boot(void);
 static void mm_lcd_idle(void);
 #define LCD_IDLE() mm_lcd_idle() /* notes keep moving while SPI transfers the UI */
+#if SMKTRON_BACKUP
+static void backup_command(const unsigned char *body, unsigned int size);
+#endif
 #include "platform.c"
 
 typedef struct {
@@ -783,6 +786,22 @@ static void go_group(uint32_t g)                /* a section's button: its page,
 static uint32_t prev_keys;
 static uint8_t held_note[27], midi_note[128];
 
+static int boot_load(mel_set_t *saved)
+{
+    mel_set_v5_t old;
+    if (!settings_load(saved, sizeof *saved) && (saved->ver == SET_VER || saved->ver == 6u) && saved->np == NP) {
+        gr_migrate(saved);
+        return 0;
+    }
+    if (settings_load(&old, sizeof old) || old.ver != 5u || old.np != NP)
+        return -1;
+    memcpy(saved, &old, sizeof old);
+    saved->bypass = 0;
+    saved->master = 724u;
+    gr_migrate(saved);
+    return 0;
+}
+
 static void app_init(void)
 {
     uint32_t k;
@@ -790,23 +809,13 @@ static void app_init(void)
     ovp_plate_init();
 #endif
     mel_set_t s;
-    mel_set_v5_t old;
-    int loaded;
     for (k = 0; k < NP; k++)
         set.p[k] = PINFO[k][2];
     set.ver = SET_VER;
     set.np = NP;
     set.master = 921u;
     set.bypass = 12u; /* first boot: Fader Bank B, pad brightness 75%, Light; FX/LOFI in */
-    loaded = !settings_load(&s, sizeof s) && (s.ver == SET_VER || s.ver == 6u) && s.np == NP;
-    if (!loaded && !settings_load(&old, sizeof old) && old.ver == 5u && old.np == NP) {
-        memcpy(&s, &old, sizeof old);
-        s.bypass = 0;                           /* v5 did not remember bypass or master */
-        s.master = 724u;
-        loaded = 1;
-    }
-    if (loaded) {
-        gr_migrate(&s);
+    if (!boot_load(&s)) {
         set.bypass = s.bypass &
 #if SMKTRON_REFINEMENTS
             127u;
@@ -1267,11 +1276,18 @@ smk_drawn:
 }
 
 #ifndef DINGHY_WEB
+#if SMKTRON_BACKUP
+#include "smktron_backup.h"
+#endif
 static void app_main(void)
 {
     app_init();
     for (;;) {
         platform_poll();
+#if SMKTRON_BACKUP
+        if (backup_restart_required)
+            continue;
+#endif
         app_loop();
     }
 }

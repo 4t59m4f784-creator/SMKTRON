@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SMKTRON · Backup</title>
+<link rel="stylesheet" href="style.css">
+<script type="module" src="app.js"></script>
+</head>
+<body>
+<main>
+<header>
+    <div class="brand">SMKTRON</div>
+    <h1>Backup do teclado</h1>
+    <p>Guarde suas cenas, acordes nos pads, ajustes de inicialização e mapas MIDI em um arquivo <code>.smktron</code>.</p>
+</header>
+<section aria-labelledby="connection">
+    <h2 id="connection">Conexão USB</h2>
+    <p>Use Chrome ou Edge no computador, com um cabo USB de dados. Esta prévia exige o firmware de teste 0.3.0-bk1 para SMK-37 Pro.</p>
+    <button id="connect">Conectar teclado</button>
+    <p id="device">Aguardando conexão</p>
+</section>
+<section aria-labelledby="export-title">
+    <h2 id="export-title">Exportar backup</h2>
+    <p>Salve suas alterações no teclado antes de exportar.</p>
+    <button id="export" disabled>Baixar backup</button>
+</section>
+<section aria-labelledby="restore-title">
+    <h2 id="restore-title">Restaurar backup</h2>
+    <p>A restauração substitui as cenas, os acordes e os ajustes salvos. Baixe um backup do estado atual antes de restaurar.</p>
+    <label for="file">Arquivo .smktron</label>
+    <input id="file" type="file" accept=".smktron">
+    <p id="summary" aria-live="polite"></p>
+    <button id="restore" disabled>Restaurar no teclado</button>
+</section>
+<div class="status">
+    <progress id="progress" max="1" value="0" hidden></progress>
+    <p id="status" role="status"></p>
+</div>
+<details>
+    <summary>Instalar firmware de teste ou voltar à ML1</summary>
+    <p>Feche outros aplicativos MIDI. Mantenha a aba e o cabo conectados durante a instalação. Para voltar à ML1, exporte seu backup primeiro.</p>
+    <div class="buttons">
+        <button id="install">Atualizar da ML1 para a prévia</button>
+        <button id="rollback">Voltar à ML1</button>
+    </div>
+    <p id="installation" role="status"></p>
+</details>
+</main>
+</body>
+</html>

@@ -101,10 +101,15 @@ static int mm_valid(const mm_store_t *s){
  }
  return 1;
 }
+static unsigned mm_load_saved(mm_store_t *bank){
+ unsigned slot=1;
+ memset(bank,0,sizeof *bank);bank->tag=0x314D4D53u;bank->version=1;
+ for(unsigned i=0;i<4;i++)mm_default(&bank->profile[i]);
+ for(unsigned i=0;i<2;i++)if(!mm_store_load(i,&mm_verify,sizeof mm_verify)&&mm_valid(&mm_verify)&&(!bank->seq||(int32_t)(mm_verify.seq-bank->seq)>0)){*bank=mm_verify;slot=i;}
+ return slot;
+}
 static void mm_boot(void){
- memset(&mm_data,0,sizeof mm_data);mm_data.tag=0x314D4D53u;mm_data.version=1;
- for(unsigned i=0;i<4;i++)mm_default(&mm_data.profile[i]);mm_slot=1;
- for(unsigned i=0;i<2;i++)if(!mm_store_load(i,&mm_verify,sizeof mm_verify)&&mm_valid(&mm_verify)&&(!mm_data.seq||(int32_t)(mm_verify.seq-mm_data.seq)>0)){mm_data=mm_verify;mm_slot=i;}
+ mm_slot=mm_load_saved(&mm_data);
  memset(mm_key_target,0,sizeof mm_key_target);memset(mm_key_sent,0,sizeof mm_key_sent);
  mm_prime_bend=mm_prime_mod=mm_pedal_down=mm_key_retrigger=mm_pedal_target=mm_pedal_sent=mm_bend_channels=mm_channel_held=0;
  mm_wheel_channels[0]=mm_wheel_channels[1]=0;mm_key_channels=(uint16_t)(1u<<(mm_main_ch()-1u));
