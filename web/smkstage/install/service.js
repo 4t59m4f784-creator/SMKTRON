@@ -3,7 +3,7 @@
 import {Updater} from './protocol.js';
 import {productOf, logicalImage, filesOk} from './package.js';
 export const PINS=Object.freeze({
- stage:Object.freeze({name:'SMKSTAGE B3 Alpha 0.1.0-b3',product:'SMK-37 Pro_19703',size:651339,sha:'a31c8014f087aada9d0880440acc0c4ba7b907c5489afa1c96b5d4862ec5db68'}),
+ stage:Object.freeze({name:'SMKSTAGE B3 Alpha 0.1.1-b3',product:'SMK-37 Pro_19703',size:651339,sha:'3b735c88ab65482153a903bfab9988b78b28c4f19ee064cfdb189dc57ca02c0c'}),
  stock:Object.freeze({name:'M-VAVE V016',product:'SMK-37 Pro_016',size:705252,sha:'2d98ce72530e71d617384963423820536f094501299e2cfec0a8d3c3fb6bcfb0'})
 });
 const MODEL='SMK-37 Pro';
