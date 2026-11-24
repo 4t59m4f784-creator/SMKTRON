@@ -1,13 +1,15 @@
-# Prévia de backup do SMKTRON
+# SMKTRON Backup · BK2
 
-Para o SMK-37 Pro com SMKTRON ML1 (USB `SMK-37 Pro_463`). O firmware de teste BK1 usa a mesma área de dados da ML1 e acrescenta o protocolo de backup USB. O firmware oficial ML1 ainda não atende aos comandos da ferramenta.
+O instalador USB-MIDI atualiza o SMK-37 Pro diretamente da ML1 (`SMK-37 Pro_463`) ou da prévia BK1 (`_464`) para BK2 (`_465`). O botão **Voltar à ML1** instala o pacote oficial. Ambos conferem o tamanho, a identidade, o SHA-256 e os CRCs do pacote e verificam a versão após o reinício. A BK2 usa a mesma área de dados da ML1 e acrescenta a comunicação de backup e o registro de recuperação da restauração.
 
-Na raiz do repositório, execute `python3 -m http.server 8000 --bind 127.0.0.1 --directory web`. Abra [http://localhost:8000/backup/](http://localhost:8000/backup/) no Chrome ou Edge. Na seção de firmware, atualize da ML1 para a prévia. Depois do reinício, clique em **Conectar teclado**.
+Para executar localmente, abra um terminal na raiz do repositório e rode `python3 -m http.server 8000 --bind 127.0.0.1 --directory web`. Abra [localhost:8000/backup/](http://localhost:8000/backup/) no Chrome ou Edge no computador.
 
-Salve suas alterações no instrumento antes de exportar. O arquivo contém as oito posições de cenas, as oito posições de acordes e seu mix, o Boot Save com a sequência e os ajustes globais, e os quatro perfis MIDI salvos. O arquivo é processado no computador e no instrumento.
+1. Atualize para BK2. Depois do reinício, clique em **Conectar teclado**.
+2. Salve no teclado o que deseja guardar e clique em **Baixar backup**. O arquivo `.smktron` inclui as oito posições de favoritos (cenas), as oito posições de acordes e seu mix, o Boot Save com a sequência e os ajustes globais, e os quatro perfis MIDI salvos. O arquivo é processado no navegador e no instrumento.
+3. Para restaurar, exporte uma cópia atual, selecione o arquivo e confira as posições preenchidas. Pare PLAY e REC, saia do MODO MIDI, solte as teclas, os pads e o pedal, e feche os aplicativos que estiverem usando o áudio USB do teclado. A restauração substitui o banco salvo inteiro. Após a confirmação, desligue e ligue para carregar o banco restaurado.
 
-Para restaurar, baixe primeiro uma cópia atual do teclado, selecione o arquivo desejado e confira os pads preenchidos. Pare PLAY e REC, saia do MODO MIDI e solte teclas, pads e pedal antes de confirmar. A restauração substitui o banco salvo inteiro. Desligue e ligue após a verificação. Se a gravação falhar com o teclado ainda ligado, reconecte e repita com o mesmo arquivo. Uma perda de energia pode deixar algumas partes do banco já restauradas. Após religar, exporte o estado que o teclado carregou e tente a restauração novamente.
+A BK2 confere o arquivo completo antes de gravar os bancos. Se a energia cair depois de o teclado registrar a restauração na flash, ele retoma a operação na próxima inicialização. Se a interrupção ocorrer antes desse registro, a gravação dos bancos não chega a começar. Ao reconectar, exporte e confira o estado atual.
 
-Para voltar ao firmware ML1, use **Voltar à ML1** na mesma página. Os pacotes da prévia e da ML1 têm seus tamanhos, identidades e SHA-256 conferidos antes da instalação.
+A BK2 é uma versão de teste para o Pro. A compilação e o fluxo USB foram verificados com um dispositivo simulado. O primeiro teste no teclado físico está pendente.
 
-O teste de ponta a ponta simula a memória do instrumento e roda com `node --test tests/backup.test.mjs` (Node 22 e compilador C). Para recompilar o pacote, use `sh tools/build_backup_preview.sh` com o SDK e o toolchain do JieLi configurados.
+`node --test tests/backup.test.mjs` executa o teste de ponta a ponta (Node e compilador C). O pacote pode ser reconstruído com `sh tools/build_backup_preview.sh`, com o SDK AC79 e o toolchain JieLi configurados.

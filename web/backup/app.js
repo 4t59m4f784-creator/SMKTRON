@@ -8,23 +8,28 @@ import {preview} from './firmware.js';
 const $ = id => document.getElementById(id);
 const installed = preview.product;
 const official = PINS.rc;
+const previousPreview = 'SMK-37 Pro_464';
 const versions = {install: preview, rollback: {...official, url: '../install/firmware/smktron-0.3.0-ml1-pro.fwsc'}};
 const resumeKey = 'smktron.backup.preview.pending';
 const messages = {
     1: 'O teclado recusou o comando.',
-    2: 'Pare PLAY e REC, saia do MODO MIDI, solte as teclas, os pads e o pedal e aguarde o áudio terminar.',
+    2: 'Pare PLAY e REC, saia do MODO MIDI, solte as teclas, os pads e o pedal. Feche apps que estejam usando o áudio USB do teclado e espere o som terminar.',
     3: 'A sessão expirou. Repita a operação.',
     4: 'O banco contém dados incompatíveis ou corrompidos.',
-    5: 'O teclado informou uma falha de memória. Se aconteceu na restauração, reconecte e tente novamente com o mesmo arquivo.',
+    5: 'Falha de memória. Desligue e ligue o teclado para que ele confira e retome a restauração gravada. Reconecte e exporte para conferir o resultado.',
     6: 'Desligue e ligue o teclado para carregar o banco gravado.',
     usb: 'USB desconectado. Reconecte o teclado.',
     timeout: 'O teclado não respondeu. Se ocorreu ao gravar, reconecte e repita com o mesmo arquivo.',
-    model: 'Conecte um SMK-37 Pro com o firmware de teste 0.3.0-bk1.',
+    model: 'Conecte um SMK-37 Pro com o firmware de teste 0.3.0-bk2.',
     file: 'O arquivo está corrompido ou pertence a outro formato.',
     data: 'A verificação da leitura falhou. Repita a exportação.',
 };
 
 let access, device, selectedFile, exported, busy, restartRequired;
+
+window.addEventListener('beforeunload', event => {
+    if (busy) event.preventDefault();
+});
 const tell = (id, value) => { $(id).textContent = value; };
 const errorMessage = error => messages[error.code] ?? error.message;
 const connected = () => device && !device.link.lost;
@@ -32,17 +37,25 @@ function controls() {
     $('connect').disabled = busy;
     $('export').disabled = busy || !connected() || restartRequired;
     $('file').disabled = busy;
-    $('restore').disabled = busy || !connected() || !selectedFile || restartRequired;
+    $('restore').disabled = busy || !connected() || !selectedFile || !exported || restartRequired;
     $('install').disabled = busy;
     $('rollback').disabled = busy;
 }
 
-async function task(status, action) {
+async function task(status, action, usesMIDI = true) {
     if (busy) return;
     busy = true;
     controls();
     try {
-        await action();
+        if (usesMIDI) {
+            if (!navigator.locks?.request) throw Error('Abra a ferramenta no Chrome ou Edge atualizado.');
+            await navigator.locks.request('smktron-firmware-update', {ifAvailable: true}, async lock => {
+                if (!lock) throw Error('Outra aba do SMKTRON está usando a conexão USB-MIDI.');
+                await action();
+            });
+        } else {
+            await action();
+        }
     } catch (error) {
         tell(status, errorMessage(error));
     } finally {
@@ -90,9 +103,9 @@ $('connect').onclick = () => task('status', async () => {
             throw error;
         }
         device = {...found, client};
-        tell('device', 'SMK-37 Pro conectado · 0.3.0-bk1');
-        restartRequired = info.state === 1;
-        tell('status', restartRequired ? messages[6] : info.state === 2 ? messages[5] : '');
+        tell('device', 'SMK-37 Pro conectado · 0.3.0-bk2');
+        restartRequired = info.state !== 0;
+        tell('status', info.state === 1 ? messages[6] : info.state === 2 ? messages[5] : '');
     } catch (error) {
         tell('device', 'Aguardando conexão');
         throw error;
@@ -127,28 +140,32 @@ $('file').onchange = () => task('status', async () => {
     tell('summary', 'Cenas: ' + (parsed.scenes.join(', ') || 'nenhuma') +
         ' · Acordes: ' + (parsed.chords.join(', ') || 'nenhum') + ' · Inclui Boot Save e mapas MIDI');
     tell('status', '');
-});
+}, false);
 
 $('restore').onclick = () => task('status', async () => {
     const info = await device.client.check();
-    if (info.state === 1) throw new BackupError(6);
-    if (info.state === 2) {
-        if (info.checksum !== crc32(selectedFile.bank)) throw Error('Selecione o mesmo arquivo usado na restauração interrompida.');
-    } else {
-        if (!exported) throw Error('Clique em Baixar backup e guarde a cópia atual antes de restaurar.');
-        tell('status', 'Verificando a cópia atual…');
-        const latest = await device.client.exportBank(progress);
-        if (!latest.every((value, offset) => value === exported[offset])) {
-            exported = undefined;
-            throw Error('O banco mudou desde a exportação. Baixe um novo backup antes de restaurar.');
-        }
-    }
-    if (!confirm('Substituir todas as cenas, acordes e ajustes salvos pelo arquivo selecionado?')) {
+    if (info.state) throw new BackupError(info.state === 1 ? 6 : 5);
+    if (!exported) throw Error('Clique em Baixar backup e guarde a cópia atual antes de restaurar.');
+    if (!confirm('Substituir os favoritos, os acordes, o Boot Save e os mapas MIDI pelo arquivo selecionado?')) {
         tell('status', 'Restauração cancelada.');
         return;
     }
+    tell('status', 'Verificando a cópia atual…');
+    const latest = await device.client.exportBank(progress);
+    if (!latest.every((value, offset) => value === exported[offset])) {
+        exported = undefined;
+        throw Error('O banco mudou desde a exportação. Baixe um novo backup antes de restaurar.');
+    }
     tell('status', 'Transferindo arquivo e gravando o banco…');
-    await device.client.restoreBank(selectedFile.bank, progress);
+    try {
+        await device.client.restoreBank(selectedFile.bank, progress);
+    } catch (error) {
+        if (error.code === 5 || error.code === 6 || error.code === 'timeout' || error.code === 'usb') {
+            exported = undefined;
+            restartRequired = true;
+        }
+        throw error;
+    }
     restartRequired = true;
     exported = undefined;
     tell('status', 'Restauração verificada. Desligue e ligue o teclado para carregar o banco.');
@@ -156,7 +173,8 @@ $('restore').onclick = () => task('status', async () => {
 
 async function install(kind) {
     const target = versions[kind];
-    const source = kind === 'install' ? official.product : installed;
+    const allowed = kind === 'install' ? [official.product, previousPreview] : [installed, previousPreview];
+    let source;
     device?.link.close();
     device = undefined;
     exported = undefined;
@@ -177,9 +195,20 @@ async function install(kind) {
     const found = await updater.find();
     if (!found) throw Error('Teclado não encontrado.');
     found.link.close();
+    source = found.id.text;
     const resuming = found.id.text === loader && localStorage.getItem(resumeKey) === target.sha;
-    if (!resuming && found.id.text !== source) throw Error('A operação exige ' + source + '.');
-    if (!confirm((resuming ? 'Retomar instalação de ' : 'Instalar ') + target.name + '?')) {
+    if (!resuming && !allowed.includes(source)) throw Error('Firmware de origem incompatível. Conecte somente o SMK-37 Pro com a versão indicada.');
+    if (!resuming && source === installed) {
+        const backupDevice = await updater.find(id => id.text === installed);
+        if (!backupDevice) throw new BackupError('usb');
+        try {
+            const info = await new BackupClient(backupDevice.link).check();
+            if (info.state) throw new BackupError(info.state === 1 ? 6 : 5);
+        } finally {
+            backupDevice.link.close();
+        }
+    }
+    if (!confirm((resuming ? 'Retomar instalação de ' : 'Instalar ') + target.name + '? Mantenha o cabo USB conectado e esta página aberta durante a gravação.')) {
         tell('installation', 'Operação cancelada.');
         return;
     }

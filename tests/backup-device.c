@@ -14,6 +14,32 @@
 #include "../firmware/firmware/src/mel.c"
 
 static int flash_ok = 1;
+static unsigned backup_restart_required;
+#define BACKUP_JOURNAL_AT 0xA4000u
+static uint8_t journal[4096];
+static int cut_journal_write;
+static int fl_erase4k(uint32_t off, uint32_t *took)
+{
+    if (off != BACKUP_JOURNAL_AT) return -1;
+    memset(journal, 255, sizeof journal);
+    *took = 0;
+    return 0;
+}
+static int st_read(uint32_t off, void *dst, uint32_t n)
+{
+    if (off < BACKUP_JOURNAL_AT || off-BACKUP_JOURNAL_AT+n > sizeof journal) return -1;
+    memcpy(dst, journal+off-BACKUP_JOURNAL_AT, n);
+    return 0;
+}
+static int fl_write(uint32_t off, const uint8_t *src, uint32_t n)
+{
+    if (off < BACKUP_JOURNAL_AT || off-BACKUP_JOURNAL_AT+n > sizeof journal) return -1;
+    uint8_t *dst = journal+off-BACKUP_JOURNAL_AT;
+    uint32_t count = cut_journal_write ? n/2 : n;
+    for (uint32_t i=0; i<count; i++) dst[i] &= src[i];
+    return cut_journal_write ? -1 : 0;
+}
+
 static uint32_t crc32(const uint8_t *p, uint32_t n) { return ~sc_crc(~0u, p, n); }
 static int ota_wire_send(const uint8_t *p, uint32_t n)
 {
@@ -45,6 +71,8 @@ static void ota_commit(const uint8_t *parm) { (void)parm; }
 
 int main(void)
 {
+    memset(journal, 255, sizeof journal);
+    backup_recover();
     app_init();
     sc_save(3);
     ch_bank_t chords = ch_bank;
@@ -61,9 +89,18 @@ int main(void)
             fflush(stdout);
             continue;
         }
+        if (!memcmp(line, "cut-journal\n", 12)) {
+            cut_journal_write = 1;
+            puts("ok");
+            fflush(stdout);
+            continue;
+        }
         if (!memcmp(line, "reboot\n", 8)) {
-            app_init();
             backup_mode = backup_restart_required = backup_received = 0;
+            backup_commit_status = backup_committed_crc = 0;
+            cut_journal_write = 0;
+            backup_recover();
+            app_init();
             puts("ok");
             fflush(stdout);
             continue;

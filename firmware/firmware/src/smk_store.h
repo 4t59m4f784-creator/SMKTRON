@@ -31,9 +31,21 @@
 #define CHORDS_END 0x000A2000u
 #define MIDI_MAP_AT 0x000A2000u
 #define MIDI_MAP_END 0x000A4000u
-#define FL_RANGE_OK(off, n) (FL_IN(off,n,MIDI_MAP_AT,MIDI_MAP_END) || FL_IN(off,n,CHORDS_AT,CHORDS_END) || SC_RANGE(off,n) || FL_IN(off, n, FL_OTA_LO, FL_OTA_HI) || FL_IN(off, n, SETTINGS_AT, SETTINGS_AT + 0x1000u) || \
+#if SMKTRON_BACKUP
+#define BACKUP_JOURNAL_AT 0x000A4000u
+#define BACKUP_RANGE(off,n) FL_IN(off,n,BACKUP_JOURNAL_AT,BACKUP_JOURNAL_AT+0x1000u)
+_Static_assert(BACKUP_JOURNAL_AT >= MIDI_MAP_END && BACKUP_JOURNAL_AT+0x1000u <= OWNER_AT,
+               "Backup journal overlaps saved data");
+#else
+#define BACKUP_RANGE(off,n) 0
+#endif
+#define FL_RANGE_OK(off, n) (BACKUP_RANGE(off,n) || FL_IN(off,n,MIDI_MAP_AT,MIDI_MAP_END) || FL_IN(off,n,CHORDS_AT,CHORDS_END) || SC_RANGE(off,n) || FL_IN(off, n, FL_OTA_LO, FL_OTA_HI) || FL_IN(off, n, SETTINGS_AT, SETTINGS_AT + 0x1000u) || \
                              FL_IN(off, n, OWNER_AT, OWNER_AT + 0x1000u))
 #include "fm1_flash_map.h"
+
+#if SMKTRON_BACKUP
+_Static_assert(FL_WIN_SAFE(BACKUP_JOURNAL_AT,BACKUP_JOURNAL_AT+0x1000u),"Backup journal protected range");
+#endif
 
 #if !BOARD_SMK37
 #error "smk_store.h is the SMK-37 layout (BOARD_SMK37)"

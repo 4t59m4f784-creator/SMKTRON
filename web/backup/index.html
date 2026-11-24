@@ -12,13 +12,13 @@
 <header>
     <div class="brand">SMKTRON</div>
     <h1>Backup do teclado</h1>
-    <p>Guarde suas cenas, acordes nos pads, ajustes de inicialização e mapas MIDI em um arquivo <code>.smktron</code>.</p>
+    <p>Guarde seus oito favoritos (cenas), acordes nos pads, ajustes de inicialização (Boot Save) e mapas MIDI em um arquivo <code>.smktron</code>.</p>
 </header>
 <section aria-labelledby="connection">
     <h2 id="connection">Conexão USB</h2>
-    <p>Use Chrome ou Edge no computador, com um cabo USB de dados. Esta prévia exige o firmware de teste 0.3.0-bk1 para SMK-37 Pro.</p>
+    <p>Use Chrome ou Edge no computador, com um cabo USB de dados. Esta prévia exige o firmware de teste 0.3.0-bk2 para SMK-37 Pro.</p>
     <button id="connect">Conectar teclado</button>
-    <p id="device">Aguardando conexão</p>
+    <p id="device" role="status">Aguardando conexão</p>
 </section>
 <section aria-labelledby="export-title">
     <h2 id="export-title">Exportar backup</h2>
@@ -27,7 +27,7 @@
 </section>
 <section aria-labelledby="restore-title">
     <h2 id="restore-title">Restaurar backup</h2>
-    <p>A restauração substitui as cenas, os acordes e os ajustes salvos. Baixe um backup do estado atual antes de restaurar.</p>
+    <p>A restauração substitui todos os dados incluídos no arquivo. Baixe um backup do estado atual e selecione o arquivo que deseja restaurar. Após a verificação, desligue e ligue o teclado.</p>
     <label for="file">Arquivo .smktron</label>
     <input id="file" type="file" accept=".smktron">
     <p id="summary" aria-live="polite"></p>
@@ -37,15 +37,18 @@
     <progress id="progress" max="1" value="0" hidden></progress>
     <p id="status" role="status"></p>
 </div>
-<details>
+<details open>
     <summary>Instalar firmware de teste ou voltar à ML1</summary>
-    <p>Feche outros aplicativos MIDI. Mantenha a aba e o cabo conectados durante a instalação. Para voltar à ML1, exporte seu backup primeiro.</p>
+    <p>O firmware de teste 0.3.0-bk2 atualiza diretamente da ML1 e da BK1 no SMK-37 Pro. Faça o teste no instrumento antes de usar em produção. Feche outros aplicativos MIDI e mantenha a aba e o cabo conectados durante a instalação. Exporte seu backup antes de voltar à ML1.</p>
     <div class="buttons">
-        <button id="install">Atualizar da ML1 para a prévia</button>
+        <button id="install">Instalar BK2 de teste</button>
         <button id="rollback">Voltar à ML1</button>
     </div>
     <p id="installation" role="status"></p>
 </details>
+<footer>
+    <p><a href="https://github.com/4t59m4f784-creator/SMKTRON/tree/smktron-backup-preview">Código-fonte e licenças</a> · <a href="https://4t59m4f784-creator.github.io/SMKTRON/">Site do SMKTRON</a></p>
+</footer>
 </main>
 </body>
 </html>

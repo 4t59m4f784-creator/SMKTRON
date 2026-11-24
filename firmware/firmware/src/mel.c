@@ -1281,7 +1281,13 @@ smk_drawn:
 #endif
 static void app_main(void)
 {
+#if SMKTRON_BACKUP
+    backup_recover();
+#endif
     app_init();
+#if SMKTRON_BACKUP
+    if (backup_restart_required) backup_screen("RESTART TO RETRY");
+#endif
     for (;;) {
         platform_poll();
 #if SMKTRON_BACKUP

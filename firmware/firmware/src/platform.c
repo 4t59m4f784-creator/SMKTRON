@@ -133,6 +133,9 @@ static uint8_t recovery_active;
 #else
 #define OTA_IDENTITY (recovery_active ? "FM-1_000" : FELUCCA_ID)
 #endif
+#if SMKTRON_BACKUP
+static unsigned backup_restart_required;
+#endif
 #include "ota.c"
 static void recovery_poll(void);
 static uint32_t ota_now_ms(void) { return fm1_ms; }
@@ -236,6 +239,11 @@ static void smk_owner_check(void)
     if (ours)
         return;
     fl_erase4k(SETTINGS_AT, &took);
+#if SMKTRON_BACKUP
+    fm1_wdt_feed();
+    if (fl_erase4k(BACKUP_JOURNAL_AT, &took))
+        return;
+#endif
     fm1_wdt_feed();                             /* (~50 ms an erase) */
     fl_erase4k(OWNER_AT, &took);
     fl_write(OWNER_AT, want, 16);
@@ -369,7 +377,11 @@ static void platform_poll(void)
     ota_service();
     if (usb.ota_req) {
         usb.ota_req = 0;
-        if (flash_ok)
+        if (flash_ok
+#if SMKTRON_BACKUP
+            && !backup_restart_required
+#endif
+        )
             ota_session();                      /* returns only if nothing was committed */
     }
     if (usb.uboot_req) {

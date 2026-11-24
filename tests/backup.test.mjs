@@ -15,11 +15,11 @@ test('preview package matches its pinned digest and Pro identity', async () => {
     const pkg = await readFile(new URL(preview.url, new URL('../web/backup/', import.meta.url)));
     assert.equal(pkg.length, preview.size);
     assert.equal(createHash('sha256').update(pkg).digest('hex'), preview.sha);
-    assert.equal(productOf(pkg), 'SMK-37 Pro_464');
+    assert.equal(productOf(pkg), 'SMK-37 Pro_465');
     assert.ok(filesOk(logicalImage(pkg)));
 });
 
-test('browser and firmware exchange a saved bank and retry a partial restore', async () => {
+test('browser and firmware exchange a saved bank and recover from interrupted flash writes', async () => {
     const dir = await mkdtemp(join(tmpdir(), 'tron-backup-'));
     let process;
     try {
@@ -58,16 +58,24 @@ test('browser and firmware exchange a saved bank and retry a partial restore', a
         changed[1538] = 0;
         changed[1366] = 40;
         changed[1604] = 2; // Selected MIDI profile.
+        await device('cut-journal');
+        await assert.rejects(client.restoreBank(changed), {code: 5});
+        await device('reboot');
+        assert.deepEqual(await client.exportBank(), original);
+
         await device('fail');
         await assert.rejects(client.restoreBank(changed), {code: 5});
         assert.deepEqual(await client.check(), {state: 2, checksum: crc32(changed)});
         await assert.rejects(client.restoreBank(original), {code: 4});
         await device('recover');
-        await client.restoreBank(changed);
+        await device('reboot');
+        assert.equal((await client.check()).state, 0);
+        assert.deepEqual(await client.exportBank(), changed);
+        await client.restoreBank(original);
         assert.equal((await client.check()).state, 1);
         await assert.rejects(client.exportBank(), {code: 6});
         await device('reboot');
-        assert.deepEqual(await client.exportBank(), changed);
+        assert.deepEqual(await client.exportBank(), original);
     } finally {
         process?.kill();
         await rm(dir, {recursive: true, force: true});

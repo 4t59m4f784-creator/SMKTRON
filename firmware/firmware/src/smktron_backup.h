@@ -16,9 +16,11 @@ enum { BK_INFO, BK_EXPORT, BK_READ, BK_UPLOAD, BK_WRITE, BK_COMMIT };
 enum { BK_OK, BK_INVALID, BK_BUSY, BK_EXPIRED, BK_DATA, BK_FLASH, BK_RESTART };
 enum { BK_NONE, BK_READING, BK_WRITING };
 #define BK_BLOCK 256u
+#define BK_JOURNAL_MAGIC 0x324B4254u /* TBK2 */
+_Static_assert(sizeof(backup_bank_t)+8u <= 4096u, "Backup journal fits one sector");
 
 static backup_bank_t backup_bank __attribute__((section(".pool")));
-static unsigned backup_mode, backup_received, backup_restart_required;
+static unsigned backup_mode, backup_received;
 static uint32_t backup_deadline, backup_crc, backup_committed_crc;
 static unsigned backup_commit_status;
 static uint8_t backup_reply[8u + BK_BLOCK + 7u], backup_wire[312u];
@@ -62,22 +64,82 @@ static int backup_valid(void)
     return sc_valid(&boot) && ch_valid(&backup_bank.chords) && mm_valid(&backup_bank.midi);
 }
 
+static void backup_screen(const char *message)
+{
+    lcd_fill(0, 0, 240, 240, C_BLACK);
+    draw_text_box(0, 96, 240, &FONT_S, "SMKTRON BACKUP", C_WHITE, 1);
+    draw_text_box(0, 128, 240, &FONT_S, message, C_WHITE, 1);
+}
+
 static int backup_restore(void)
 {
-    mm_store_t current;
+    uint32_t took;
+    /* Discover active sectors before a power-loss replay. Each twin bank then
+     * writes to its other sector using the existing header-last writer. */
+    if (sc_store_load(&sc_bank, sizeof sc_bank) ||
+        memcmp(&sc_bank, &backup_bank.scenes, sizeof sc_bank)) {
+        if (sc_store_save(&backup_bank.scenes, sizeof backup_bank.scenes)) return -1;
+    }
+    ch_init();
+    if (memcmp(&ch_bank, &backup_bank.chords, sizeof ch_bank) &&
+        ch_store_store_save(&backup_bank.chords, sizeof backup_bank.chords)) return -1;
+
+    mm_store_t current, target = backup_bank.midi;
     unsigned slot = mm_load_saved(&current) ^ 1u;
-    backup_bank.midi.seq = current.seq + 1u;
-    if (!backup_bank.midi.seq)
-        backup_bank.midi.seq = 1;
-    if (sc_store_save(&backup_bank.scenes, sizeof backup_bank.scenes) ||
-        ch_store_store_save(&backup_bank.chords, sizeof backup_bank.chords) ||
-        mm_store_save(slot, &backup_bank.midi, sizeof backup_bank.midi) ||
-        mm_store_load(slot, &current, sizeof current) ||
-        memcmp(&current, &backup_bank.midi, sizeof current) ||
-        settings_save(&backup_bank.boot, sizeof backup_bank.boot))
-        return -1;
+    target.seq = current.seq ? current.seq : 1u;
+    if (memcmp(&current, &target, sizeof current)) {
+        target.seq = current.seq + 1u;
+        if (!target.seq) target.seq = 1u;
+        if (mm_store_save(slot, &target, sizeof target) ||
+            mm_store_load(slot, &current, sizeof current) ||
+            memcmp(&current, &target, sizeof current)) return -1;
+    }
+
     mel_set_t boot;
-    return settings_load(&boot, sizeof boot) || memcmp(&boot, &backup_bank.boot, sizeof boot);
+    if (settings_load(&boot, sizeof boot) || memcmp(&boot, &backup_bank.boot, sizeof boot)) {
+        if (settings_save(&backup_bank.boot, sizeof backup_bank.boot) ||
+            settings_load(&boot, sizeof boot) || memcmp(&boot, &backup_bank.boot, sizeof boot)) return -1;
+    }
+    return fl_erase4k(BACKUP_JOURNAL_AT, &took);
+}
+
+static int backup_stage(void)
+{
+    uint32_t header[2] = {BK_JOURNAL_MAGIC, backup_crc}, took;
+    const uint8_t *bytes = (const uint8_t *)&backup_bank;
+    uint8_t readback[BK_BLOCK];
+    if (fl_erase4k(BACKUP_JOURNAL_AT, &took) ||
+        fl_write(BACKUP_JOURNAL_AT + sizeof header, bytes, sizeof backup_bank)) return -1;
+    for (unsigned off = 0; off < sizeof backup_bank; off += sizeof readback) {
+        unsigned n = sizeof backup_bank - off;
+        if (n > sizeof readback) n = sizeof readback;
+        if (st_read(BACKUP_JOURNAL_AT + sizeof header + off, readback, n) ||
+            memcmp(readback, bytes + off, n)) return -1;
+    }
+    /* A valid header is written only after the whole bank is durable. */
+    backup_restart_required = 1;
+    return fl_write(BACKUP_JOURNAL_AT, (const uint8_t *)header, sizeof header) ||
+        st_read(BACKUP_JOURNAL_AT, readback, sizeof header) ||
+        memcmp(readback, header, sizeof header);
+}
+
+static void backup_recover(void)
+{
+    uint32_t header[2];
+    if (!flash_ok || smk_store_cleared ||
+        st_read(BACKUP_JOURNAL_AT, header, sizeof header) || header[0] != BK_JOURNAL_MAGIC) return;
+    if (st_read(BACKUP_JOURNAL_AT + sizeof header, &backup_bank, sizeof backup_bank)) {
+        backup_restart_required = 1;
+        backup_commit_status = BK_FLASH;
+        return;
+    }
+    /* If final erase was interrupted only the journal can be incomplete. */
+    if (crc32((const uint8_t *)&backup_bank, sizeof backup_bank) != header[1] || !backup_valid()) return;
+    if (backup_restore()) {
+        backup_restart_required = 1;
+        backup_committed_crc = header[1];
+        backup_commit_status = BK_FLASH;
+    }
 }
 
 static unsigned backup_execute(unsigned op, const uint8_t *args, unsigned size,
@@ -147,11 +209,13 @@ static unsigned backup_execute(unsigned op, const uint8_t *args, unsigned size,
         if (backup_received != sizeof backup_bank || ota_rd32(args) != backup_crc ||
             crc32(bank, sizeof backup_bank) != backup_crc || !backup_valid()) return BK_DATA;
         if (!quiet() || seq_play || seq_rec || ch_rec || mm_on || pedal || fm1_in.keys ||
-            ch_pads || fm1_in.buttons || save_req || platform_usb_recording()) return BK_BUSY;
+            ch_pads || fm1_in.buttons || save_req || ch_mix_dirty || scene_pending < 8u ||
+            mm_pedal.candidate || platform_usb_recording()) return BK_BUSY;
         backup_mode = BK_NONE;
-        backup_restart_required = 1;
         backup_committed_crc = backup_crc;
-        backup_commit_status = backup_restore() ? BK_FLASH : BK_OK;
+        backup_commit_status = (backup_stage() || backup_restore()) ? BK_FLASH : BK_OK;
+        if (backup_restart_required)
+            backup_screen(backup_commit_status == BK_OK ? "RESTART TO PLAY" : "RESTART TO RETRY");
         return backup_commit_status;
     default:
         return BK_INVALID;
