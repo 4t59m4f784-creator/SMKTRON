@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
-import {PINS as DP,modeFor as diagMode,PENDING as DPENDING} from '../web/smkstage/install-d1/service.js';
+import {PINS as DP,modeFor as diagMode,readPending as diagPending,PENDING as DPENDING} from '../web/smkstage/install-d1/service.js';
 import {PINS as FP,modeFor as fallbackMode,readPending as fallbackPending} from '../web/smkstage/install-011/service.js';
 const id=text=>({text,model:text.startsWith('ota-')?'ota-SMK-37 Pro':'SMK-37 Pro'});
 const D='61372501e13b6fed9fa24febad26ac4effc95266c4e2fca40b903831be3e7887';
@@ -18,6 +18,8 @@ test('diagnostic D1 is distinct from baseline and pinned to exact bytes',()=>{
 });
 test('diag refuses USB Rescue, foreign model and unknown loader',()=>{
  assert.throws(()=>diagMode('stage',id('SMK-37 Pro_000'),flashAttempt));
+ assert.throws(()=>diagMode('stage',id('SMK-37 Pro_000'),{...flashAttempt,recovery:true}));
+ assert.equal(diagPending(local({...flashAttempt,sha:'2d992f98864558b24d61a007e20c7c6c192a441489c5be4c90c2ca20881cd97b'})),null);
  assert.throws(()=>diagMode('stage',id('ota-SMK-37 Pro_901'),null));
  assert.throws(()=>diagMode('stage',{text:'FM-1_000',model:'FM-1'},null));
  assert.equal(diagMode('stage',id('SMK-37 Pro_19703'),null),'install');
