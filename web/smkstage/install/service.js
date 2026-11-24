@@ -28,6 +28,7 @@ export function readPending(storage){
 }
 export function modeFor(kind,id,pending){
  if(!PINS[kind]||!id?.text)throw Error('Connect and identify / Conecte e identifique.');
+ if(kind==='stage')throw Error('SMKSTAGE 0.1.2 was withdrawn after a verified USB Rescue boot failure. DO NOT REINSTALL. / 0.1.2 suspensa após falha real de boot. Não reinstale.');
  if(id.model!==MODEL&&id.model!=='ota-'+MODEL)throw Error('Only SMK-37 Pro / Somente SMK-37 Pro.');
  if(isLoader(id)){
   if(pending?.model===MODEL&&pending.kind===kind&&pending.sha===PINS[kind].sha)return 'resume';
