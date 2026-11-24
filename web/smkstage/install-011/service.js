@@ -13,6 +13,8 @@ export const PENDING='smkstage.b3.alpha.19703.pending.v1';
  * 0.1.2 transaction: stage hash, known source ID, model and operation.
  * The 0.1.1 package remains independently SHA-256 pinned. */
 const FAILED_STAGE_SHA='2d992f98864558b24d61a007e20c7c6c192a441489c5be4c90c2ca20881cd97b';
+const DIAG_PENDING='smkstage.b3.diag.d1.pending.v1';
+const FAILED_DIAG_SHA='61372501e13b6fed9fa24febad26ac4effc95266c4e2fca40b903831be3e7887';
 const RESCUE_ID='SMK-37 Pro_000';
 const isLoader=(id)=>id?.text==='ota-SMK-37 Pro_900';
 export async function validate(raw,kind){
@@ -28,12 +30,21 @@ export async function validate(raw,kind){
 export function readPending(storage){
  try{
   const p=JSON.parse(storage.getItem(PENDING));
-  if(!p||p.model!==MODEL)return null;
-  if(p.kind==='stage'&&p.sha===FAILED_STAGE_SHA&&p.source==='SMK-37 Pro_19703')
+  if(p&&p.model===MODEL){
+   if(p.kind==='stage'&&p.sha===FAILED_STAGE_SHA&&p.source==='SMK-37 Pro_19703')
+    return {model:MODEL,kind:'stage',sha:PINS.stage.sha,source:RESCUE_ID,recovery:true};
+   if(p.kind==='stage'&&p.sha===PINS.stage.sha&&p.source===RESCUE_ID)
+    return {model:MODEL,kind:'stage',sha:p.sha,source:p.source,recovery:true};
+   if(PINS[p.kind]?.sha===p.sha&&ALLOWED_SOURCE.includes(p.source))return p;
+  }
+  /* D1's standalone installer leaves its own pending record. For safety,
+   * permit rollback to the known-good 0.1.1 only from a known same-device
+   * D1 flash attempt; never permit other identities or unpinned uploads. */
+  const d=JSON.parse(storage.getItem(DIAG_PENDING));
+  if(d?.model===MODEL&&d.kind==='stage'&&d.sha===FAILED_DIAG_SHA&&
+     (d.source==='SMK-37 Pro_19703'||d.source===RESCUE_ID))
    return {model:MODEL,kind:'stage',sha:PINS.stage.sha,source:RESCUE_ID,recovery:true};
-  if(p.kind==='stage'&&p.sha===PINS.stage.sha&&p.source===RESCUE_ID)
-   return {model:MODEL,kind:'stage',sha:p.sha,source:p.source,recovery:true};
-  return PINS[p.kind]?.sha===p.sha&&ALLOWED_SOURCE.includes(p.source)?p:null;
+  return null;
  }catch{return null}
 }
 export function modeFor(kind,id,pending){
