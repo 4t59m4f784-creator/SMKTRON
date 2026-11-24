@@ -4,7 +4,9 @@ on:
     branches: [main]
     paths:
       - 'web/smkstage/install/**'
+      - 'web/smkstage/install-011/**'
       - 'tests/stage-installer.test.mjs'
+      - 'tests/stage-rescue.test.mjs'
       - '.github/workflows/smkstage-installer.yml'
   workflow_dispatch:
 permissions:
@@ -19,6 +21,6 @@ jobs:
           node-version: 22
       - name: Check all JS modules and protocol
         run: |
-          for f in web/smkstage/install/{controller,service,protocol,package}.js; do node --check "$f"; done
+          for f in web/smkstage/{install,install-011}/{controller,service,protocol,package}.js; do node --check "$f"; done
       - name: Test device allowlist, pending-update safeguards and UI wiring
-        run: node --test tests/stage-installer.test.mjs
+        run: node --test tests/stage-installer.test.mjs tests/stage-rescue.test.mjs
