@@ -12,7 +12,7 @@ test('B3 and stock pins are immutable and distinct',()=>{
  assert.equal(PINS.stock.size,705252);
 });
 test('known firmware origins only',()=>{
- for(const n of ['016','19668','463','19703'])assert.equal(modeFor('stage',ID('SMK-37 Pro_'+n),null),'install');
+ for(const n of ['016','19668','463','19703'])assert.throws(()=>modeFor('stage',ID('SMK-37 Pro_'+n),null),/withdrawn/);
  for(const n of ['19668','463','19703'])assert.equal(modeFor('stock',ID('SMK-37 Pro_'+n),null),'install');
  assert.throws(()=>modeFor('stock',ID('SMK-37 Pro_016'),null));
  for(const n of ['19667','19664','462','19702','451','999'])assert.throws(()=>modeFor('stage',ID('SMK-37 Pro_'+n),null));
@@ -23,7 +23,7 @@ test('loader never authorized without exact pending operation',()=>{
  assert.throws(()=>modeFor('stage',ID('ota-SMK-37 Pro_900'),null));
  assert.throws(()=>modeFor('stage',ID('ota-SMK-37 Pro_901'),null));
  const pending={kind:'stage',sha:PINS.stage.sha,source:'SMK-37 Pro_19668',model:'SMK-37 Pro'};
- assert.equal(modeFor('stage',ID('ota-SMK-37 Pro_900'),pending),'resume');
+ assert.throws(()=>modeFor('stage',ID('ota-SMK-37 Pro_900'),pending),/withdrawn/);
  assert.throws(()=>modeFor('stock',ID('ota-SMK-37 Pro_900'),pending));
  const storage={getItem:key=>key===PENDING?JSON.stringify(pending):null};
  assert.deepEqual(readPending(storage),pending);
