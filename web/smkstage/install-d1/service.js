@@ -28,17 +28,13 @@ export async function validate(raw,kind){
 export function readPending(storage){
  try{
   const p=JSON.parse(storage.getItem(PENDING));
-  if(!p||p.model!==MODEL)return null;
-  if(p.kind==='stage'&&p.sha===FAILED_STAGE_SHA&&p.source==='SMK-37 Pro_19703')
-   return {model:MODEL,kind:'stage',sha:PINS.stage.sha,source:RESCUE_ID,recovery:true};
-  if(p.kind==='stage'&&p.sha===PINS.stage.sha&&p.source===RESCUE_ID)
-   return {model:MODEL,kind:'stage',sha:p.sha,source:p.source,recovery:true};
-  return PINS[p.kind]?.sha===p.sha&&ALLOWED_SOURCE.includes(p.source)?p:null;
+  return p&&p.model===MODEL&&PINS[p.kind]?.sha===p.sha&&ALLOWED_SOURCE.includes(p.source)?p:null;
  }catch{return null}
 }
 export function modeFor(kind,id,pending){
  if(!PINS[kind]||!id?.text)throw Error('Connect and identify / Conecte e identifique.');
  if(id.model!==MODEL&&id.model!=='ota-'+MODEL)throw Error('Only SMK-37 Pro / Somente SMK-37 Pro.');
+ if(id.text===RESCUE_ID)throw Error('Use the pinned 0.1.1 fallback installer for USB Rescue / Use o instalador de retorno 0.1.1 em Rescue.');
  if(id.text===RESCUE_ID){
   if(kind==='stage'&&pending?.recovery===true&&pending.kind==='stage'&&pending.sha===PINS.stage.sha&&pending.source===RESCUE_ID)return 'install';
   throw Error('SMK-37 Pro USB Rescue requires a matching failed 0.1.2 transaction from this same browser. No writes sent. / Rescue exige registro da falha 0.1.2 neste navegador.');
