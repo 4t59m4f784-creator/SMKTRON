@@ -6,6 +6,7 @@ on:
     paths: ['web/**', '.github/workflows/pages.yml']
 permissions:
   contents: read
+  actions: read
   pages: write
   id-token: write
 concurrency:
@@ -23,6 +24,19 @@ jobs:
       - uses: actions/upload-pages-artifact@v3
         with:
           path: web
+      - name: Wait for the uploaded Pages artifact to be indexed
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          ok=0
+          for attempt in $(seq 1 20); do
+            count=$(gh api "repos/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}/artifacts?per_page=100" --jq '[.artifacts[] | select(.name == "github-pages")] | length')
+            echo "Pages artifacts found: $count (attempt $attempt)"
+            if [ "$count" = "1" ]; then ok=1; break; fi
+            if [ "$count" != "0" ]; then echo "Multiple Pages artifacts in one run"; exit 1; fi
+            sleep 5
+          done
+          if [ "$ok" != "1" ]; then echo "Artifact was not indexed"; exit 1; fi
       - id: deployment
         uses: actions/deploy-pages@v4
 
