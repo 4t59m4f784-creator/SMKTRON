@@ -28,15 +28,18 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          ok=0
+          stable=0
           for attempt in $(seq 1 20); do
             count=$(gh api "repos/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}/artifacts?per_page=100" --jq '[.artifacts[] | select(.name == "github-pages")] | length')
             echo "Pages artifacts found: $count (attempt $attempt)"
-            if [ "$count" = "1" ]; then ok=1; break; fi
-            if [ "$count" != "0" ]; then echo "Multiple Pages artifacts in one run"; exit 1; fi
+            if [ "$count" = "1" ]; then stable=$((stable+1)); else stable=0; fi
+            if [ "$count" != "0" ] && [ "$count" != "1" ]; then echo "Multiple Pages artifacts in one run"; exit 1; fi
+            if [ "$stable" -ge 3 ]; then break; fi
             sleep 5
           done
-          if [ "$ok" != "1" ]; then echo "Artifact was not indexed"; exit 1; fi
+          if [ "$stable" -lt 3 ]; then echo "Artifact metadata not stable"; exit 1; fi
+          # GitHub Pages deploy API can lag the Actions artifact API by a few seconds.
+          sleep 10
       - id: deployment
         uses: actions/deploy-pages@v4
 
