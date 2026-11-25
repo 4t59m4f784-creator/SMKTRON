@@ -62,7 +62,7 @@
   <nav><button id="b-en" aria-pressed="true">EN</button> <button id="b-pt" aria-pressed="false">PT</button></nav>
   
   <div class="rail"></div>
-  <h1><b>Organ</b>Vave Padrini <span class="ver">v0.9.59 Padrini · SMK-37</span></h1>
+  <h1><b>Organ</b>Vave Padrini <span class="ver">v0.9.59 Padrini D2 · SMK-37</span></h1>
 
 
   <div data-l="en">
@@ -711,7 +711,7 @@ const STEP_PCT = { start: 4, verify: 20, loader: 50, write: 60, reboot: 92, done
 const images = {};
 let loaded = false, busy = false;
 const EXPECTED_PRODUCT = "SMK-37 Pro_800";
-const EXPECTED_SHA256 = "11ec779c2550a31063c380d2e622537f622bcc923e57d54230f8265e2dbbf466";
+const EXPECTED_SHA256 = "62eb9f46ffbb0375e56c38829548f3c2898f780edc279c060bb5c04007372c8e";
 const canGo = () => loaded && !busy && $("backup").checked && $("risk").checked && !!navigator.requestMIDIAccess;
 const refresh = () => { $("go").disabled = $("go-pt").disabled = !canGo(); };
 $("backup").addEventListener("change",refresh);
