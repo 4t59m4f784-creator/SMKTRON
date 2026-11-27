@@ -1,0 +1,27 @@
+.coffee-support {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: .65rem 1rem;
+  margin-block: 1.5rem;
+  font-size: .9375rem;
+}
+.coffee-support a {
+  display: inline-flex;
+  align-items: center;
+  gap: .45em;
+  min-height: 44px;
+  padding: .45em .85em;
+  border: 1px solid currentColor;
+  border-radius: .5rem;
+  color: var(--accent, #84d4b4);
+  font-weight: 650;
+  text-decoration: none;
+}
+.coffee-support a:hover {
+  background: rgba(75, 165, 136, .14);
+}
+.coffee-support a:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
+}
